@@ -13,14 +13,14 @@ namespace Random_Polygon
             get { return m_MaxEdges; }
             set { m_MaxEdges = value; }
         }
-        private int m_MinRadius = 60;
+        private int m_MinRadius = 5;
 
         public int MinRadius
         {
             get { return m_MinRadius; }
             set { m_MinRadius = value; }
         }
-        private int m_MaxRadius = 100;
+        private int m_MaxRadius = 60;
         public int MaxRadius
         {
             get { return m_MaxRadius; }

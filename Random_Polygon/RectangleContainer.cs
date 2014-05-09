@@ -99,7 +99,7 @@ namespace Random_Polygon
             if (null != polygon.Points)
             {
 
-                PointCollection pts = polygon.Points;
+                List<Point> pts = polygon.getPoints();
                 for (int i = 0; i < pts.Count; i++)
                 {
                     if (!this.m_rectange.Contains((int)pts[i].X, (int)pts[i].Y))

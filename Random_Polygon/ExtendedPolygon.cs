@@ -9,7 +9,7 @@ namespace Random_Polygon
 {
     public class ExtendedPolygon
     {
-        private Polygon m_Polygon = null;
+         
         private List<Point> norms = null;
         private double m_area = 0.0;
         private double m_radius = 0.0;
@@ -18,10 +18,8 @@ namespace Random_Polygon
 
         public ExtendedPolygon()
         {
-            this.m_Polygon = new Polygon();
-            m_Polygon.Stroke = System.Windows.Media.Brushes.Black;
-            m_Polygon.Fill = System.Windows.Media.Brushes.LightSeaGreen;
-            m_Polygon.StrokeThickness = 1;
+            
+           
         }
         
         public int Quadrant
@@ -42,24 +40,32 @@ namespace Random_Polygon
             set { m_radius = value; }
         }
 
-        public PointCollection Points
+        private List<Point> m_points = new List<Point>();
+        public List<Point> Points
         {
-            get { return m_Polygon == null ? null : m_Polygon.Points; }
+            get { return m_points; }
+            set { m_points = value; }
         }
 
-        public Polygon MPolygon
+        public List<System.Drawing.Point> getPoints()
         {
+            List<System.Drawing.Point> pts = new List<System.Drawing.Point>();
+            for (int i = 0; i < Points.Count; ++i)
+            {
+                Point pt = Points[i];
+                pts.Add(new System.Drawing.Point(Convert.ToInt32(pt.X), Convert.ToInt32(pt.Y)));
 
-            get { return m_Polygon; }
+            }
+            return pts;
+
         }
+        
+      
         private void getMinMaxProjs(Point axis, ref double minProj, ref double maxProj)
         {
-            if (m_Polygon == null)
-            {
-                return;
-            }
 
-            List<Point>  points = this.m_Polygon.Points.ToList<Point>();
+
+            List<Point> points = new List<Point>(Points);
 
             minProj = maxProj = points[0].X * axis.X + points[0].Y * axis.Y;
             for (int i = 0; i < points.Count; ++i)
@@ -81,12 +87,16 @@ namespace Random_Polygon
         public void translate(int deltX, int deltY)
         {
             //m_Polygon.TranslatePoint(new Point(deltX, deltY), null);
-            PointCollection pc = new PointCollection();
-            foreach (Point pt in m_Polygon.Points)
-            { 
-                pc.Add(new Point(pt.X + deltX,pt.Y + deltY));
+            for (int i = 0; i < Points.Count; ++i)
+            {
+                Point pt= Points[i];
+                pt.X = pt.X + deltX;
+                pt.Y = pt.Y + deltX;
+                Points[i] = pt;
+
             }
-            m_Polygon.Points = pc;
+
+               
 
             this.m_circleCenter.X += deltX;
             this.m_circleCenter.Y += deltY;
@@ -152,17 +162,17 @@ namespace Random_Polygon
 
             this.norms = new List<Point>();
             int i = 0;
-            for (; i < this.m_Polygon.Points.Count - 1; ++i)
+            for (; i < Points.Count - 1; ++i)
             {
-                Point pt = this.m_Polygon.Points[i];
-                Point pt1 = this.m_Polygon.Points[i + 1];
+                Point pt = Points[i];
+                Point pt1 = Points[i + 1];
                 Point norm = new Point(pt.Y - pt1.Y, pt1.X - pt.X);
                 this.norms.Add(norm);
             }
 
             {
-                Point pt = this.m_Polygon.Points[i];
-                Point pt1 = this.m_Polygon.Points[0];
+                Point pt = Points[i];
+                Point pt1 = Points[0];
                 Point norm = new Point(pt.Y - pt1.Y, pt1.X - pt.X);
                 this.norms.Add(norm);
             }
@@ -173,19 +183,19 @@ namespace Random_Polygon
         private double calculateArea()
         {
             double area1 = 0, area2 = 0;
-            int size =this.m_Polygon.Points.Count;
+            int size =Points.Count;
             for (int i = 0; i < size -1; ++i)
             {
-                area1 += this.m_Polygon.Points[i].X * this.m_Polygon.Points[i + 1].Y;
+                area1 += Points[i].X * Points[i + 1].Y;
             }
-            area1 += this.m_Polygon.Points[size - 1].X * this.m_Polygon.Points[0].Y;
+            area1 += Points[size - 1].X * Points[0].Y;
 
 
             for (int i = 0; i < size - 1; ++i)
             {
-                area2 += this.m_Polygon.Points[i].Y * this.m_Polygon.Points[i + 1].X;
+                area2 += Points[i].Y * Points[i + 1].X;
             }
-            area2 += this.m_Polygon.Points[size - 1].Y * this.m_Polygon.Points[0].X;
+            area2 += Points[size - 1].Y * Points[0].X;
 
             this.m_area = Math.Abs(area1 - area2) / 2;
 
@@ -205,7 +215,7 @@ namespace Random_Polygon
 
         public void addPoint(System.Drawing.Point pt)
         {
-            m_Polygon.Points.Add(new Point(pt.X,pt.Y));
+           Points.Add(new Point(pt.X,pt.Y));
         }
 
 

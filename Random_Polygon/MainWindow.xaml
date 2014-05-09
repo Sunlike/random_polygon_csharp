@@ -1,7 +1,7 @@
 ﻿<Window x:Class="Random_Polygon.Window1"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    Title="Window1" Height="600" Width="1000
+    Title="2D物料填充" Height="600" Width="1000
         ">
     <Grid>
         <Grid.RowDefinitions>
