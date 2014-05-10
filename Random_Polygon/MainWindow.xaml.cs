@@ -29,6 +29,7 @@ namespace Random_Polygon
             InitializeComponent();
             this.ui_condition.DataContext = this.m_condition;
             this.ui_result.DataContext = this;
+            this.DataContext = this;
 
         }
         private Condition m_condition = new Condition();
@@ -54,6 +55,31 @@ namespace Random_Polygon
             set { coverRadio = value; OnPropertyChanged("CoverRadio"); }
         }
 
+        private bool m_condation_enable = true;
+        public bool Condation_Enable
+        {
+            get { return m_condation_enable; }
+            set { m_condation_enable = value; OnPropertyChanged("Condation_Enable"); }
+        }
+
+        private bool canStopThread = false;
+
+
+        #region INotifyPropertyChanged Members
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged(string propertyName)
+        {
+            if (this.PropertyChanged != null)
+            {
+                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        #endregion
+
+        #region 随机生成多边形的方法接口
+
         public static ExtendedPolygon randPolygonWithinBox(System.Drawing.Rectangle box, int maxEdgeNum, int minAngle, int maxAngle)
         {
             Random rand = new Random(DateTime.Now.Millisecond);
@@ -68,6 +94,9 @@ namespace Random_Polygon
             ExtendedPolygonBuilder pBuilder = new ExtendedPolygonBuilder(box);
             return pBuilder.buildPolygon(edgeNum, minRadius, maxRadius, minAngle, maxAngle);
         }
+        #endregion
+        
+        #region 随机生成多边形的算法
 
         // TODO(Rye): 1.   Randomly run points, pick those that are not in any of the polygons in container
         //              2.    For each point, change it into random boxes with a small unit bound.
@@ -81,6 +110,10 @@ namespace Random_Polygon
             Random rand = new Random(DateTime.Now.Millisecond);
             for (int i = 0; i < parameters.Condition.IterCount; ++i)
             {
+                if (canStopThread)
+                {
+                    break;
+                }
                 System.Drawing.Rectangle box = new System.Drawing.Rectangle();
                 box.X = rand.Next(m_container.Width - 1) + 1;
                 box.Y = rand.Next(m_container.Height - 1) + 1;
@@ -91,6 +124,10 @@ namespace Random_Polygon
                 bool bSuccess = false;
                 for (int j = 0; j < parameters.Condition.MaxRadius * 2; j += parameters.Condition.ExpandStep)
                 {
+                    if (canStopThread)
+                    {
+                        break;
+                    }
                     box.Width += parameters.Condition.ExpandStep;
                     box.Height += parameters.Condition.ExpandStep;
 
@@ -108,15 +145,8 @@ namespace Random_Polygon
 
                 if (polygon != null)
                 {
-                    m_container.put(polygon);
-
-                    AddPolygon(polygon, parameters);
-
-                    //double radio = m_container.getCoverageRatio() * 100;
-                    //if (radio > m_condition.MinCoverRadio)
-                    //{
-                    //    return;
-                    //}
+                    m_container.put(polygon); 
+                    AddPolygon(polygon, parameters); 
                 }
             }
         }
@@ -130,7 +160,10 @@ namespace Random_Polygon
             
             while (true)
             {
-
+                if (canStopThread)
+                {
+                    break;
+                }
                 bool bSuccess = false;
                 ExtendedPolygon polygon = randPolygonWithinBox(m_container, condition.MaxEdges, condition.MinRadius, condition.MaxRadius, condition.MinAngle, condition.MaxAngle);
                 bSuccess = m_container.canSafePut(polygon);
@@ -170,34 +203,13 @@ namespace Random_Polygon
             }
            
             sw.Stop();
+            Condation_Enable = true;
 
         }
+        #endregion
 
-        private Stopwatch sw = null;
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-
-            m_container = new RectangleContainer(0, 0, m_condition.CWidth, m_condition.CHeight);
-            rect_container.Width = m_condition.CWidth;
-            rect_container.Height = m_condition.CHeight;
-            rect_container.Visibility = Visibility.Visible;
-            bg_draw.Children.Clear();
-            LogInfo = "";
-            CoverRadio = "0";
-            bg_draw.Children.Add(rect_container);
-            if (null == sw)
-            {
-                sw = new Stopwatch();
-            }
-
-            // 工作线程，生成多边形
-            Thread thread = new Thread(new ParameterizedThreadStart(run));
-            thread.SetApartmentState(ApartmentState.STA); //Set the thread to STA
-            //thread.IsBackground = true;
-            ThreadParameters param = new ThreadParameters(m_condition, bg_draw);
-            thread.Start(param); 
-
-        }
+        private Stopwatch sw = null; 
+       
 
         private Brush getRandomBrush()
         {
@@ -243,20 +255,42 @@ namespace Random_Polygon
 
 
         }
-
-
-        #region INotifyPropertyChanged Members
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged(string propertyName)
+ 
+        // 开启随机生成多面体
+        private void StartButton_Click(object sender, RoutedEventArgs e)
         {
-            if (this.PropertyChanged != null)
+            Condation_Enable = false;
+            canStopThread = false;
+            m_container = new RectangleContainer(0, 0, m_condition.CWidth, m_condition.CHeight);
+            rect_container.Width = m_condition.CWidth;
+            rect_container.Height = m_condition.CHeight;
+            rect_container.Visibility = Visibility.Visible;
+            bg_draw.Children.Clear();
+            LogInfo = "";
+            CoverRadio = "0";
+            bg_draw.Children.Add(rect_container);
+            if (null == sw)
             {
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+                sw = new Stopwatch();
             }
-        }
 
-        #endregion
+            // 工作线程，生成多边形
+            Thread thread = new Thread(new ParameterizedThreadStart(run));
+            thread.SetApartmentState(ApartmentState.STA); //Set the thread to STA
+            //thread.IsBackground = true;
+            ThreadParameters param = new ThreadParameters(m_condition, bg_draw);
+            thread.Start(param); 
+        }
+        // 终止线程
+        private void StopButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.Dispatcher.BeginInvoke(DispatcherPriority.Send, new Action(
+             () =>
+             {
+                 canStopThread = true;
+                 Debug.WriteLine("canStopThread = true");
+             }));
+        }
     }
 
     class ThreadParameters

@@ -14,56 +14,56 @@
             <ColumnDefinition Width="150"/>
 
         </Grid.ColumnDefinitions>
-        <Border BorderThickness="1" BorderBrush="Black">
-            <StackPanel Orientation="Vertical" x:Name="ui_condition">
+        <Border BorderThickness="1" BorderBrush="Black" >
+            <StackPanel Orientation="Vertical" x:Name="ui_condition" >
                 <Border BorderThickness="0,0,0,1" BorderBrush="Black">
                     <StackPanel Orientation="Vertical" >
                         <TextBlock Height ="30" VerticalAlignment="Stretch" TextAlignment="Center" Background="Beige" IsHitTestVisible="False" HorizontalAlignment="Stretch">条件设置</TextBlock>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="最大边数:" Width ="100"></TextBlock>
                             <TextBlock Text="{Binding MaxEdges}"  Width ="50"></TextBlock>
-                            <Slider Width="150" Value="{Binding MaxEdges}" Minimum="3" Maximum="6"/>
+                            <Slider Width="150" Value="{Binding MaxEdges}" Minimum="3" Maximum="6" IsEnabled="{Binding Condation_Enable}"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="最小外接圆半径:" Width ="100"></TextBlock>
                             <TextBlock Text="{Binding MinRadius}"  Width ="50"></TextBlock>
-                            <Slider Width="150" Value="{Binding MinRadius}" Minimum="1" Maximum="500" />
+                            <Slider Width="150" Value="{Binding MinRadius}" Minimum="1" Maximum="500"  IsEnabled="{Binding Condation_Enable}"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="最大外接圆半径:" Width ="100"></TextBlock>
                             <TextBlock Text="{Binding MaxRadius}"  Width ="50"></TextBlock>
-                            <Slider Width="150" Value="{Binding MaxRadius}" Minimum="1" Maximum="1000" />
+                            <Slider Width="150" Value="{Binding MaxRadius}" Minimum="1" Maximum="1000" IsEnabled="{Binding Condation_Enable}"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="最小角度:" Width ="100"></TextBlock>
                             <TextBlock Text="{Binding MinAngle}"  Width ="50"></TextBlock>
-                            <Slider Width="150" Value="{Binding MinAngle}" Minimum="1" Maximum="179" />
+                            <Slider Width="150" Value="{Binding MinAngle}" Minimum="1" Maximum="179" IsEnabled="{Binding Condation_Enable}"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="最大角度:" Width ="100"></TextBlock>
                             <TextBlock Text="{Binding MaxAngle}"  Width ="50"></TextBlock>
-                            <Slider Width="150" Value="{Binding MaxAngle}" Minimum="1" Maximum="179" />
+                            <Slider Width="150" Value="{Binding MaxAngle}" Minimum="1" Maximum="179" IsEnabled="{Binding Condation_Enable}"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="矩形边界宽:" Width ="100"></TextBlock>
                             <TextBlock Text="{Binding CWidth}"  Width ="50"></TextBlock>
-                            <Slider Width="150" Value="{Binding CWidth}" Minimum="10" Maximum="5000" />
+                            <Slider Width="150" Value="{Binding CWidth}" Minimum="10" Maximum="5000" IsEnabled="{Binding Condation_Enable}"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="矩形边界高:" Width ="100"></TextBlock>
                             <TextBlock Text="{Binding CHeight}"  Width ="50"></TextBlock>
-                            <Slider Width="150" Value="{Binding CHeight}" Minimum="10" Maximum="5000" />
+                            <Slider Width="150" Value="{Binding CHeight}" Minimum="10" Maximum="5000" IsEnabled="{Binding Condation_Enable}"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="最小填充率:" Width ="100"></TextBlock>
                             <TextBlock Text="{Binding MinCoverRadio}"  Width ="25"></TextBlock>
                             <TextBlock Text="%"  Width ="25"></TextBlock>
-                            <Slider Width="150" Value="{Binding MinCoverRadio}" Minimum="10" Maximum="80" />
+                            <Slider Width="150" Value="{Binding MinCoverRadio}" Minimum="10" Maximum="80" IsEnabled="{Binding Condation_Enable}"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="迭代次数:" Width ="100"></TextBlock>
                             <TextBlock Text="{Binding IterCount}"  Width ="50"></TextBlock>
-                            <Slider Width="150" Value="{Binding IterCount}" Minimum="1000" Maximum="300000" TickPlacement="None" />
+                            <Slider Width="150" Value="{Binding IterCount}" Minimum="1000" Maximum="300000" TickPlacement="None" IsEnabled="{Binding Condation_Enable}"/>
                         </StackPanel>
                     </StackPanel>
                 </Border>
@@ -93,8 +93,8 @@
         </Canvas>
         </Border>    
         <StackPanel Grid.Row="1" Orientation="Horizontal" Grid.ColumnSpan="3">
-            <Button Width="80" Click="Button_Click">开始</Button>
-            <Button Width="80">暂停</Button>
+            <Button Width="80" Click="StartButton_Click" IsEnabled="{Binding Condation_Enable}">开始</Button>
+            <Button Width="80" Click="StopButton_Click">停止</Button>
             <Button Width="80">保存</Button>
         </StackPanel>
     </Grid>
