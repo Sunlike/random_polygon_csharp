@@ -30,6 +30,7 @@ namespace Random_Polygon
             this.ui_condition.DataContext = this.m_condition;
             this.ui_result.DataContext = this;
             this.DataContext = this;
+            layer_condaition.ItemsSource = this.ContidationList;
 
         }
         private Condition m_condition = new Condition();
@@ -64,6 +65,16 @@ namespace Random_Polygon
 
         private bool canStopThread = false;
 
+        // 矩形分层填充控制条件
+        ObservableCollection<Condition> m_contidationList = new ObservableCollection<Condition>();
+        public ObservableCollection<Condition> ContidationList
+        {
+            get { return m_contidationList; }
+            set { m_contidationList = value; }
+        }
+
+        private List<double> m_recover_radio = new List<double>();
+
 
         #region INotifyPropertyChanged Members
 
@@ -95,7 +106,7 @@ namespace Random_Polygon
             return pBuilder.buildPolygon(edgeNum, minRadius, maxRadius, minAngle, maxAngle);
         }
         #endregion
-        
+
         #region 随机生成多边形的算法
 
         // TODO(Rye): 1.   Randomly run points, pick those that are not in any of the polygons in container
@@ -105,34 +116,34 @@ namespace Random_Polygon
         //              3.1   For each of the rest boxes, randomly run polygons within
         //              3.2   Put the generated polygons into container
         //              4     Repeat for reasonable times
-        private void awesomelyFill(ThreadParameters parameters)
+        private void awesomelyFill(RectangleContainer container,Canvas ui_container, Condition condition)
         {
             Random rand = new Random(DateTime.Now.Millisecond);
-            for (int i = 0; i < parameters.Condition.IterCount; ++i)
+            for (int i = 0; i < condition.IterCount; ++i)
             {
                 if (canStopThread)
                 {
                     break;
                 }
                 System.Drawing.Rectangle box = new System.Drawing.Rectangle();
-                box.X = rand.Next(m_container.Width - 1) + 1;
-                box.Y = rand.Next(m_container.Height - 1) + 1;
-                box.Width = m_condition.MinRadius * 2;
+                box.X = rand.Next(container.Width - 1) + 1;
+                box.Y = rand.Next(container.Height - 1) + 1;
+                box.Width = condition.MinRadius * 2;
                 box.Height = box.Width;
 
                 ExtendedPolygon polygon = null;
                 bool bSuccess = false;
-                for (int j = 0; j < parameters.Condition.MaxRadius * 2; j += parameters.Condition.ExpandStep)
+                for (int j = 0; j < condition.MaxRadius * 2; j += condition.ExpandStep)
                 {
                     if (canStopThread)
                     {
                         break;
                     }
-                    box.Width += parameters.Condition.ExpandStep;
-                    box.Height += parameters.Condition.ExpandStep;
+                    box.Width += condition.ExpandStep;
+                    box.Height += condition.ExpandStep;
 
-                    ExtendedPolygon tmpPolygon = randPolygonWithinBox(box, parameters.Condition.MaxEdges, parameters.Condition.MinAngle, parameters.Condition.MaxAngle);
-                    bSuccess = m_container.canSafePut(tmpPolygon);
+                    ExtendedPolygon tmpPolygon = randPolygonWithinBox(box, condition.MaxEdges, condition.MinAngle, condition.MaxAngle);
+                    bSuccess = container.canSafePut(tmpPolygon);
                     if (bSuccess)
                     {
                         polygon = tmpPolygon;
@@ -145,19 +156,18 @@ namespace Random_Polygon
 
                 if (polygon != null)
                 {
-                    m_container.put(polygon); 
-                    AddPolygon(polygon, parameters); 
+                    container.put(polygon);
+
+
+                    AddPolygon(polygon, ui_container, condition, container);
                 }
             }
         }
 
-        public void run(object oParameters)
+        public void genteraterRun(Condition condition, Canvas ui_containor)
         {
-            ThreadParameters parameters = oParameters as ThreadParameters;
-            Condition condition = parameters.Condition;
+            RectangleContainer container = new RectangleContainer(0,0, condition.CWidth, condition.CHeight);
 
-            sw.Start();
-            
             while (true)
             {
                 if (canStopThread)
@@ -165,8 +175,8 @@ namespace Random_Polygon
                     break;
                 }
                 bool bSuccess = false;
-                ExtendedPolygon polygon = randPolygonWithinBox(m_container, condition.MaxEdges, condition.MinRadius, condition.MaxRadius, condition.MinAngle, condition.MaxAngle);
-                bSuccess = m_container.canSafePut(polygon);
+                ExtendedPolygon polygon = randPolygonWithinBox(container, condition.MaxEdges, condition.MinRadius, condition.MaxRadius, condition.MinAngle, condition.MaxAngle);
+                bSuccess = container.canSafePut(polygon);
                 if (!bSuccess)
                 {
                     for (int i = 0; i < 20; ++i)
@@ -175,11 +185,12 @@ namespace Random_Polygon
                         int deltX = condition.StepX + rand.Next(3);
                         int deltY = condition.StepY;
                         polygon.translate(deltX, deltY);
-                        bSuccess = m_container.canSafePut(polygon);
+                        bSuccess = container.canSafePut(polygon);
                         if (bSuccess)
                         {
-                            m_container.put(polygon);
-                            AddPolygon(polygon, parameters);
+                            container.put(polygon);
+
+                            AddPolygon(polygon, ui_containor, condition, container);
 
                             break;
                         }
@@ -187,29 +198,60 @@ namespace Random_Polygon
                 }
                 else
                 {
-                    m_container.put(polygon);
-                    AddPolygon(polygon, parameters);
+                    container.put(polygon);
+
+                    AddPolygon(polygon, ui_containor, condition, container);
 
                 }
 
 
-                this.awesomelyFill(parameters);
+                this.awesomelyFill(container, ui_containor, condition);
 
-                double radio = m_container.getCoverageRatio() * 100;
+                double radio = container.getCoverageRatio() * 100;
                 if (radio > condition.MinCoverRadio)
                 {
                     break;
                 }
             }
-           
+
+            m_recover_radio.Add(container.getCoverageRatio()*100); 
+             
+        }
+
+        public void run(object oParameters)
+        {
+            ThreadParameters parameters = oParameters as ThreadParameters;
+            List<Condition> conditionList = parameters.ConditionList.ToList<Condition>();
+            sw.Start(); 
+            foreach (Condition condition in conditionList)
+            {
+                try
+                {
+                    genteraterRun(condition, parameters.Ui_containor);
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.Write("Wrong:" + ex.ToString());
+                } 
+               
+            }
+
             sw.Stop();
+
+            int layer = 1;
+            CoverRadio = "";
+            foreach(double radio in m_recover_radio)
+            {
+                CoverRadio += "" + layer + "层:" + radio + "%d" ; 
+            }
+
             Condation_Enable = true;
 
         }
         #endregion
 
-        private Stopwatch sw = null; 
-       
+        private Stopwatch sw = null;
+
 
         private Brush getRandomBrush()
         {
@@ -238,34 +280,42 @@ namespace Random_Polygon
             return polygon;
         }
         // 异步函数，保证其他线程能在UI 线程上进行操作
-        private void AddPolygon(ExtendedPolygon polygon, ThreadParameters parameters)
+        private void AddPolygon(ExtendedPolygon polygon, Canvas ui_container, Condition condition,RectangleContainer container)
         {
-            Canvas container = parameters.Ui_containor;
+
+            ExtendedPolygon polygonTemp = new ExtendedPolygon();
+            foreach (Point pt in polygon.Points)
+            {
+                polygonTemp.addPoint(new System.Drawing.Point((int)pt.X,(int)pt.Y));
+            }
+            polygonTemp.translate(condition.X, condition.Y);
+
             this.Dispatcher.BeginInvoke(DispatcherPriority.Send, new Action(
               () =>
               {
                   CostTime = sw.ElapsedMilliseconds.ToString();
-                  LogInfo = m_container.LogInfo;
-                  CoverRadio = (m_container.getCoverageRatio() * 100).ToString();
+                  LogInfo = container.LogInfo;
+                  CoverRadio = (container.getCoverageRatio() * 100).ToString();
 
-                  Polygon ui_polygon = createPolygon(polygon.Points);
-                  bg_draw.Children.Add(ui_polygon); 
+                  Polygon ui_polygon = createPolygon(polygonTemp.Points);
+                  ui_container.Children.Add(ui_polygon);
 
               }));
 
 
         }
- 
+
         // 开启随机生成多面体
         private void StartButton_Click(object sender, RoutedEventArgs e)
         {
             Condation_Enable = false;
             canStopThread = false;
-            m_container = new RectangleContainer(0, 0, m_condition.CWidth, m_condition.CHeight);
-            rect_container.Width = m_condition.CWidth;
-            rect_container.Height = m_condition.CHeight;
+           
+            rect_container.Width = m_condition.BoundaryHeight;
+            rect_container.Height = m_condition.BoundaryHeight;
             rect_container.Visibility = Visibility.Visible;
             bg_draw.Children.Clear();
+            m_recover_radio.Clear();
             LogInfo = "";
             CoverRadio = "0";
             bg_draw.Children.Add(rect_container);
@@ -274,12 +324,15 @@ namespace Random_Polygon
                 sw = new Stopwatch();
             }
 
+
             // 工作线程，生成多边形
             Thread thread = new Thread(new ParameterizedThreadStart(run));
             thread.SetApartmentState(ApartmentState.STA); //Set the thread to STA
             //thread.IsBackground = true;
-            ThreadParameters param = new ThreadParameters(m_condition, bg_draw);
-            thread.Start(param); 
+            ThreadParameters param = new ThreadParameters(ContidationList, bg_draw);
+            thread.Start(param);
+
+
         }
         // 终止线程
         private void StopButton_Click(object sender, RoutedEventArgs e)
@@ -291,20 +344,69 @@ namespace Random_Polygon
                  Debug.WriteLine("canStopThread = true");
              }));
         }
+
+        private int getCurrentLayerHeight()
+        {
+            int height = 0;
+            foreach (Condition cd in this.ContidationList)
+            {
+                height += cd.CHeight;
+            }
+            return height;
+        }
+        // 添加分层控制
+        private void AddContidation_Click(object sender, RoutedEventArgs e)
+        {
+            // 判断是否层高是否大于总高 
+            int height = m_condition.CHeight + getCurrentLayerHeight();
+
+            if (height > m_condition.BoundaryHeight)
+            {
+                MessageBox.Show("超出范围", "提醒");
+                return;
+            }
+            boundary_width.IsEnabled = false;
+            boundary_height.IsEnabled = false;
+            int currentHeight = getCurrentLayerHeight();
+            m_condition.Y = currentHeight;
+            
+            Condition condition = new Condition(m_condition);
+            this.ContidationList.Add(condition);
+        }
+
+        // 重置分层控制参数
+        private void ResetContidation_Click(object sender, RoutedEventArgs e)
+        {
+            this.ContidationList.Clear();
+            m_condition = new Condition();
+            boundary_width.IsEnabled = true;
+            boundary_height.IsEnabled = true;
+        }
+
+        // 删除选中的分层
+        private void DeleteContidation_Click(object sender, RoutedEventArgs e)
+        {
+            int index = layer_condaition.SelectedIndex;
+            if (-1 == index)
+            {
+                return;
+            }
+            this.ContidationList.RemoveAt(index);
+        }
     }
 
-    class ThreadParameters
+    public class ThreadParameters
     {
-        public ThreadParameters(Condition condition, System.Windows.Controls.Canvas container)
+        public ThreadParameters(ObservableCollection<Condition> conditionList, System.Windows.Controls.Canvas container)
         {
-            this.m_condition = condition;
+            this.m_condition_list = conditionList.ToList<Condition>();
             this.m_ui_containor = container;
         }
-        private Condition m_condition;
-        public Random_Polygon.Condition Condition
+        private List<Condition> m_condition_list;
+        public List<Condition> ConditionList
         {
-            get { return m_condition; }
-            set { m_condition = value; }
+            get { return m_condition_list; }
+            set { m_condition_list = value; }
         }
         private System.Windows.Controls.Canvas m_ui_containor;
         public System.Windows.Controls.Canvas Ui_containor

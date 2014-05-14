@@ -7,6 +7,35 @@ namespace Random_Polygon
 {
     public class Condition
     {
+        public Condition()
+        {
+
+        }
+        public Condition(Condition  cdt)
+        {
+            MaxAngle = cdt.MaxAngle;
+            MaxEdges = cdt.MaxEdges;
+            MaxRadius = cdt.MaxRadius;
+           
+            MinAngle = cdt.MinAngle;
+            MinCoverRadio = cdt.MinCoverRadio;
+            MinRadius = cdt.MinRadius;
+
+            BoundaryWidth = cdt.BoundaryWidth;
+            BoundaryHeight = cdt.BoundaryHeight;
+
+            IterCount = cdt.IterCount;
+            ExpandStep = cdt.ExpandStep;
+
+            CHeight = cdt.CHeight;
+            CWidth = cdt.CWidth;
+
+            StepX = cdt.StepX;
+            StepY = cdt.StepY;
+            X = cdt.X;
+            Y = cdt.Y;
+
+        }
         private int m_MaxEdges = 5;
         public int MaxEdges
         {
@@ -50,7 +79,21 @@ namespace Random_Polygon
             get { return m_IterCount; }
             set { m_IterCount = value; }
         }
-        private int m_Height = 500;
+
+        private int x = 0;
+        public int X
+        {
+            get { return x; }
+            set { x = value; }
+        }
+        private int y = 0;
+        public int Y
+        {
+            get { return y; }
+            set { y = value; }
+        }
+
+        private int m_Height = 250;
         public int CHeight
         {
             get { return m_Height; }
@@ -81,6 +124,20 @@ namespace Random_Polygon
         {
             get { return m_expandStep; }
             set { m_expandStep = value; }
+        }
+
+        // 总边界
+        private int m_BoundaryWidth=500;
+        public int BoundaryWidth
+        {
+            get { return m_BoundaryWidth; }
+            set { m_BoundaryWidth = value; }
+        }
+        private int m_BoundaryHeight = 500;
+        public int BoundaryHeight
+        {
+            get { return m_BoundaryHeight; }
+            set { m_BoundaryHeight = value; }
         }
     }
 }

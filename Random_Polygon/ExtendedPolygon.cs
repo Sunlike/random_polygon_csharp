@@ -91,7 +91,7 @@ namespace Random_Polygon
             {
                 Point pt= Points[i];
                 pt.X = pt.X + deltX;
-                pt.Y = pt.Y + deltX;
+                pt.Y = pt.Y + deltY;
                 Points[i] = pt;
 
             }
