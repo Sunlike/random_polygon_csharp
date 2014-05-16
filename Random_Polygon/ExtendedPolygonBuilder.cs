@@ -33,25 +33,25 @@ namespace Random_Polygon
 
         public ExtendedPolygon buildPolygon(int edgeNum, int minRadius, int maxRadius)
         {
-            return this.randAnyPolygon(container, edgeNum, minRadius, maxRadius);
+            return randAnyPolygon(container, edgeNum, minRadius, maxRadius);
         }
 
         public ExtendedPolygon buildPolygon(Rectangle box, int edgeNum)
         {
-            return this.randAnyPolygonWithinBox(box, edgeNum);
+            return randAnyPolygonWithinBox(box, edgeNum);
         }
 
         public ExtendedPolygon buildPolygon(int edgeNum, int minRadius, int maxRadius, double minAngle, double maxAngle)
         {
-            return this.randAnyPolygon(container, edgeNum, minRadius, maxRadius, minAngle, maxAngle);
+            return randAnyPolygon(container, edgeNum, minRadius, maxRadius, minAngle, maxAngle);
         }
 
         public ExtendedPolygon buildPolygon(Rectangle box, int edgeNum, double minAngle, double maxAngle)
         {
-            return this.randAnyPolygonWithinBox(box, edgeNum, minAngle, maxAngle);
+            return randAnyPolygonWithinBox(box, edgeNum, minAngle, maxAngle);
         }
 
-        private ExtendedPolygon randAnyPolygonWithinBox(Rectangle box, int edgeNum)
+        public static ExtendedPolygon randAnyPolygonWithinBox(Rectangle box, int edgeNum)
         {
             Random rand = new Random(DateTime.Now.Millisecond);
 
@@ -111,7 +111,7 @@ namespace Random_Polygon
             return polygon;
         }
 
-        private ExtendedPolygon randAnyPolygon(RectangleContainer box, int edgeNum, int minRadius, int maxRadius)
+        private static  ExtendedPolygon randAnyPolygon(RectangleContainer box, int edgeNum, int minRadius, int maxRadius)
         {
             Random rand = new Random(DateTime.Now.Millisecond);
 
@@ -175,7 +175,7 @@ namespace Random_Polygon
             return polygon;
         }
 
-        private ExtendedPolygon randAnyPolygonWithinBox(Rectangle box, int edgeNum, double minAngle, double maxAngle)
+        public static ExtendedPolygon randAnyPolygonWithinBox(Rectangle box, int edgeNum, double minAngle, double maxAngle)
         {
             Random rand = new Random(DateTime.Now.Millisecond);
 
@@ -259,7 +259,7 @@ namespace Random_Polygon
             return polygon;
         }
 
-        private ExtendedPolygon randAnyPolygon(RectangleContainer box, int edgeNum, int minRadius, int maxRadius, double minAngle, double maxAngle)
+        public static ExtendedPolygon randAnyPolygon(RectangleContainer box, int edgeNum, int minRadius, int maxRadius, double minAngle, double maxAngle)
         {
             Random rand = new Random(DateTime.Now.Millisecond);
 

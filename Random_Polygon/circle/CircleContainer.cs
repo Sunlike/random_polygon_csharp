@@ -4,25 +4,40 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 using Random_Polygon;
-using System.Windows.Media;
 using System.Diagnostics;
 
-
-namespace Random_Polygon
+namespace Random_Polygon.circle
 {
-
-    public class RectangleContainer
+    public class CircleContainer
     {
-        private Rectangle m_rectange = Rectangle.Empty;
-        private double m_blankArea = 0.0;
-        private double m_area = 0.0;
+        private RCircle m_circle = new RCircle();
         private int listSize = 0;
-        private List<ExtendedPolygon>[] polygonInside = new List<ExtendedPolygon>[maxCount];
-        private static int maxCount = 5;
-        public RectangleContainer(int x, int y, int width, int height)
+        private double m_blankArea = 0.0;
+        public double BlankArea
         {
-            m_rectange = new Rectangle(x, y, width, height);
-            this.m_area = this.m_blankArea = width * height;
+            get { return m_blankArea; }
+        }
+        private double m_area = 0.0;
+        public double Area
+        {
+            get { return m_area; }
+        }
+        private List<ExtendedPolygon>[] polygonInside = new List<ExtendedPolygon>[maxCount];
+        public List<ExtendedPolygon>[] PolygonInside
+        {
+            get { return polygonInside; }
+        }
+        public string LogInfo
+        {
+            get;
+            set;
+        }
+        private static int maxCount = 5;
+
+        public CircleContainer(int x, int y, int radius)
+        {
+            m_circle = new RCircle(x, y, radius);
+            this.m_area = this.m_blankArea = m_circle.Area();;
             for (int i = 0; i < maxCount; ++i)
             {
                 polygonInside[i] = new List<ExtendedPolygon>();
@@ -30,33 +45,17 @@ namespace Random_Polygon
             }
         }
 
-        public int Width
+        public double Radius
         {
-            get { return this.m_rectange.Width; }
-        }
-        public int Height
-        {
-            get { return this.m_rectange.Height; }
-        }
-        public int X
-        {
-            get { return this.m_rectange.X; }
-        }
-        public int Y
-        {
-            get { return this.m_rectange.Y; }
+            get { return m_circle.Radius;}
         }
 
-        public string LogInfo
+        public Point Center
         {
-            get;
-            set;
+            get{return m_circle.Center;}
         }
 
-        public Rectangle getRectangle()
-        {
-            return new Rectangle(X, Y, Width, Height);
-        }
+
         public List<ExtendedPolygon> getAllPolygons()
         {
             List<ExtendedPolygon> list = new List<ExtendedPolygon>();
@@ -69,36 +68,6 @@ namespace Random_Polygon
             return list;
         }
 
-        private int calculateQuadrant(ExtendedPolygon polygon, int x, int y, int width, int height)
-        {
-            Point center = new Point(x + width / 2, y + height / 2);
-            RectangleContainer section1 = new RectangleContainer(x, y, width / 2, height / 2);
-            RectangleContainer section2 = new RectangleContainer(center.X, y, width / 2, height / 2);
-            RectangleContainer section3 = new RectangleContainer(x, center.Y, width / 2, height / 2);
-            RectangleContainer section4 = new RectangleContainer(center.X, center.Y, width / 2, height / 2);
-
-            if (section1.contains(polygon))
-            {
-                return 1;
-            }
-            else if (section2.contains(polygon))
-            {
-                return 2;
-            }
-            else if (section3.contains(polygon))
-            {
-                return 3;
-            }
-            else if (section4.contains(polygon))
-            {
-                return 4;
-            }
-            else
-            {
-                return 0;
-            }
-        }
-
         public bool contains(ExtendedPolygon polygon)
         {
             if (null != polygon.Points)
@@ -107,7 +76,7 @@ namespace Random_Polygon
                 List<Point> pts = polygon.getPoints();
                 for (int i = 0; i < pts.Count; i++)
                 {
-                    if (!this.m_rectange.Contains((int)pts[i].X, (int)pts[i].Y))
+                    if (!this.m_circle.Contains(pts[i].X, pts[i].Y))
                     {
                         return false;
                     }
@@ -118,34 +87,9 @@ namespace Random_Polygon
             return false;
         }
 
-        private int getQuadrant(ExtendedPolygon polygon)
-        {
-            return calculateQuadrant(polygon, this.m_rectange.X, this.m_rectange.Y, this.m_rectange.Width, this.m_rectange.Height);
-        }
-
-        public double getBlankArea()
-        {
-            return this.m_blankArea;
-        }
-
-        public double getArea()
-        {
-            return this.m_area;
-        }
-
         public double getCoverageRatio()
         {
-            return 1 - this.m_blankArea / this.m_area;
-        }
-
-        public int getListSize()
-        {
-            return listSize;
-        }
-
-        public List<ExtendedPolygon>[] getPolygonsInside()
-        {
-            return this.polygonInside;
+            return 1 - this.BlankArea / this.Area;
         }
 
         public void put(ExtendedPolygon polygon)
@@ -163,6 +107,10 @@ namespace Random_Polygon
             Debug.WriteLine(str);
         }
 
+        private int getQuadrant(ExtendedPolygon polygon)
+        {
+            return 1;
+        }
 
         public bool canSafePut(ExtendedPolygon polygon)
         {
@@ -207,5 +155,49 @@ namespace Random_Polygon
             }
             return true;
         }
+
+        // x,y center
+        private int calculateQuadrant(ExtendedPolygon polygon, int x, int y, double radius)
+        {
+            Point center = new Point(x,y);
+            // 外界元
+            int interRadius = 0 - 1 + (int)Math.Round(radius + 0.5);//(int)Math.Round(0.5+Math.Sqrt(2 * Math.Pow(radius,2.0))) -1;
+            RectangleContainer section1 = new RectangleContainer(x, y, interRadius, interRadius);
+            RectangleContainer section2 = new RectangleContainer(x - interRadius, y, interRadius, interRadius);
+            RectangleContainer section3 = new RectangleContainer(x, y - interRadius, interRadius, interRadius);
+            RectangleContainer section4 = new RectangleContainer(x - interRadius, y - interRadius, interRadius, interRadius);
+
+            if (section1.contains(polygon))
+            {
+                return 1;
+            }
+            else if (section2.contains(polygon))
+            {
+                return 2;
+            }
+            else if (section3.contains(polygon))
+            {
+                return 3;
+            }
+            else if (section4.contains(polygon))
+            {
+                return 4;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        public RectangleContainer GetBoundBox()
+        {
+            int x = (int)(Center.X - Radius);
+            int y = (int)(Center.Y - Radius) ;
+            int width = 0,height = 0;
+            width = height =(int)(2*Radius);
+            return new RectangleContainer(x, y, width, height); 
+        }
+
+
     }
 }
