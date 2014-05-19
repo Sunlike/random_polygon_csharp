@@ -71,6 +71,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="laddershape\laddershape_polygon.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -98,6 +102,13 @@
     <Compile Include="ContitionList.cs" />
     <Compile Include="ExtendedPolygon.cs" />
     <Compile Include="ExtendedPolygonBuilder.cs" />
+    <Compile Include="laddershape\LadderShape.cs" />
+    <Compile Include="laddershape\LadderShapeContainer.cs" />
+    <Compile Include="laddershape\LadderShape_Condition.cs" />
+    <Compile Include="laddershape\laddershape_polygon.xaml.cs">
+      <DependentUpon>laddershape_polygon.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="laddershape\LadderShape_PolygonBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

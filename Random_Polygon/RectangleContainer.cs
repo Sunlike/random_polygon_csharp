@@ -118,7 +118,7 @@ namespace Random_Polygon
             return false;
         }
 
-        private int getQuadrant(ExtendedPolygon polygon)
+        public int getQuadrant(ExtendedPolygon polygon)
         {
             return calculateQuadrant(polygon, this.m_rectange.X, this.m_rectange.Y, this.m_rectange.Width, this.m_rectange.Height);
         }

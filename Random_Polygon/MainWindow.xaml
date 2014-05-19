@@ -27,12 +27,12 @@
                         <StackPanel Orientation="Horizontal" x:Name="boundary_width">
                             <TextBlock Text="矩形边界宽:" Width ="100"></TextBlock>
                             <TextBlock Text="{Binding BoundaryWidth}"  Width ="50"></TextBlock>
-                            <Slider Width="150" Value="{Binding BoundaryWidth}" Minimum="3" Maximum="6" IsEnabled="{Binding Condation_Enable}"/>
+                            <Slider Width="150" Value="{Binding BoundaryWidth}" Minimum="100" Maximum="1000" IsEnabled="{Binding Condation_Enable}"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal"  x:Name="boundary_height">
                             <TextBlock Text="矩形边界高:" Width ="100"></TextBlock>
                             <TextBlock Text="{Binding BoundaryHeight}"  Width ="50"></TextBlock>
-                            <Slider Width="150" Value="{Binding BoundaryHeight}" Minimum="3" Maximum="6" IsEnabled="{Binding Condation_Enable}"/>
+                            <Slider Width="150" Value="{Binding BoundaryHeight}" Minimum="100" Maximum="1000" IsEnabled="{Binding Condation_Enable}"/>
                         </StackPanel>
 
                         <Border BorderThickness="1"  BorderBrush="Blue">
