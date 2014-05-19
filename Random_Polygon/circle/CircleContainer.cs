@@ -109,7 +109,7 @@ namespace Random_Polygon.circle
 
         private int getQuadrant(ExtendedPolygon polygon)
         {
-            return 1;
+            return calculateQuadrant(polygon,0,0,m_circle.Radius);
         }
 
         public bool canSafePut(ExtendedPolygon polygon)
