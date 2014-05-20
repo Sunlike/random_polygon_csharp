@@ -67,15 +67,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="circle\circle_polygon.xaml">
+    <Page Include="circle\CircleControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="laddershape\laddershape_polygon.xaml">
+    <Page Include="laddershape\LadderShapeControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Page Include="MainWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="rectangle\RectangleControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -83,30 +87,33 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
+    <Compile Include="rectangle\RectangleControl.xaml.cs">
+      <DependentUpon>RectangleControl.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AngleHelper.cs" />
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="utils\AngleHelper.cs" />
     <Compile Include="circle\CircleContainer.cs" />
     <Compile Include="circle\Circle_Condition.cs" />
-    <Compile Include="circle\circle_polygon.xaml.cs">
-      <DependentUpon>circle_polygon.xaml</DependentUpon>
+    <Compile Include="circle\CircleControl.xaml.cs">
+      <DependentUpon>CircleControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="circle\Circle_PolygonBuilder.cs" />
     <Compile Include="circle\RCircle.cs" />
-    <Compile Include="CollectionComparator.cs" />
-    <Compile Include="Condition.cs" />
-    <Compile Include="ContitionList.cs" />
-    <Compile Include="ExtendedPolygon.cs" />
-    <Compile Include="ExtendedPolygonBuilder.cs" />
+    <Compile Include="utils\CollectionComparator.cs" />
+    <Compile Include="rectangle\Condition.cs" />
+    <Compile Include="rectangle\ContitionList.cs" />
+    <Compile Include="rectangle\ExtendedPolygon.cs" />
+    <Compile Include="rectangle\ExtendedPolygonBuilder.cs" />
     <Compile Include="laddershape\LadderShape.cs" />
     <Compile Include="laddershape\LadderShapeContainer.cs" />
     <Compile Include="laddershape\LadderShape_Condition.cs" />
-    <Compile Include="laddershape\laddershape_polygon.xaml.cs">
-      <DependentUpon>laddershape_polygon.xaml</DependentUpon>
+    <Compile Include="laddershape\LadderShapeControl.xaml.cs">
+      <DependentUpon>LadderShapeControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="laddershape\LadderShape_PolygonBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -122,7 +129,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="RectangleContainer.cs" />
+    <Compile Include="rectangle\RectangleContainer.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

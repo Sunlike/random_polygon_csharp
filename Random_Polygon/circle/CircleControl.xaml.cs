@@ -16,14 +16,14 @@ using System.Windows.Threading;
 using System.Diagnostics;
 using System.Threading;
 
-namespace Random_Polygon
+namespace Random_Polygon.circle
 {
     /// <summary>
     /// Interaction logic for circle_polygon.xaml
     /// </summary>
-    public partial class circle_polygon : Window, INotifyPropertyChanged
+    public partial class CircleControl : UserControl, INotifyPropertyChanged
     {
-        public circle_polygon()
+        public CircleControl()
         {
             InitializeComponent();
             ui_condition.DataContext = m_circle_condition; 

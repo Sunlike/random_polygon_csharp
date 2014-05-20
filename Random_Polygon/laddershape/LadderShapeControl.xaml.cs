@@ -21,9 +21,9 @@ namespace Random_Polygon.laddershape
     /// <summary>
     /// Interaction logic for laddershape_polygon.xaml
     /// </summary>
-    public partial class laddershape_polygon : Window, INotifyPropertyChanged
+    public partial class LadderShapeControl : UserControl, INotifyPropertyChanged
     {
-        public laddershape_polygon()
+        public LadderShapeControl()
         {
             InitializeComponent();
             ui_condition.DataContext = m_ladder_condition; 
@@ -115,7 +115,7 @@ namespace Random_Polygon.laddershape
                 System.Drawing.Rectangle box = new System.Drawing.Rectangle();
                 box.X = rand.Next((int)container.DownLayer - 1) + 1;
                 box.Y = rand.Next((int)container.DownLayer - 1) + 1;
-                box.Width = (int)container.DownLayer;
+                box.Width = (int)condition.MinRadius*2;
                 box.Height = box.Width;
 
                 ExtendedPolygon polygon = null;
@@ -177,9 +177,7 @@ namespace Random_Polygon.laddershape
                         if (bSuccess)
                         {
                             container.put(polygon);
-
                             AddPolygon(polygon, ui_containor, condition, container);
-
                             break;
                         }
                     }
@@ -187,9 +185,7 @@ namespace Random_Polygon.laddershape
                 else
                 {
                     container.put(polygon);
-
                     AddPolygon(polygon, ui_containor, condition, container);
-
                 }
 
 
@@ -201,6 +197,8 @@ namespace Random_Polygon.laddershape
                     break;
                 }
             }
+
+            Condation_Enable = true;
 
            
 

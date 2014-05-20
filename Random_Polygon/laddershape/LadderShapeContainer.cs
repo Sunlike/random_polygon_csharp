@@ -32,7 +32,7 @@ namespace Random_Polygon.laddershape
             get;
             set;
         }
-        private static int maxCount = 7;
+        private static int maxCount = 5;
 
         public LadderShapeContainer( int upLayer,int downLayer,int height)
         {
@@ -178,54 +178,56 @@ namespace Random_Polygon.laddershape
 
             Point center = new Point(x + width / 2, y + height / 2);
 
-            RectangleContainer mainRectangle = new RectangleContainer(m_laddershape.Points[1].X, 0, (int)m_laddershape.Up_layer, (int)m_laddershape.Height);
-            RectangleContainer section1 = new RectangleContainer(x, y, (int)(m_laddershape.Down_layer - m_laddershape.Up_layer)/2, height);
-            RectangleContainer section2 = new RectangleContainer((int)(m_laddershape.Down_layer + m_laddershape.Up_layer) / 2, y, (int)(m_laddershape.Down_layer - m_laddershape.Up_layer) / 2, height);
+            //RectangleContainer mainRectangle = new RectangleContainer(m_laddershape.Points[1].X, 0, (int)m_laddershape.Up_layer, (int)m_laddershape.Height);
+            //RectangleContainer section1 = new RectangleContainer(x, y, (int)(m_laddershape.Down_layer - m_laddershape.Up_layer)/2, height);
+            //RectangleContainer section2 = new RectangleContainer((int)(m_laddershape.Down_layer + m_laddershape.Up_layer) / 2, y, (int)(m_laddershape.Down_layer - m_laddershape.Up_layer) / 2, height);
             
-            if (mainRectangle.contains(polygon))
-            {
-                return  1 + mainRectangle.getQuadrant(polygon);
-            }
-            else if (section1.contains(polygon))
-            {
-                return 6;
-            }
-            else if (section1.contains(polygon))
-            {
-                return 7;
-            }
-            else
-            {
-                return 0;
-            }
-
-            
-            
-            //RectangleContainer section1 = new RectangleContainer(x, y, width / 2, height / 2);
-            //RectangleContainer section2 = new RectangleContainer(center.X, y, width / 2, height / 2);
-            //RectangleContainer section3 = new RectangleContainer(x, center.Y, width / 2, height / 2);
-            //RectangleContainer section4 = new RectangleContainer(center.X, center.Y, width / 2, height / 2);
-
-            //if (section1.contains(polygon))
+            //if (mainRectangle.contains(polygon))
             //{
-            //    return 1;
+            //    int location =   1 + mainRectangle.getQuadrant(polygon);
+            //    polygon.Quadrant = location;
+            //    return location;
             //}
-            //else if (section2.contains(polygon))
+            //else if (section1.contains(polygon))
             //{
-            //    return 2;
+            //    return 6;
             //}
-            //else if (section3.contains(polygon))
+            //else if (section1.contains(polygon))
             //{
-            //    return 3;
-            //}
-            //else if (section4.contains(polygon))
-            //{
-            //    return 4;
+            //    return 7;
             //}
             //else
             //{
             //    return 0;
             //}
+
+
+
+            RectangleContainer section1 = new RectangleContainer(x, y, width / 2, height / 2);
+            RectangleContainer section2 = new RectangleContainer(center.X, y, width / 2, height / 2);
+            RectangleContainer section3 = new RectangleContainer(x, center.Y, width / 2, height / 2);
+            RectangleContainer section4 = new RectangleContainer(center.X, center.Y, width / 2, height / 2);
+
+            if (section1.contains(polygon))
+            {
+                return 1;
+            }
+            else if (section2.contains(polygon))
+            {
+                return 2;
+            }
+            else if (section3.contains(polygon))
+            {
+                return 3;
+            }
+            else if (section4.contains(polygon))
+            {
+                return 4;
+            }
+            else
+            {
+                return 0;
+            }
         }
 
         public RectangleContainer GetBoundBox()

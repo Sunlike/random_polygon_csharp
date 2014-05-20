@@ -100,13 +100,7 @@ namespace Random_Polygon.laddershape
             if (rect.Contains((int)x, (int)y))
             {
                 return true;
-            }
-            else
-            {
-               return false;
-            }
-
-
+            } 
 
             int i = 0, j = points.Count-1;
             for (i = 0; i < points.Count; ++i)
