@@ -67,6 +67,7 @@
                     </StackPanel>
 
                 </Border>
+               
                 <Border BorderThickness="0,0,0,1" BorderBrush="Black">
                     <StackPanel Orientation="Vertical" x:Name="ui_result">
                         <TextBlock Height ="30" VerticalAlignment="Stretch" TextAlignment="Center" Background="Beige" IsHitTestVisible="False" HorizontalAlignment="Stretch">生成的中间信息</TextBlock>

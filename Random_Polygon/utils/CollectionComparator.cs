@@ -128,9 +128,7 @@ namespace Random_Polygon
                 {
                     return -1;
                 }
-            }
-
-            return 1;
+            } 
         }
 
 
