@@ -315,6 +315,8 @@ namespace Random_Polygon.rectangle
             m_recover_radio.Clear();
             LogInfo = "";
             CoverRadio = "0";
+
+           
             bg_draw.Children.Add(rect_container);
             if (null == sw)
             {

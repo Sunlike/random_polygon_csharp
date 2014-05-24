@@ -93,7 +93,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="circle\BoolToVisibilityConverter.cs" />
+    <Compile Include="circle\DoubleToPercentConverter.cs" />
     <Compile Include="circle\RadioControl.cs" />
+    <Compile Include="usercontrol\editbox.cs" />
+    <Compile Include="usercontrol\editboxadorner.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>

@@ -29,6 +29,7 @@ namespace Random_Polygon.circle
             ui_condition.DataContext = m_circle_condition; 
             this.ui_result.DataContext = this;
             this.DataContext = this;
+            layer_condaition.DataContext = this.m_circle_condition.RatioControlList;
            
         }
 
@@ -147,6 +148,7 @@ namespace Random_Polygon.circle
                     condition.RatioControlList.UpdateTotalCount();
 
                     ratioControl = condition.RatioControlList.getMinRatio();
+                    Condation_Enable = true;
                 }
             }
         }
@@ -221,8 +223,10 @@ namespace Random_Polygon.circle
 
         public void run(object parameters)
         {
+            sw.Start();
             RThreadParameters threadParameter = parameters as RThreadParameters;
             genteraterRun(threadParameter.Condition, threadParameter.Ui_containor);
+            sw.Stop();
 
         }
         
@@ -285,6 +289,9 @@ namespace Random_Polygon.circle
            
             LogInfo = "";
             CoverRadio = "0";
+
+            m_circle_condition.RatioControlList.ClearGeneraterInfo();
+
             bg_draw.Children.Add(rect_container);
             if (null == sw)
             {
@@ -309,6 +316,8 @@ namespace Random_Polygon.circle
                 Debug.WriteLine("canStopThread = true");
             }));
         }
+
+      
     }
 
 

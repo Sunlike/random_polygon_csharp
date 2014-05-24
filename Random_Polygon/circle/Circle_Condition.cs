@@ -29,37 +29,37 @@ namespace Random_Polygon
         public int MinRadius
         {
             get { return m_MinRadius; }
-            set { m_MinRadius = value; }
+            set { m_MinRadius = value; SubscribePropertyChanged("MinRadius"); }
         }
         private int m_MaxRadius = 60;
         public int MaxRadius
         {
             get { return m_MaxRadius; }
-            set { m_MaxRadius = value; }
+            set { m_MaxRadius = value; SubscribePropertyChanged("MaxRadius"); }
         }
         private int m_MinAngle = 10;
         public int MinAngle
         {
             get { return m_MinAngle; }
-            set { m_MinAngle = value; }
+            set { m_MinAngle = value; SubscribePropertyChanged("MinAngle"); }
         }
         private int m_MaxAngle = 179;
         public int MaxAngle
         {
             get { return m_MaxAngle; }
-            set { m_MaxAngle = value; }
+            set { m_MaxAngle = value; SubscribePropertyChanged("MaxAngle"); }
         }
         private int m_MinCoverRadio = 50;
         public int MinCoverRadio
         {
             get { return m_MinCoverRadio; }
-            set { m_MinCoverRadio = value; }
+            set { m_MinCoverRadio = value; SubscribePropertyChanged("MinCoverRadio"); }
         }
         private int m_IterCount = 25000;
         public int IterCount
         {
             get { return m_IterCount; }
-            set { m_IterCount = value; }
+            set { m_IterCount = value; SubscribePropertyChanged("IterCount"); }
         }
 
 
@@ -67,7 +67,7 @@ namespace Random_Polygon
         public int Radius
         {
             get { return m_radius; }
-            set { m_radius = value; }
+            set { m_radius = value; SubscribePropertyChanged("Radius"); }
         }
 
         private int m_stepX = -1;

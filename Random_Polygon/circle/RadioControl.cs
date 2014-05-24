@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace Random_Polygon.circle
 {
-    public class RatioControl
+    public class RatioControl:INotifyPropertyChanged
     {
 
         private int key = 3;
@@ -19,13 +20,25 @@ namespace Random_Polygon.circle
         public double TargetRatio
         {
             get { return m_TargetRatio; }
-            set { m_TargetRatio = value; caldiff(); }
+            set 
+            { 
+                m_TargetRatio = value; 
+
+
+                  
+
+
+                caldiff();
+                SubscribePropertyChanged("TargetRatio");
+            }
         }
         private double m_RealRatio = 0.0;
         public double RealRatio
         {
             get { return m_RealRatio; }
-            set { m_RealRatio = value; caldiff(); }
+            set { m_RealRatio = value; caldiff();
+            SubscribePropertyChanged("RealRatio");
+            }
         }
         public RatioControl(int key)
         {
@@ -42,7 +55,9 @@ namespace Random_Polygon.circle
         public int Count
         {
             get { return m_Count; }
-            set { m_Count = value; calreal(); }
+            set { m_Count = value; calreal();
+            SubscribePropertyChanged("Count");
+            }
         }
         public double Diff = 0;
 
@@ -54,6 +69,7 @@ namespace Random_Polygon.circle
             {
                 m_totalCount = value;
                 calreal();
+                SubscribePropertyChanged("TotalCount");
             }
         }
         private void caldiff()
@@ -74,6 +90,27 @@ namespace Random_Polygon.circle
             return "Target:" + TargetRatio.ToString() + "\n\rReal:" + RealRatio + "\n\rCount:" + Count + "/ TotalCount:" + TotalCount.ToString() + "\n\r";
         }
 
+        public void ClearGenteraterInfo()
+        {
+            TotalCount = 0;
+            Count = 0;
+            RealRatio = 0;
+        }
+
+      
+
+        #region INotifyPropertyChanged Members
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void SubscribePropertyChanged(string propertyName)
+        {
+            if(null != PropertyChanged)
+            {
+                this.PropertyChanged(this,new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        #endregion
     }
 
     public class RatioControlList
@@ -175,5 +212,13 @@ namespace Random_Polygon.circle
 
         }
 
+
+        public void ClearGeneraterInfo()
+        {
+            foreach (RatioControl ratio in this.m_RatioList)
+            {
+                ratio.ClearGenteraterInfo();
+            }
+        }
     }
 }
