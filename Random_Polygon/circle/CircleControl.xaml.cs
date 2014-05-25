@@ -148,7 +148,7 @@ namespace Random_Polygon.circle
                     condition.RatioControlList.UpdateTotalCount();
 
                     ratioControl = condition.RatioControlList.getMinRatio();
-                    Condation_Enable = true;
+                
                 }
             }
         }
@@ -206,7 +206,7 @@ namespace Random_Polygon.circle
                 if (radio > condition.MinCoverRadio)
                 {
 
-                    this.Dispatcher.BeginInvoke(DispatcherPriority.Send, new Action(
+                    this.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(
                                  () =>
                                  {
                                      this.m_circle_condition.RatioControlList = condition.RatioControlList;
@@ -227,6 +227,7 @@ namespace Random_Polygon.circle
             RThreadParameters threadParameter = parameters as RThreadParameters;
             genteraterRun(threadParameter.Condition, threadParameter.Ui_containor);
             sw.Stop();
+            Condation_Enable = true;
 
         }
         
@@ -234,8 +235,8 @@ namespace Random_Polygon.circle
 
         // 异步函数，保证其他线程能在UI 线程上进行操作
         private void AddPolygon(ExtendedPolygon polygon, Canvas ui_container, Circle_Condition condition, CircleContainer container)
-        { 
-            this.Dispatcher.BeginInvoke(DispatcherPriority.Send, new Action(
+        {
+            this.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(
               () =>
               {
                   CostTime = sw.ElapsedMilliseconds.ToString();
@@ -276,7 +277,7 @@ namespace Random_Polygon.circle
 
 
         #endregion
-
+        private Thread m_thread = null;
         private void StartButton_Click(object sender, RoutedEventArgs e)
         {
             Condation_Enable = false;
@@ -297,24 +298,34 @@ namespace Random_Polygon.circle
             {
                 sw = new Stopwatch();
             }
-
+            sw.Reset();
 
             // 工作线程，生成多边形
-            Thread thread = new Thread(new ParameterizedThreadStart(run));
-            thread.SetApartmentState(ApartmentState.STA); //Set the thread to STA
-            //thread.IsBackground = true;
+            
+            
+            m_thread = new Thread(new ParameterizedThreadStart(run));
+           
+         
+            m_thread.IsBackground = true;
+            m_thread.Priority = ThreadPriority.BelowNormal;
             RThreadParameters param = new RThreadParameters(m_circle_condition, bg_draw);
-            thread.Start(param);
+            m_thread.Start(param);
         }
 
         private void StopButton_Click(object sender, RoutedEventArgs e)
         {
-            this.Dispatcher.BeginInvoke(DispatcherPriority.Send, new Action(
-            () =>
-            {
+           // this.Dispatcher.BeginInvoke(DispatcherPriority.Send, new Action(
+          //  () =>
+          //  {
                 canStopThread = true;
+                if (m_thread != null && m_thread.IsAlive)
+                {
+                    m_thread.Abort(1000);
+                }
+
+                Condation_Enable = true;
                 Debug.WriteLine("canStopThread = true");
-            }));
+           // }));
         }
 
       
