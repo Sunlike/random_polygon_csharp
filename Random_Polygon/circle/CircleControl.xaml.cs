@@ -26,15 +26,15 @@ namespace Random_Polygon.circle
         public CircleControl()
         {
             InitializeComponent();
-            ui_condition.DataContext = m_circle_condition; 
+            ui_condition.DataContext = m_circle_condition;
             this.ui_result.DataContext = this;
             this.DataContext = this;
             layer_condaition.DataContext = this.m_circle_condition.RatioControlList;
-           
+
         }
 
         private Circle_Condition m_circle_condition = new Circle_Condition();
-         
+
         private string costTime = "0";
         public string CostTime
         {
@@ -80,12 +80,12 @@ namespace Random_Polygon.circle
         #region 随机生成多边形的方法接口
         public static ExtendedPolygon randPolygonWithinBox(System.Drawing.Rectangle box, int edgeNum, int minAngle, int maxAngle)
         {
-            
+
             ExtendedPolygonBuilder pBuilder = new ExtendedPolygonBuilder();
             return pBuilder.buildPolygon(box, edgeNum, minAngle, maxAngle);
         }
         public static ExtendedPolygon randPolygonWithinBox(CircleContainer box, int edgeNum, int minRadius, int maxRadius, int minAngle, int maxAngle)
-        {    
+        {
             Circle_PolygonBuilder pBuilder = new Circle_PolygonBuilder(box);
             return pBuilder.randPolygonWithCircle(edgeNum, minRadius, maxRadius, minAngle, maxAngle);
         }
@@ -111,8 +111,8 @@ namespace Random_Polygon.circle
                     break;
                 }
                 System.Drawing.Rectangle box = new System.Drawing.Rectangle();
-                box.X = rand.Next((int)container.Radius*2 - 1) + 1;
-                box.Y = rand.Next((int)container.Radius*2 - 1) + 1;
+                box.X = rand.Next((int)container.Radius * 2 - 1) + 1;
+                box.Y = rand.Next((int)container.Radius * 2 - 1) + 1;
                 box.Width = condition.MinRadius * 2;
                 box.Height = box.Width;
 
@@ -142,18 +142,18 @@ namespace Random_Polygon.circle
 
                 if (polygon != null)
                 {
-                    container.put(polygon);  
+                    container.put(polygon);
                     AddPolygon(polygon, ui_container, condition, container);
                     condition.RatioControlList.UpdateCount(ratioControl.Key);
                     condition.RatioControlList.UpdateTotalCount();
 
                     ratioControl = condition.RatioControlList.getMinRatio();
-                
+
                 }
             }
         }
 
-   
+
         public void genteraterRun(Circle_Condition condition, Canvas ui_containor)
         {
             CircleContainer container = new CircleContainer(condition.Radius, condition.Radius, condition.Radius);
@@ -179,24 +179,20 @@ namespace Random_Polygon.circle
                         bSuccess = container.canSafePut(polygon);
                         if (bSuccess)
                         {
-                            container.put(polygon);
-
+                            container.put(polygon); 
                             AddPolygon(polygon, ui_containor, condition, container);
                             condition.RatioControlList.UpdateCount(ratioControl.Key);
-                            condition.RatioControlList.UpdateTotalCount();
-
+                            condition.RatioControlList.UpdateTotalCount(); 
                             break;
                         }
                     }
                 }
                 else
                 {
-                    container.put(polygon);
-
+                    container.put(polygon); 
                     AddPolygon(polygon, ui_containor, condition, container);
                     condition.RatioControlList.UpdateCount(ratioControl.Key);
-                    condition.RatioControlList.UpdateTotalCount();
-
+                    condition.RatioControlList.UpdateTotalCount(); 
                 }
 
 
@@ -217,7 +213,7 @@ namespace Random_Polygon.circle
                 }
             }
 
-           
+
 
         }
 
@@ -230,7 +226,7 @@ namespace Random_Polygon.circle
             Condation_Enable = true;
 
         }
-        
+
         private Stopwatch sw = new Stopwatch();
 
         // 异步函数，保证其他线程能在UI 线程上进行操作
@@ -283,11 +279,11 @@ namespace Random_Polygon.circle
             Condation_Enable = false;
             canStopThread = false;
 
-            rect_container.Width = 2* m_circle_condition.Radius;
+            rect_container.Width = 2 * m_circle_condition.Radius;
             rect_container.Height = 2 * m_circle_condition.Radius;
             rect_container.Visibility = Visibility.Visible;
             bg_draw.Children.Clear();
-           
+
             LogInfo = "";
             CoverRadio = "0";
 
@@ -301,11 +297,11 @@ namespace Random_Polygon.circle
             sw.Reset();
 
             // 工作线程，生成多边形
-            
-            
+
+
             m_thread = new Thread(new ParameterizedThreadStart(run));
-           
-         
+
+
             m_thread.IsBackground = true;
             m_thread.Priority = ThreadPriority.BelowNormal;
             RThreadParameters param = new RThreadParameters(m_circle_condition, bg_draw);
@@ -314,21 +310,19 @@ namespace Random_Polygon.circle
 
         private void StopButton_Click(object sender, RoutedEventArgs e)
         {
-           // this.Dispatcher.BeginInvoke(DispatcherPriority.Send, new Action(
-          //  () =>
-          //  {
-                canStopThread = true;
-                if (m_thread != null && m_thread.IsAlive)
-                {
-                    m_thread.Abort(1000);
-                }
 
-                Condation_Enable = true;
-                Debug.WriteLine("canStopThread = true");
-           // }));
+            canStopThread = true;
+            if (m_thread != null && m_thread.IsAlive)
+            {
+                m_thread.Abort(1000);
+            }
+
+            Condation_Enable = true;
+            Debug.WriteLine("canStopThread = true");
+
         }
 
-      
+
     }
 
 

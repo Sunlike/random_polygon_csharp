@@ -26,14 +26,14 @@ namespace Random_Polygon.laddershape
         public LadderShapeControl()
         {
             InitializeComponent();
-            ui_condition.DataContext = m_ladder_condition; 
+            ui_condition.DataContext = m_ladder_condition;
             this.ui_result.DataContext = this;
             this.DataContext = this;
-           
+            layer_condaition.DataContext = this.m_ladder_condition.RatioControlList;
         }
 
         private LadderShap_Condition m_ladder_condition = new LadderShap_Condition();
-         
+
         private string costTime = "0";
         public string CostTime
         {
@@ -77,17 +77,14 @@ namespace Random_Polygon.laddershape
         #endregion
 
         #region 随机生成多边形的方法接口
-        public static ExtendedPolygon randPolygonWithinBox(System.Drawing.Rectangle box, int maxEdgeNum, int minAngle, int maxAngle)
+        public static ExtendedPolygon randPolygonWithinBox(System.Drawing.Rectangle box, int edgeNum, int minAngle, int maxAngle)
         {
-            Random rand = new Random(DateTime.Now.Millisecond);
-            int edgeNum = 3 + rand.Next(maxEdgeNum - 2);
+            
             ExtendedPolygonBuilder pBuilder = new ExtendedPolygonBuilder();
             return pBuilder.buildPolygon(box, edgeNum, minAngle, maxAngle);
         }
-        public static ExtendedPolygon randPolygonWithinBox(LadderShapeContainer box, int maxEdgeNum, int minRadius, int maxRadius, int minAngle, int maxAngle)
-        {
-            Random rand = new Random(DateTime.Now.Millisecond);
-            int edgeNum = 3 + rand.Next(maxEdgeNum - 2);
+        public static ExtendedPolygon randPolygonWithinBox(LadderShapeContainer box, int edgeNum, int minRadius, int maxRadius, int minAngle, int maxAngle)
+        {   
             LadderShape_PolygonBuilder pBuilder = new LadderShape_PolygonBuilder(box);
             return pBuilder.randPolygonWithCircle(edgeNum, minRadius, maxRadius, minAngle, maxAngle);
         }
@@ -103,7 +100,7 @@ namespace Random_Polygon.laddershape
         //              3.1   For each of the rest boxes, randomly run polygons within
         //              3.2   Put the generated polygons into container
         //              4     Repeat for reasonable times
-        private void awesomelyFill(LadderShapeContainer container, Canvas ui_container, LadderShap_Condition condition)
+        private void awesomelyFill(LadderShapeContainer container, Canvas ui_container, ref LadderShap_Condition condition)
         {
             Random rand = new Random(DateTime.Now.Millisecond);
             for (int i = 0; i < condition.IterCount; ++i)
@@ -115,10 +112,11 @@ namespace Random_Polygon.laddershape
                 System.Drawing.Rectangle box = new System.Drawing.Rectangle();
                 box.X = rand.Next((int)container.DownLayer - 1) + 1;
                 box.Y = rand.Next((int)container.DownLayer - 1) + 1;
-                box.Width = (int)condition.MinRadius*2;
+                box.Width = (int)condition.MinRadius * 2;
                 box.Height = box.Width;
 
                 ExtendedPolygon polygon = null;
+                RatioControl ratioControl = condition.RatioControlList.getMinRatio();
                 bool bSuccess = false;
                 for (int j = 0; j < condition.MaxRadius * 2; j += condition.ExpandStep)
                 {
@@ -129,7 +127,7 @@ namespace Random_Polygon.laddershape
                     box.Width += condition.ExpandStep;
                     box.Height += condition.ExpandStep;
 
-                    ExtendedPolygon tmpPolygon = randPolygonWithinBox(box, condition.MaxEdges, condition.MinAngle, condition.MaxAngle);
+                    ExtendedPolygon tmpPolygon = randPolygonWithinBox(box,  ratioControl.Key, condition.MinAngle, condition.MaxAngle);
                     bSuccess = container.canSafePut(tmpPolygon);
                     if (bSuccess)
                     {
@@ -143,10 +141,11 @@ namespace Random_Polygon.laddershape
 
                 if (polygon != null)
                 {
-                    container.put(polygon);
-
-
+                    container.put(polygon); 
                     AddPolygon(polygon, ui_container, condition, container);
+                    condition.RatioControlList.UpdateCount(ratioControl.Key);
+                    condition.RatioControlList.UpdateTotalCount(); 
+                    ratioControl = condition.RatioControlList.getMinRatio();
                 }
             }
         }
@@ -154,7 +153,7 @@ namespace Random_Polygon.laddershape
 
         public void genteraterRun(LadderShap_Condition condition, Canvas ui_containor)
         {
-            LadderShapeContainer container = new LadderShapeContainer(condition.UpLayer,condition.DownLayer,condition.Height);
+            LadderShapeContainer container = new LadderShapeContainer(condition.UpLayer, condition.DownLayer, condition.Height);
 
             while (true)
             {
@@ -163,7 +162,8 @@ namespace Random_Polygon.laddershape
                     break;
                 }
                 bool bSuccess = false;
-                ExtendedPolygon polygon = randPolygonWithinBox(container, condition.MaxEdges, condition.MinRadius, condition.MaxRadius, condition.MinAngle, condition.MaxAngle);
+                RatioControl ratioControl = condition.RatioControlList.getMinRatio();
+                ExtendedPolygon polygon = randPolygonWithinBox(container, ratioControl.Key, condition.MinRadius, condition.MaxRadius, condition.MinAngle, condition.MaxAngle);
                 bSuccess = container.canSafePut(polygon);
                 if (!bSuccess)
                 {
@@ -178,6 +178,8 @@ namespace Random_Polygon.laddershape
                         {
                             container.put(polygon);
                             AddPolygon(polygon, ui_containor, condition, container);
+                            condition.RatioControlList.UpdateCount(ratioControl.Key);
+                            condition.RatioControlList.UpdateTotalCount(); 
                             break;
                         }
                     }
@@ -186,21 +188,25 @@ namespace Random_Polygon.laddershape
                 {
                     container.put(polygon);
                     AddPolygon(polygon, ui_containor, condition, container);
+                    condition.RatioControlList.UpdateCount(ratioControl.Key);
+                    condition.RatioControlList.UpdateTotalCount(); 
                 }
 
 
-                this.awesomelyFill(container, ui_containor, condition);
+                this.awesomelyFill(container, ui_containor, ref condition);
 
                 double radio = container.getCoverageRatio() * 100;
                 if (radio > condition.MinCoverRadio)
                 {
+                    this.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(
+                                () =>
+                                {
+                                    this.m_ladder_condition.RatioControlList = condition.RatioControlList;
+
+                                }));
                     break;
                 }
-            }
-
-            Condation_Enable = true;
-
-           
+            } 
 
         }
 
@@ -210,14 +216,14 @@ namespace Random_Polygon.laddershape
             LThreadParameters threadParameter = parameters as LThreadParameters;
             genteraterRun(threadParameter.Condition, threadParameter.Ui_containor);
             sw.Stop();
-
+            Condation_Enable = true;
         }
-        
+
         private Stopwatch sw = new Stopwatch();
 
         // 异步函数，保证其他线程能在UI 线程上进行操作
         private void AddPolygon(ExtendedPolygon polygon, Canvas ui_container, LadderShap_Condition condition, LadderShapeContainer container)
-        { 
+        {
             this.Dispatcher.BeginInvoke(DispatcherPriority.Send, new Action(
               () =>
               {
@@ -260,12 +266,16 @@ namespace Random_Polygon.laddershape
 
         #endregion
 
+
+        #region  Button Event
+
+        private Thread m_thread = null;
         private void StartButton_Click(object sender, RoutedEventArgs e)
         {
             Condation_Enable = false;
             canStopThread = false;
 
-            rect_container.Width =  m_ladder_condition.DownLayer;
+            rect_container.Width = m_ladder_condition.DownLayer;
             rect_container.Height = m_ladder_condition.DownLayer;
 
             PointCollection pts = new PointCollection();
@@ -279,7 +289,8 @@ namespace Random_Polygon.laddershape
 
             rect_container.Visibility = Visibility.Visible;
             bg_draw.Children.Clear();
-           
+            m_ladder_condition.RatioControlList.ClearGeneraterInfo();
+
             LogInfo = "";
             CoverRadio = "0";
             bg_draw.Children.Add(rect_container);
@@ -287,25 +298,29 @@ namespace Random_Polygon.laddershape
             {
                 sw = new Stopwatch();
             }
-
+            sw.Reset();
 
             // 工作线程，生成多边形
-            Thread thread = new Thread(new ParameterizedThreadStart(run));
-            thread.SetApartmentState(ApartmentState.STA); //Set the thread to STA
-            //thread.IsBackground = true;
+            m_thread = new Thread(new ParameterizedThreadStart(run));
+
+            m_thread.IsBackground = true;
             LThreadParameters param = new LThreadParameters(m_ladder_condition, bg_draw);
-            thread.Start(param);
+            m_thread.Start(param);
         }
 
         private void StopButton_Click(object sender, RoutedEventArgs e)
         {
-            this.Dispatcher.BeginInvoke(DispatcherPriority.Send, new Action(
-            () =>
+            canStopThread = true;
+            if (m_thread != null && m_thread.IsAlive)
             {
-                canStopThread = true;
-                Debug.WriteLine("canStopThread = true");
-            }));
+                m_thread.Abort(1000);
+            }
+
+            Condation_Enable = true;
+            Debug.WriteLine("canStopThread = true");
         }
+
+        #endregion
     }
 
 
