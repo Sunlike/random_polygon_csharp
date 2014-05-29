@@ -2,108 +2,95 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.ComponentModel;
+using Random_Polygon.circle;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization;
 
 namespace Random_Polygon
 {
-    public class Condition
+    [Serializable]
+    public class Condition : INotifyPropertyChanged,ICloneable  
     {
         public Condition()
         {
-
+            MaxEdges = 5;
         }
-        public Condition(Condition  cdt)
-        {
-            MaxAngle = cdt.MaxAngle;
-            MaxEdges = cdt.MaxEdges;
-            MaxRadius = cdt.MaxRadius;
-           
-            MinAngle = cdt.MinAngle;
-            MinCoverRadio = cdt.MinCoverRadio;
-            MinRadius = cdt.MinRadius;
-
-            BoundaryWidth = cdt.BoundaryWidth;
-            BoundaryHeight = cdt.BoundaryHeight;
-
-            IterCount = cdt.IterCount;
-            ExpandStep = cdt.ExpandStep;
-
-            CHeight = cdt.CHeight;
-            CWidth = cdt.CWidth;
-
-            StepX = cdt.StepX;
-            StepY = cdt.StepY;
-            X = cdt.X;
-            Y = cdt.Y;
-
-        }
+       
+        
         private int m_MaxEdges = 5;
         public int MaxEdges
         {
             get { return m_MaxEdges; }
-            set { m_MaxEdges = value; }
+            set { m_MaxEdges = value;
+            SubscribePropertyChanged("MaxEdges");
+            this.ratioControlList.Initialize(m_MaxEdges);
+            }
         }
         private int m_MinRadius = 5;
 
         public int MinRadius
         {
             get { return m_MinRadius; }
-            set { m_MinRadius = value; }
+            set { m_MinRadius = value; SubscribePropertyChanged("MinRadius"); }
         }
         private int m_MaxRadius = 60;
         public int MaxRadius
         {
             get { return m_MaxRadius; }
-            set { m_MaxRadius = value; }
+            set { m_MaxRadius = value; SubscribePropertyChanged("MaxRadius"); }
         }
         private int m_MinAngle = 10;
         public int MinAngle
         {
             get { return m_MinAngle; }
-            set { m_MinAngle = value; }
+            set { m_MinAngle = value; SubscribePropertyChanged("MinAngle"); }
         }
         private int m_MaxAngle = 179;
         public int MaxAngle
         {
             get { return m_MaxAngle; }
-            set { m_MaxAngle = value; }
+            set { m_MaxAngle = value; SubscribePropertyChanged("MaxAngle"); }
         }
         private int m_MinCoverRadio = 50;
         public int MinCoverRadio
         {
             get { return m_MinCoverRadio; }
-            set { m_MinCoverRadio = value; }
+            set { m_MinCoverRadio = value; SubscribePropertyChanged("MinCoverRadio"); }
         }
         private int m_IterCount = 25000;
         public int IterCount
         {
             get { return m_IterCount; }
-            set { m_IterCount = value; }
+            set { m_IterCount = value; SubscribePropertyChanged("IterCount"); }
         }
 
         private int x = 0;
         public int X
         {
             get { return x; }
-            set { x = value; }
+            set { x = value; SubscribePropertyChanged("X"); }
         }
         private int y = 0;
         public int Y
         {
             get { return y; }
-            set { y = value; }
+            set { y = value; SubscribePropertyChanged("Y"); }
         }
 
         private int m_Height = 250;
         public int CHeight
         {
             get { return m_Height; }
-            set { m_Height = value; }
+            set { m_Height = value; SubscribePropertyChanged("CHeight"); }
         }
         private int m_Width = 500;
         public int CWidth
         {
+
             get { return m_Width; }
-            set { m_Width = value; }
+            set { m_Width = value; SubscribePropertyChanged("CWidth"); }
         }
 
         private int m_stepX = -1;
@@ -131,13 +118,61 @@ namespace Random_Polygon
         public int BoundaryWidth
         {
             get { return m_BoundaryWidth; }
-            set { m_BoundaryWidth = value; }
+            set { m_BoundaryWidth = value; SubscribePropertyChanged("BoundaryWidth"); }
         }
         private int m_BoundaryHeight = 500;
         public int BoundaryHeight
         {
             get { return m_BoundaryHeight; }
-            set { m_BoundaryHeight = value; }
+            set { m_BoundaryHeight = value; SubscribePropertyChanged("BoundaryHeight"); }
         }
+
+
+        private RatioControlList ratioControlList = new RatioControlList();
+
+       
+        public Random_Polygon.circle.RatioControlList RatioControlList
+        {
+            get { return ratioControlList; }
+            set { ratioControlList = value; SubscribePropertyChanged("RatioControlList"); }
+        }
+
+
+        #region INotifyPropertyChanged Members
+        [field: NonSerialized]  
+        public event PropertyChangedEventHandler PropertyChanged;
+      
+        private void SubscribePropertyChanged(string propertyName)
+        {
+            if (this.PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        #endregion
+
+       
+        public Condition DeepClone()
+        {
+            using (Stream objectStream = new MemoryStream())
+            {
+                IFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(objectStream, this);
+                objectStream.Seek(0, SeekOrigin.Begin);
+                return formatter.Deserialize(objectStream) as Condition;
+            }  
+        }
+
+
+
+        #region ICloneable Members
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
+
+        #endregion
     }
 }

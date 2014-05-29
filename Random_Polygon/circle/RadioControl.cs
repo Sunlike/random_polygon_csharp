@@ -7,6 +7,7 @@ using System.ComponentModel;
 
 namespace Random_Polygon.circle
 {
+    [Serializable]
     public class RatioControl:INotifyPropertyChanged
     {
 
@@ -100,7 +101,7 @@ namespace Random_Polygon.circle
       
 
         #region INotifyPropertyChanged Members
-
+        [field: NonSerialized]  
         public event PropertyChangedEventHandler PropertyChanged;
         private void SubscribePropertyChanged(string propertyName)
         {
@@ -112,7 +113,7 @@ namespace Random_Polygon.circle
 
         #endregion
     }
-
+    [Serializable]
     public class RatioControlList
     {
         private ObservableCollection<RatioControl> m_RatioList = new ObservableCollection<RatioControl>();

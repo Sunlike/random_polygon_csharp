@@ -1,8 +1,28 @@
 ﻿<UserControl x:Class="Random_Polygon.rectangle.RectangleControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converter="clr-namespace:Random_Polygon.circle"
     >
-   
+
+    <UserControl.Resources>
+        <converter:DoubleToPercentConverter x:Key="DoubleToPercentConverter"/>
+        <converter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+
+
+
+        <Style TargetType="{x:Type TextBlock}" x:Key="GridBlockStyle">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Visibility"  Value="{Binding Path=IsSelected, RelativeSource={RelativeSource FindAncestor, 
+                     AncestorType={x:Type ListViewItem}}, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=False}" />
+        </Style>
+
+        <Style TargetType="{x:Type FrameworkElement}" x:Key="GridEditStyle">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Visibility" Value="{Binding Path=IsSelected,  RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}},
+                                                 Converter={StaticResource BoolToVisibilityConverter},  ConverterParameter=True}" />
+        </Style>
+    </UserControl.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -31,7 +51,7 @@
                         </StackPanel>
 
                         <Border BorderThickness="1"  BorderBrush="Blue">
-                            <StackPanel Orientation="Vertical" Margin="10,0,0,0"  >
+                            <StackPanel Orientation="Vertical" Margin="0"  >
                                 <TextBlock Height ="30" VerticalAlignment="Stretch" TextAlignment="Center" Background="Beige" IsHitTestVisible="False" HorizontalAlignment="Stretch">分层填充条件控制</TextBlock>
 
                                 <StackPanel Orientation="Horizontal">
@@ -80,6 +100,29 @@
                                     <TextBlock Text="{Binding IterCount}"  Width ="50"></TextBlock>
                                     <Slider Width="150" Value="{Binding IterCount}" Minimum="1000" Maximum="300000" TickPlacement="None" IsEnabled="{Binding Condation_Enable}"/>
                                 </StackPanel>
+
+                                <ListView x:Name="layer_condaition_control" MinHeight="150" MaxHeight="300" ItemsSource="{Binding RatioList}">
+                                    <ListView.View>
+                                        <GridView>
+                                            <GridViewColumn Header="边数" Width="30"  DisplayMemberBinding="{Binding Key}"/>
+                                            <GridViewColumn Header="目标比例"  Width="70">
+                                                <GridViewColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <Grid>
+                                                            <TextBlock x:Name="txt_ratio"  Text="{Binding Path=TargetRatio, Converter={StaticResource DoubleToPercentConverter}}" Style="{StaticResource GridBlockStyle}"/>
+                                                            <TextBox Text="{Binding Path=TargetRatio, Converter={StaticResource DoubleToPercentConverter}}"   Style="{StaticResource GridEditStyle}" />
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </GridViewColumn.CellTemplate>
+                                            </GridViewColumn>
+                                            <GridViewColumn Header="实际比例" Width="70" DisplayMemberBinding="{Binding RealRatio, Converter={StaticResource DoubleToPercentConverter}}" />
+                                            <GridViewColumn Header="数量"  Width="65" DisplayMemberBinding="{Binding Count}" />
+                                            <GridViewColumn Header="总数量" Width="65" DisplayMemberBinding="{Binding TotalCount}" />
+                                        </GridView>
+                                    </ListView.View>
+                                </ListView>
+
+
                             </StackPanel>
                         </Border>
                         <Grid >
@@ -94,7 +137,7 @@
 
                         </Grid>
 
-                        <ListView x:Name="layer_condaition"  Height="200">
+                        <ListView x:Name="layer_condaition"  Height="200" SelectionChanged="layer_condaition_SelectionChanged">
                             <ListView.View>
                                 <GridView>
                                     <GridViewColumn Header="最大边数" DisplayMemberBinding="{Binding MaxEdges}"/>
@@ -108,7 +151,7 @@
                                 </GridView>
                             </ListView.View>
                         </ListView>
-
+                       
                     </StackPanel>
 
                 </Border> 
@@ -143,5 +186,18 @@
             <Button Width="80" Click="StopButton_Click">停止</Button>
             <Button Width="80">保存</Button>
         </StackPanel>
+	<Popup x:Name="PopupControl" IsOpen="False" PlacementTarget="{Binding ElementName=layer_condaition}" Placement="Right"  MouseLeave="layer_condaition_MouseLeave" Margin="0,0,-312,49.5"  >
+ 	  <ListView x:Name="popup_condaition_control" MinHeight="150" MaxHeight="300" ItemsSource="{Binding RatioList}" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+        	<ListView.View>
+        		<GridView>
+        			<GridViewColumn Header="边数" Width="30"  DisplayMemberBinding="{Binding Key}"/>
+        			<GridViewColumn Header="目标比例"  Width="70" DisplayMemberBinding="{Binding TargetRatio, Converter={StaticResource DoubleToPercentConverter}}"/>
+        			<GridViewColumn Header="实际比例" Width="70" DisplayMemberBinding="{Binding RealRatio, Converter={StaticResource DoubleToPercentConverter}}" />
+        			<GridViewColumn Header="数量"  Width="65" DisplayMemberBinding="{Binding Count}" />
+        			<GridViewColumn Header="总数量" Width="65" DisplayMemberBinding="{Binding TotalCount}" />
+        		</GridView>
+        	</ListView.View>
+        </ListView>
+		</Popup>
     </Grid>
 </UserControl>
