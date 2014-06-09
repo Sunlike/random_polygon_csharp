@@ -4,16 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Windows.Data;
 
-namespace Random_Polygon.circle
+namespace Random_Polygon.Converters
 {
-    class DoubleToPercentConverter:IValueConverter
+    public class DoubleToPercentConverter:IValueConverter
     {
         #region IValueConverter Members
 
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             double ratio  = double.Parse(value.ToString());
-            string result = (ratio * 100).ToString("0.00");
+            string format = parameter == null ? "0" : parameter.ToString();
+            string result = (ratio * 100).ToString(format);
             return result + "%";
             
         }
@@ -27,4 +28,7 @@ namespace Random_Polygon.circle
 
         #endregion
     }
+
+   
+
 }

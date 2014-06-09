@@ -93,9 +93,14 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="circle\BoolToVisibilityConverter.cs" />
-    <Compile Include="circle\DoubleToPercentConverter.cs" />
+    <Compile Include="Converters\BoolReverseConverter.cs" />
+    <Compile Include="Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="circle\CircleRationCondition.cs" />
+    <Compile Include="Converters\DoubleToPercentConverter.cs" />
     <Compile Include="circle\RadioControl.cs" />
+    <Compile Include="Converters\IntToPercentConverter.cs" />
+    <Compile Include="laddershape\LadderShapeRationCondition.cs" />
+    <Compile Include="rectangle\RectRationCondition.cs" />
     <Compile Include="usercontrol\editbox.cs" />
     <Compile Include="usercontrol\editboxadorner.cs" />
     <Compile Include="MainWindow.xaml.cs">

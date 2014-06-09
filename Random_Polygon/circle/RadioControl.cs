@@ -10,6 +10,21 @@ namespace Random_Polygon.circle
     [Serializable]
     public class RatioControl:INotifyPropertyChanged
     {
+        public RatioControl()
+        {
+        }
+
+        public RatioControl(int key)
+        {
+            this.key = key;
+        }
+        public RatioControl(int key, double target)
+        {
+            this.key = key;
+            TargetRatio = target;
+            Diff = TargetRatio - RealRatio;
+        }
+
 
         private int key = 3;
         public int Key
@@ -17,18 +32,15 @@ namespace Random_Polygon.circle
             get { return key; }
             set { key = value; }
         }
-        private double m_TargetRatio = 0.0;
+
+
+        private double m_TargetRatio = 1.0;
         public double TargetRatio
         {
             get { return m_TargetRatio; }
             set 
             { 
                 m_TargetRatio = value; 
-
-
-                  
-
-
                 caldiff();
                 SubscribePropertyChanged("TargetRatio");
             }
@@ -41,17 +53,8 @@ namespace Random_Polygon.circle
             SubscribePropertyChanged("RealRatio");
             }
         }
-        public RatioControl(int key)
-        {
-            this.key = key;
-        }
-        public RatioControl(int key, double target)
-        {
-            this.key = key;
-            TargetRatio = target;
-            Diff = TargetRatio - RealRatio;
-        }
-
+       
+      
         private int m_Count = 0;
         public int Count
         {
@@ -135,7 +138,6 @@ namespace Random_Polygon.circle
         public double calculateTotalTargetRatio()
         {
             return m_RatioList.Sum(val => val.TargetRatio);
-
         }
 
         public void UpdateRatio(int key, double targetRatio)

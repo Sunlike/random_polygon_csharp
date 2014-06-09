@@ -26,13 +26,33 @@ namespace Random_Polygon.laddershape
         public LadderShapeControl()
         {
             InitializeComponent();
-            ui_condition.DataContext = m_ladder_condition;
             this.ui_result.DataContext = this;
-            this.DataContext = this;
-            layer_condaition.DataContext = this.m_ladder_condition.RatioControlList;
+            this.DataContext = m_RatioConditionList;
+            this.ui_condition.DataContext = m_uiCondition;
         }
 
-        private LadderShap_Condition m_ladder_condition = new LadderShap_Condition();
+        private LadderShapeRationCondition m_uiCondition = new LadderShapeRationCondition();
+
+        private LadderShapeRationConditionList m_RatioConditionList = new LadderShapeRationConditionList();
+        public LadderShapeRationConditionList RatioConditionList
+        {
+            get { return m_RatioConditionList; }
+            set { m_RatioConditionList = value; }
+        }
+
+        private bool openRatio = false;
+        public bool OpenRatio
+        {
+            get { return openRatio; }
+            set
+            {
+                openRatio = value;
+                if (!openRatio)
+                {
+                    m_uiCondition.ControlRatio.TargetRatio = 1.0;
+                }
+            }
+        }
 
         private string costTime = "0";
         public string CostTime
@@ -100,34 +120,35 @@ namespace Random_Polygon.laddershape
         //              3.1   For each of the rest boxes, randomly run polygons within
         //              3.2   Put the generated polygons into container
         //              4     Repeat for reasonable times
-        private void awesomelyFill(LadderShapeContainer container, Canvas ui_container, ref LadderShap_Condition condition)
+        private void awesomelyFill(LadderShapeContainer container)
         {
             Random rand = new Random(DateTime.Now.Millisecond);
-            for (int i = 0; i < condition.IterCount; ++i)
+            for (int i = 0; i < this.m_RatioConditionList.IterCount; ++i)
             {
                 if (canStopThread)
                 {
                     break;
                 }
+                LadderShapeRationCondition ratioControl = this.m_RatioConditionList.getMiniRatioControl();
                 System.Drawing.Rectangle box = new System.Drawing.Rectangle();
                 box.X = rand.Next((int)container.DownLayer - 1) + 1;
                 box.Y = rand.Next((int)container.DownLayer - 1) + 1;
-                box.Width = (int)condition.MinRadius * 2;
+                box.Width = (int)ratioControl.Condition.MinRadius * 2;
                 box.Height = box.Width;
 
                 ExtendedPolygon polygon = null;
-                RatioControl ratioControl = condition.RatioControlList.getMinRatio();
+              
                 bool bSuccess = false;
-                for (int j = 0; j < condition.MaxRadius * 2; j += condition.ExpandStep)
+                for (int j = 0; j < ratioControl.Condition.MaxRadius * 2; j += ratioControl.Condition.ExpandStep)
                 {
                     if (canStopThread)
                     {
                         break;
                     }
-                    box.Width += condition.ExpandStep;
-                    box.Height += condition.ExpandStep;
+                    box.Width += ratioControl.Condition.ExpandStep;
+                    box.Height += ratioControl.Condition.ExpandStep;
 
-                    ExtendedPolygon tmpPolygon = randPolygonWithinBox(box,  ratioControl.Key, condition.MinAngle, condition.MaxAngle);
+                    ExtendedPolygon tmpPolygon = randPolygonWithinBox(box, ratioControl.Condition.MaxEdges, ratioControl.Condition.MinAngle, ratioControl.Condition.MaxAngle);
                     bSuccess = container.canSafePut(tmpPolygon);
                     if (bSuccess)
                     {
@@ -141,19 +162,19 @@ namespace Random_Polygon.laddershape
 
                 if (polygon != null)
                 {
-                    container.put(polygon); 
-                    AddPolygon(polygon, ui_container, condition, container);
-                    condition.RatioControlList.UpdateCount(ratioControl.Key);
-                    condition.RatioControlList.UpdateTotalCount(); 
-                    ratioControl = condition.RatioControlList.getMinRatio();
+                    container.put(polygon);
+                    AddPolygon(polygon, container);
+                    ++ratioControl.ControlRatio.Count;
+                    this.RatioConditionList.UpdateTotalCount();
+                    ratioControl = this.m_RatioConditionList.getMiniRatioControl();
                 }
             }
         }
 
 
-        public void genteraterRun(LadderShap_Condition condition, Canvas ui_containor)
+        public void genteraterRun()
         {
-            LadderShapeContainer container = new LadderShapeContainer(condition.UpLayer, condition.DownLayer, condition.Height);
+            LadderShapeContainer container = new LadderShapeContainer(this.m_RatioConditionList.UpLayer, this.m_RatioConditionList.DownLayer, this.m_RatioConditionList.Height);
 
             while (true)
             {
@@ -162,24 +183,24 @@ namespace Random_Polygon.laddershape
                     break;
                 }
                 bool bSuccess = false;
-                RatioControl ratioControl = condition.RatioControlList.getMinRatio();
-                ExtendedPolygon polygon = randPolygonWithinBox(container, ratioControl.Key, condition.MinRadius, condition.MaxRadius, condition.MinAngle, condition.MaxAngle);
+                LadderShapeRationCondition ratioControl = this.m_RatioConditionList.getMiniRatioControl();
+                ExtendedPolygon polygon = randPolygonWithinBox(container, ratioControl.Condition.MaxEdges, ratioControl.Condition.MinRadius, ratioControl.Condition.MaxRadius, ratioControl.Condition.MinAngle, ratioControl.Condition.MaxAngle);
                 bSuccess = container.canSafePut(polygon);
                 if (!bSuccess)
                 {
                     for (int i = 0; i < 20; ++i)
                     {
                         Random rand = new Random(DateTime.Now.Millisecond);
-                        int deltX = condition.StepX + rand.Next(3);
-                        int deltY = condition.StepY;
+                        int deltX = ratioControl.Condition.StepX + rand.Next(3);
+                        int deltY = ratioControl.Condition.StepY;
                         polygon.translate(deltX, deltY);
                         bSuccess = container.canSafePut(polygon);
                         if (bSuccess)
                         {
                             container.put(polygon);
-                            AddPolygon(polygon, ui_containor, condition, container);
-                            condition.RatioControlList.UpdateCount(ratioControl.Key);
-                            condition.RatioControlList.UpdateTotalCount(); 
+                            AddPolygon(polygon, container);
+                            ++ratioControl.ControlRatio.Count;
+                            this.RatioConditionList.UpdateTotalCount();
                             break;
                         }
                     }
@@ -187,34 +208,28 @@ namespace Random_Polygon.laddershape
                 else
                 {
                     container.put(polygon);
-                    AddPolygon(polygon, ui_containor, condition, container);
-                    condition.RatioControlList.UpdateCount(ratioControl.Key);
-                    condition.RatioControlList.UpdateTotalCount(); 
+                    AddPolygon(polygon, container);
+                    ++ratioControl.ControlRatio.Count;
+                    this.RatioConditionList.UpdateTotalCount();
                 }
 
 
-                this.awesomelyFill(container, ui_containor, ref condition);
+                this.awesomelyFill(container);
 
                 double radio = container.getCoverageRatio() * 100;
-                if (radio > condition.MinCoverRadio)
+                if (radio > this.m_RatioConditionList.MinCoverRadio)
                 {
-                    this.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(
-                                () =>
-                                {
-                                    this.m_ladder_condition.RatioControlList = condition.RatioControlList;
-
-                                }));
+                   
                     break;
                 }
             } 
 
         }
 
-        public void run(object parameters)
+        public void run()
         {
-            sw.Start();
-            LThreadParameters threadParameter = parameters as LThreadParameters;
-            genteraterRun(threadParameter.Condition, threadParameter.Ui_containor);
+            sw.Start();         
+            genteraterRun();
             sw.Stop();
             Condation_Enable = true;
         }
@@ -222,7 +237,7 @@ namespace Random_Polygon.laddershape
         private Stopwatch sw = new Stopwatch();
 
         // 异步函数，保证其他线程能在UI 线程上进行操作
-        private void AddPolygon(ExtendedPolygon polygon, Canvas ui_container, LadderShap_Condition condition, LadderShapeContainer container)
+        private void AddPolygon(ExtendedPolygon polygon, LadderShapeContainer container)
         {
             this.Dispatcher.BeginInvoke(DispatcherPriority.Send, new Action(
               () =>
@@ -232,7 +247,7 @@ namespace Random_Polygon.laddershape
                   CoverRadio = (container.getCoverageRatio() * 100).ToString();
 
                   Polygon ui_polygon = createPolygon(polygon.Points);
-                  ui_container.Children.Add(ui_polygon);
+                  this.bg_draw.Children.Add(ui_polygon);
 
               }));
         }
@@ -272,14 +287,19 @@ namespace Random_Polygon.laddershape
         private Thread m_thread = null;
         private void StartButton_Click(object sender, RoutedEventArgs e)
         {
+            if (!CheckOpenRatioControl())
+            {
+                return;
+            }
+
             Condation_Enable = false;
             canStopThread = false;
 
-            rect_container.Width = m_ladder_condition.DownLayer;
-            rect_container.Height = m_ladder_condition.DownLayer;
+            rect_container.Width = m_RatioConditionList.DownLayer;
+            rect_container.Height = m_RatioConditionList.DownLayer;
 
             PointCollection pts = new PointCollection();
-            LadderShape lshape = new LadderShape(m_ladder_condition.UpLayer, m_ladder_condition.DownLayer, m_ladder_condition.Height);
+            LadderShape lshape = new LadderShape(m_RatioConditionList.UpLayer, m_RatioConditionList.DownLayer, m_RatioConditionList.Height);
             foreach (System.Drawing.Point pt in lshape.Points)
             {
                 pts.Add(new Point(pt.X, pt.Y));
@@ -289,7 +309,7 @@ namespace Random_Polygon.laddershape
 
             rect_container.Visibility = Visibility.Visible;
             bg_draw.Children.Clear();
-            m_ladder_condition.RatioControlList.ClearGeneraterInfo();
+            m_RatioConditionList.ClearGeneraterInfo();
 
             LogInfo = "";
             CoverRadio = "0";
@@ -301,11 +321,10 @@ namespace Random_Polygon.laddershape
             sw.Reset();
 
             // 工作线程，生成多边形
-            m_thread = new Thread(new ParameterizedThreadStart(run));
-
+            m_thread = new Thread(new ThreadStart(run)); 
             m_thread.IsBackground = true;
-            LThreadParameters param = new LThreadParameters(m_ladder_condition, bg_draw);
-            m_thread.Start(param);
+           
+            m_thread.Start();
         }
 
         private void StopButton_Click(object sender, RoutedEventArgs e)
@@ -321,27 +340,61 @@ namespace Random_Polygon.laddershape
         }
 
         #endregion
+        #region 比率控制
+    
+        //是否开启物料比率控制
+        private bool CheckOpenRatioControl()
+        {
+            if (!this.OpenRatio)
+            {
+                this.m_RatioConditionList.RatioConditionList.Clear();
+                this.m_RatioConditionList.RatioConditionList.Add(this.m_uiCondition.Clone());
+
+            }
+
+            if (1 == this.m_RatioConditionList.IsTargetOutLimited(0))
+            {
+                MessageBox.Show("目标比率之和已经超过100%！", "警告");
+                return false;
+            }
+            else if (-1 == this.m_RatioConditionList.IsTargetOutLimited(0))
+            {
+                MessageBox.Show("目标比率之和不足100%,请调整目标比率！", "警告");
+                return false;
+            }
+
+            return true;
+        }
+
+        //添加物料比率控制
+        private void Button_AddClick(object sender, RoutedEventArgs e)
+        {
+
+            if (1 == this.m_RatioConditionList.IsTargetOutLimited(this.m_uiCondition.ControlRatio.TargetRatio))
+            {
+                MessageBox.Show("目标比率之和已经超过100%", "警告");
+                return;
+            }
+
+            this.m_RatioConditionList.RatioConditionList.Add(this.m_uiCondition.Clone());
+        }
+
+        private void Button_DeleteSelectClick(object sender, RoutedEventArgs e)
+        {
+            LadderShapeRationCondition condition = this.ui_listview.SelectedItem as LadderShapeRationCondition;
+            if (condition != null)
+            {
+                this.m_RatioConditionList.RatioConditionList.Remove(condition);
+            }
+        }
+
+        private void Button_ClearClick(object sender, RoutedEventArgs e)
+        {
+            this.ui_listview.SelectedIndex = -1;
+            this.m_RatioConditionList.RatioConditionList.Clear();
+        }
+        #endregion
     }
 
 
-    public class LThreadParameters
-    {
-        public LThreadParameters(LadderShap_Condition condition, System.Windows.Controls.Canvas container)
-        {
-            this.m_condition = condition;
-            this.m_ui_containor = container;
-        }
-        private LadderShap_Condition m_condition;
-        public LadderShap_Condition Condition
-        {
-            get { return m_condition; }
-            set { m_condition = value; }
-        }
-        private System.Windows.Controls.Canvas m_ui_containor;
-        public System.Windows.Controls.Canvas Ui_containor
-        {
-            get { return m_ui_containor; }
-            set { m_ui_containor = value; }
-        }
-    }
 }

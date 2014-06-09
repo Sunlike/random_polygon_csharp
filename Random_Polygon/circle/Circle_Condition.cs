@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.ComponentModel;
 using Random_Polygon.circle;
+using System.Collections.ObjectModel;
 
 namespace Random_Polygon
 {
+    [Serializable]
     public class Circle_Condition :INotifyPropertyChanged
     {
         public Circle_Condition()
@@ -21,7 +23,6 @@ namespace Random_Polygon
             {
                 m_MaxEdges = value; 
                 SubscribePropertyChanged("MaxEdges");
-                this.ratioControlList.Initialize(m_MaxEdges);
             }
         }
         private int m_MinRadius = 5;
@@ -49,27 +50,7 @@ namespace Random_Polygon
             get { return m_MaxAngle; }
             set { m_MaxAngle = value; SubscribePropertyChanged("MaxAngle"); }
         }
-        private int m_MinCoverRadio = 50;
-        public int MinCoverRadio
-        {
-            get { return m_MinCoverRadio; }
-            set { m_MinCoverRadio = value; SubscribePropertyChanged("MinCoverRadio"); }
-        }
-        private int m_IterCount = 25000;
-        public int IterCount
-        {
-            get { return m_IterCount; }
-            set { m_IterCount = value; SubscribePropertyChanged("IterCount"); }
-        }
-
-
-        private int m_radius = 250;
-        public int Radius
-        {
-            get { return m_radius; }
-            set { m_radius = value; SubscribePropertyChanged("Radius"); }
-        }
-
+     
         private int m_stepX = -1;
         public int StepX
         {
@@ -97,8 +78,9 @@ namespace Random_Polygon
             set { ratioControlList = value; SubscribePropertyChanged("RatioControlList"); }
         }
 
+        
         #region INotifyPropertyChanged Members
-
+        [field: NonSerialized]  
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void SubscribePropertyChanged(string propertyName)
@@ -110,7 +92,8 @@ namespace Random_Polygon
         }
 
         #endregion
-
       
     }
+
+    
 }

@@ -5,7 +5,7 @@ using System.Text;
 using System.Windows.Data;
 using System.Windows;
 
-namespace Random_Polygon.circle
+namespace Random_Polygon.Converters
 {
     class BoolToVisibilityConverter : IValueConverter
     {

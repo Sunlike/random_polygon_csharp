@@ -1,13 +1,15 @@
 ﻿<UserControl x:Class="Random_Polygon.rectangle.RectangleControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:converter="clr-namespace:Random_Polygon.circle"
+    xmlns:converter="clr-namespace:Random_Polygon.Converters"
+    x:Name ="Rectangle_Control"
     >
 
     <UserControl.Resources>
         <converter:DoubleToPercentConverter x:Key="DoubleToPercentConverter"/>
         <converter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
-
+        <converter:IntToPercentConverter x:Key="IntToPercentConverter"/>
+        <converter:BoolReverseConverter x:Key="BoolReverseConverter"/>
 
 
         <Style TargetType="{x:Type TextBlock}" x:Key="GridBlockStyle">
@@ -22,182 +24,192 @@
                                                  Converter={StaticResource BoolToVisibilityConverter},  ConverterParameter=True}" />
         </Style>
     </UserControl.Resources>
-    
+
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
-			<RowDefinition Height="200"/>
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="300"/>
-            <ColumnDefinition Width="*"/> 
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Border BorderThickness="1" BorderBrush="Black" >
-            <StackPanel Orientation="Vertical" x:Name="ui_condition" >
+            <StackPanel Orientation="Vertical"  >
                 <Border BorderThickness="0,0,0,1" BorderBrush="Black">
-                    <StackPanel Orientation="Vertical" >
+                    <StackPanel Orientation="Vertical" IsEnabled="{Binding  ElementName=Circle_Control ,Path=Condation_Enable}" >
                         <TextBlock Height ="30" VerticalAlignment="Stretch" TextAlignment="Center" Background="Beige" IsHitTestVisible="False" HorizontalAlignment="Stretch">条件设置</TextBlock>
 
-                        <StackPanel Orientation="Horizontal" x:Name="boundary_width">
+                        <StackPanel Orientation="Horizontal" >
                             <TextBlock Text="矩形边界宽:" Width ="100"></TextBlock>
                             <TextBlock Text="{Binding BoundaryWidth}"  Width ="50"></TextBlock>
-                            <Slider Width="150" Value="{Binding BoundaryWidth}" Minimum="100" Maximum="1000" IsEnabled="{Binding Condation_Enable}"/>
+                            <Slider Width="150" Value="{Binding BoundaryWidth}" Minimum="100" Maximum="1000" />
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal"  x:Name="boundary_height">
+                        <StackPanel Orientation="Horizontal">
                             <TextBlock Text="矩形边界高:" Width ="100"></TextBlock>
                             <TextBlock Text="{Binding BoundaryHeight}"  Width ="50"></TextBlock>
-                            <Slider Width="150" Value="{Binding BoundaryHeight}" Minimum="100" Maximum="1000" IsEnabled="{Binding Condation_Enable}"/>
+                            <Slider Width="150" Value="{Binding BoundaryHeight}" Minimum="100" Maximum="1000" />
                         </StackPanel>
 
-                        <Border BorderThickness="1"  BorderBrush="Blue">
-                            <StackPanel Orientation="Vertical" Margin="0"  >
+                        <Border BorderThickness="1"  BorderBrush="Blue" IsEnabled="{Binding  ElementName=Rectangle_Control ,Path=Condation_Enable}">
+                            <StackPanel Orientation="Vertical" Margin="0" >
                                 <TextBlock Height ="30" VerticalAlignment="Stretch" TextAlignment="Center" Background="Beige" IsHitTestVisible="False" HorizontalAlignment="Stretch">分层填充条件控制</TextBlock>
+                                <StackPanel x:Name="ui_layerCondition"  Orientation="Vertical" >
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="层高:" Width ="100"></TextBlock>
+                                        <TextBlock Text="{Binding CHeight}"  Width ="50"></TextBlock>
+                                        <Slider Width="150" Value="{Binding CHeight}" Minimum="10" Maximum="5000" />
+                                    </StackPanel>
 
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="最大边数:" Width ="100"></TextBlock>
-                                    <TextBlock Text="{Binding MaxEdges}"  Width ="50"></TextBlock>
-                                    <Slider Width="150" Value="{Binding MaxEdges}" Minimum="3" Maximum="6" IsEnabled="{Binding Condation_Enable}"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="最小填充率:" Width ="100"></TextBlock>
+                                        <TextBlock Text="{Binding MinCoverRadio}"  Width ="25"></TextBlock>
+                                        <TextBlock Text="%"  Width ="25"></TextBlock>
+                                        <Slider Width="150" Value="{Binding MinCoverRadio}" Minimum="10" Maximum="80" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="迭代次数:" Width ="100"></TextBlock>
+                                        <TextBlock Text="{Binding IterCount}"  Width ="50"></TextBlock>
+                                        <Slider Width="150" Value="{Binding IterCount}" Minimum="1000" Maximum="300000" TickPlacement="None" />
+                                    </StackPanel>
                                 </StackPanel>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="最小外接圆半径:" Width ="100"></TextBlock>
-                                    <TextBlock Text="{Binding MinRadius}"  Width ="50"></TextBlock>
-                                    <Slider Width="150" Value="{Binding MinRadius}" Minimum="1" Maximum="500"  IsEnabled="{Binding Condation_Enable}"/>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="最大外接圆半径:" Width ="100"></TextBlock>
-                                    <TextBlock Text="{Binding MaxRadius}"  Width ="50"></TextBlock>
-                                    <Slider Width="150" Value="{Binding MaxRadius}" Minimum="1" Maximum="1000" IsEnabled="{Binding Condation_Enable}"/>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="最小角度:" Width ="100"></TextBlock>
-                                    <TextBlock Text="{Binding MinAngle}"  Width ="50"></TextBlock>
-                                    <Slider Width="150" Value="{Binding MinAngle}" Minimum="1" Maximum="179" IsEnabled="{Binding Condation_Enable}"/>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="最大角度:" Width ="100"></TextBlock>
-                                    <TextBlock Text="{Binding MaxAngle}"  Width ="50"></TextBlock>
-                                    <Slider Width="150" Value="{Binding MaxAngle}" Minimum="1" Maximum="179" IsEnabled="{Binding Condation_Enable}"/>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="矩形边界宽:" Width ="100"></TextBlock>
-                                    <TextBlock Text="{Binding CWidth}"  Width ="50"></TextBlock>
-                                    <Slider Width="150" Value="{Binding CWidth}" Minimum="10" Maximum="5000" IsEnabled="{Binding Condation_Enable}"/>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="矩形边界高:" Width ="100"></TextBlock>
-                                    <TextBlock Text="{Binding CHeight}"  Width ="50"></TextBlock>
-                                    <Slider Width="150" Value="{Binding CHeight}" Minimum="10" Maximum="5000" IsEnabled="{Binding Condation_Enable}"/>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="最小填充率:" Width ="100"></TextBlock>
-                                    <TextBlock Text="{Binding MinCoverRadio}"  Width ="25"></TextBlock>
-                                    <TextBlock Text="%"  Width ="25"></TextBlock>
-                                    <Slider Width="150" Value="{Binding MinCoverRadio}" Minimum="10" Maximum="80" IsEnabled="{Binding Condation_Enable}"/>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="迭代次数:" Width ="100"></TextBlock>
-                                    <TextBlock Text="{Binding IterCount}"  Width ="50"></TextBlock>
-                                    <Slider Width="150" Value="{Binding IterCount}" Minimum="1000" Maximum="300000" TickPlacement="None" IsEnabled="{Binding Condation_Enable}"/>
+                                <Separator></Separator>
+                                <StackPanel x:Name="ui_Condition"  Orientation="Vertical" >
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="最大边数:" Width ="100"></TextBlock>
+                                        <TextBlock Text="{Binding Condition.MaxEdges}"  Width ="50"></TextBlock>
+                                        <Slider Width="150" Value="{Binding Condition.MaxEdges}" Minimum="3" Maximum="6" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="最小外接圆半径:" Width ="100"></TextBlock>
+                                        <TextBlock Text="{Binding Condition.MinRadius}"  Width ="50"></TextBlock>
+                                        <Slider Width="150" Value="{Binding Condition.MinRadius}" Minimum="1" Maximum="500"  />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="最大外接圆半径:" Width ="100"></TextBlock>
+                                        <TextBlock Text="{Binding Condition.MaxRadius}"  Width ="50"></TextBlock>
+                                        <Slider Width="150" Value="{Binding Condition.MaxRadius}" Minimum="1" Maximum="1000" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="最小角度:" Width ="100"></TextBlock>
+                                        <TextBlock Text="{Binding Condition.MinAngle}"  Width ="50"></TextBlock>
+                                        <Slider Width="150" Value="{Binding Condition.MinAngle}" Minimum="1" Maximum="179" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="最大角度:" Width ="100"></TextBlock>
+                                        <TextBlock Text="{Binding Condition.MaxAngle}"  Width ="50"></TextBlock>
+                                        <Slider Width="150" Value="{Binding Condition.MaxAngle}" Minimum="1" Maximum="179" />
+                                    </StackPanel>
+
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="目标比率:" Width ="100"></TextBlock>
+                                        <TextBlock Text="{Binding ControlRatio.TargetRatio,Converter={StaticResource DoubleToPercentConverter}}"  Width ="50"></TextBlock>
+                                        <Slider Width="150" Value="{Binding ControlRatio.TargetRatio,Converter={StaticResource IntToPercentConverter}}"  IsEnabled="{Binding ElementName=ctrl_OpenRatio,Path=IsChecked}" Minimum="1" Maximum="100" />
+                                    </StackPanel>
+                                    <CheckBox x:Name="ctrl_OpenRatio" IsChecked ="{Binding ElementName=Rectangle_Control,Path=OpenRatio}">开启物料比率控制</CheckBox>
                                 </StackPanel>
 
-                                <ListView x:Name="layer_condaition_control" MinHeight="150" MaxHeight="300" ItemsSource="{Binding RatioList}">
-                                    <ListView.View>
-                                        <GridView>
-                                            <GridViewColumn Header="边数" Width="30"  DisplayMemberBinding="{Binding Key}"/>
-                                            <GridViewColumn Header="目标比例"  Width="70">
-                                                <GridViewColumn.CellTemplate>
-                                                    <DataTemplate>
-                                                        <Grid>
-                                                            <TextBlock x:Name="txt_ratio"  Text="{Binding Path=TargetRatio, Converter={StaticResource DoubleToPercentConverter}}" Style="{StaticResource GridBlockStyle}"/>
-                                                            <TextBox Text="{Binding Path=TargetRatio, Converter={StaticResource DoubleToPercentConverter}}"   Style="{StaticResource GridEditStyle}" />
-                                                        </Grid>
-                                                    </DataTemplate>
-                                                </GridViewColumn.CellTemplate>
-                                            </GridViewColumn>
-                                            <GridViewColumn Header="实际比例" Width="70" DisplayMemberBinding="{Binding RealRatio, Converter={StaticResource DoubleToPercentConverter}}" />
-                                            <GridViewColumn Header="数量"  Width="65" DisplayMemberBinding="{Binding Count}" />
-                                            <GridViewColumn Header="总数量" Width="65" DisplayMemberBinding="{Binding TotalCount}" />
-                                        </GridView>
-                                    </ListView.View>
-                                </ListView>
+                                <StackPanel Orientation="Vertical" Margin="0" MouseLeave="layer_condaition_MouseLeave">
+                                    <Expander Header="物料比率控制">
+                                        <StackPanel Orientation="Vertical" IsEnabled="{Binding ElementName=ctrl_OpenRatio,Path=IsChecked}" >
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                </Grid.RowDefinitions>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition />
+                                                    <ColumnDefinition />
+                                                    <ColumnDefinition />
+                                                </Grid.ColumnDefinitions>
+                                                <Button Click="Button_AddClick">添加</Button>
+                                                <Button Grid.Column="1" Click="Button_DeleteSelectClick">删除选中</Button>
+                                                <Button Grid.Column="2" Click="Button_ClearClick">清空所有</Button>
+                                                <ListView x:Name="ui_listview" ItemsSource="{Binding RatioConditionList}"  Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Height="100">
+                                                    <ListView.View>
+                                                        <GridView>
+                                                            <GridViewColumn Header="目标比率" DisplayMemberBinding="{Binding ControlRatio.TargetRatio,Converter={StaticResource DoubleToPercentConverter}}"/>
+                                                            <GridViewColumn Header="实际比率" DisplayMemberBinding="{Binding ControlRatio.RealRatio,Converter={StaticResource DoubleToPercentConverter},ConverterParameter=0.00}"/>
+                                                            <GridViewColumn Header="数量" DisplayMemberBinding="{Binding ControlRatio.Count}"/>
+                                                            <GridViewColumn Header="总数量" DisplayMemberBinding="{Binding ControlRatio.TotalCount}"/>
+                                                            <GridViewColumn Header="最大边数" DisplayMemberBinding="{Binding Condition.MaxEdges}"/>
+                                                            <GridViewColumn Header="最小外接圆半径" DisplayMemberBinding="{Binding Condition.MinRadius}" />
+                                                            <GridViewColumn Header="最大外接圆半径" DisplayMemberBinding="{Binding Condition.MaxRadius}"/>
+                                                            <GridViewColumn Header="最小角度" DisplayMemberBinding="{Binding Condition.MinAngle}"/>
+                                                            <GridViewColumn Header="最大角度" DisplayMemberBinding="{Binding Condition.MaxAngle}"/>
 
+                                                        </GridView>
+                                                    </ListView.View>
+                                                </ListView>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Expander>
+                                    <Grid IsEnabled="{Binding  ElementName=Rectangle_Control ,Path=Condation_Enable}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="33*"/>
+                                            <ColumnDefinition Width="34*"/>
+                                            <ColumnDefinition Width="33*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Button Grid.Column="0"  Height="25" HorizontalAlignment="Stretch"  Click="AddContidation_Click">添加分层控制</Button>
+                                        <Button Grid.Column="1"  Height="25"  HorizontalAlignment="Stretch" Click="ResetContidation_Click">重置分层控制</Button>
+                                        <Button Grid.Column="2"  Height="25"  HorizontalAlignment="Stretch" Click="DeleteContidation_Click">删除选中的分层</Button>
+
+                                    </Grid>
+
+                                    <ListView x:Name="layer_condaition"  ItemsSource="{Binding LayerConditionList}" Height="100" MouseLeave="layer_condaition_MouseLeave">
+                                        <ListView.View>
+                                            <GridView>
+                                                <GridViewColumn Header="层高" DisplayMemberBinding="{Binding CHeight}"/>
+                                                <GridViewColumn Header="层宽" DisplayMemberBinding="{Binding CWidth}"/>
+                                                <GridViewColumn Header="Y" DisplayMemberBinding="{Binding Y}"/>
+                                                <GridViewColumn Header="最小填充率" DisplayMemberBinding="{Binding MinCoverRadio}"/>
+                                                <GridViewColumn Header="迭代次数" DisplayMemberBinding="{Binding IterCount}"/>
+                                                <GridViewColumn Header="该层物料种类数" DisplayMemberBinding="{Binding RatioConditionList.Count}"/>
+                                            </GridView>
+                                        </ListView.View>
+                                    </ListView>
+                                        
+                                </StackPanel>
 
                             </StackPanel>
+
                         </Border>
-                        <Grid >
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="33*"/>
-                                <ColumnDefinition Width="34*"/>
-                                <ColumnDefinition Width="33*"/>
-                            </Grid.ColumnDefinitions>
-                            <Button Grid.Column="0"  Height="25" HorizontalAlignment="Stretch"  Click="AddContidation_Click">添加分层控制</Button>
-                            <Button Grid.Column="1"  Height="25"  HorizontalAlignment="Stretch" Click="ResetContidation_Click">重置分层控制</Button>
-                            <Button Grid.Column="2"  Height="25"  HorizontalAlignment="Stretch" Click="DeleteContidation_Click">删除选中的分层</Button>
 
-                        </Grid>
-
-                        <ListView x:Name="layer_condaition"  Height="200" SelectionChanged="layer_condaition_SelectionChanged">
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn Header="最大边数" DisplayMemberBinding="{Binding MaxEdges}"/>
-                                    <GridViewColumn Header="最小外接圆半径" DisplayMemberBinding="{Binding MaxRadius}" />
-                                    <GridViewColumn Header="最大外接圆半径" DisplayMemberBinding="{Binding MinRadius}"/>
-                                    <GridViewColumn Header="最小角度" DisplayMemberBinding="{Binding MinAngle}"/>
-                                    <GridViewColumn Header="最大角度" DisplayMemberBinding="{Binding MaxAngle}"/>
-                                    <GridViewColumn Header="层高" DisplayMemberBinding="{Binding CHeight}"/>
-                                    <GridViewColumn Header="最小填充率" DisplayMemberBinding="{Binding MinCoverRadio}"/>
-                                    <GridViewColumn Header="迭代次数" DisplayMemberBinding="{Binding IterCount}"/>
-                                </GridView>
-                            </ListView.View>
-                        </ListView>
-                       
                     </StackPanel>
 
-                </Border> 
+                </Border>
             </StackPanel>
         </Border>
-		  <Border Grid.Row="1" Grid.Column="0" BorderThickness="0,0,0,1" BorderBrush="Black">
-              <ScrollViewer>
-                    <StackPanel Orientation="Vertical" x:Name="ui_result">
-                        <TextBlock Height ="30" VerticalAlignment="Stretch" TextAlignment="Center" Background="Beige" IsHitTestVisible="False" HorizontalAlignment="Stretch">生成的中间信息</TextBlock>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="花费时间:" Width ="100"></TextBlock>
-                            <TextBlock Text="{Binding CostTime}"  ToolTip="毫秒"></TextBlock>
-                            <TextBlock Text="ms"  Width ="25" ToolTip="毫秒"></TextBlock>
-                        </StackPanel>
-                        <TextBox x:Name="mid_result" Height="Auto" MinHeight="100" MaxHeight="200" IsReadOnly="True" IsHitTestVisible="True" Text="{Binding LogInfo}" TextWrapping="Wrap" AllowDrop="False">
-
-                        </TextBox>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="最终填充率:" Width ="100"></TextBlock>
-                            <TextBlock Text="{Binding CoverRadio}"  ></TextBlock> 
-                        </StackPanel> 
+        <Border Grid.Row="1" Grid.Column="0" BorderThickness="0,0,0,1" BorderBrush="Black">
+            <ScrollViewer>
+                <StackPanel Orientation="Vertical" x:Name="ui_result">
+                    <TextBlock Height ="30" VerticalAlignment="Stretch" TextAlignment="Center" Background="Beige" IsHitTestVisible="False" HorizontalAlignment="Stretch">生成的中间信息</TextBlock>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="花费时间:" Width ="100"></TextBlock>
+                        <TextBlock Text="{Binding ElementName=Rectangle_Control,Path=CostTime}"  ToolTip="毫秒"></TextBlock>
+                        <TextBlock Text="ms"  Width ="25" ToolTip="毫秒"></TextBlock>
                     </StackPanel>
-				</ScrollViewer>
-          </Border>
+                    <TextBox x:Name="mid_result" Height="Auto" MinHeight="100" MaxHeight="200" IsReadOnly="True" IsHitTestVisible="True" Text="{Binding  ElementName=Rectangle_Control,Path=LogInfo}" TextWrapping="Wrap" AllowDrop="False">
+
+                    </TextBox>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="最终填充率:" Width ="100"></TextBlock>
+                        <TextBlock Text="{Binding ElementName=Rectangle_Control,Path=CoverRadio}"  ></TextBlock>
+                    </StackPanel>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
         <Border Grid.Row="0" Grid.Column="1" Grid.RowSpan="3"  BorderBrush="Blue" BorderThickness="1">
             <Canvas x:Name="bg_draw"  >
                 <Rectangle x:Name="rect_container"  Canvas.Left="0" Canvas.Top="0" Height="100" Stroke="Red" Width="200" Visibility="Hidden" />
             </Canvas>
         </Border>
         <StackPanel Grid.Row="2" Orientation="Horizontal" Grid.ColumnSpan="3">
-            <Button Width="80" Click="StartButton_Click" IsEnabled="{Binding Condation_Enable}">开始</Button>
+            <Button Width="80" Click="StartButton_Click"  IsEnabled="{Binding ElementName=Rectangle_Control ,Path=Condation_Enable}">开始</Button>
             <Button Width="80" Click="StopButton_Click">停止</Button>
             <Button Width="80">保存</Button>
         </StackPanel>
-	<Popup x:Name="PopupControl" IsOpen="False" PlacementTarget="{Binding ElementName=layer_condaition}" Placement="Right"  MouseLeave="layer_condaition_MouseLeave" Margin="0,0,-312,49.5"  >
- 	  <ListView x:Name="popup_condaition_control" MinHeight="150" MaxHeight="300" ItemsSource="{Binding RatioList}" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom">
-        	<ListView.View>
-        		<GridView>
-        			<GridViewColumn Header="边数" Width="30"  DisplayMemberBinding="{Binding Key}"/>
-        			<GridViewColumn Header="目标比例"  Width="70" DisplayMemberBinding="{Binding TargetRatio, Converter={StaticResource DoubleToPercentConverter}}"/>
-        			<GridViewColumn Header="实际比例" Width="70" DisplayMemberBinding="{Binding RealRatio, Converter={StaticResource DoubleToPercentConverter}}" />
-        			<GridViewColumn Header="数量"  Width="65" DisplayMemberBinding="{Binding Count}" />
-        			<GridViewColumn Header="总数量" Width="65" DisplayMemberBinding="{Binding TotalCount}" />
-        		</GridView>
-        	</ListView.View>
-        </ListView>
-		</Popup>
+
     </Grid>
 </UserControl>

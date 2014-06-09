@@ -26,15 +26,35 @@ namespace Random_Polygon.circle
         public CircleControl()
         {
             InitializeComponent();
-            ui_condition.DataContext = m_circle_condition;
-            this.ui_result.DataContext = this;
-            this.DataContext = this;
-            layer_condaition.DataContext = this.m_circle_condition.RatioControlList;
+
+            this.DataContext = m_RatioConditionList;
+            ui_condition.DataContext = m_uiCondition;
+           
 
         }
 
-        private Circle_Condition m_circle_condition = new Circle_Condition();
+        private CircleRatioCondition m_uiCondition = new CircleRatioCondition();
 
+        private CircleRatioConditionList m_RatioConditionList = new CircleRatioConditionList();
+        public Random_Polygon.circle.CircleRatioConditionList RatioConditionList
+        {
+            get { return m_RatioConditionList; }
+            set { m_RatioConditionList = value; }
+        }
+        private bool openRatio = false;
+        public bool OpenRatio
+        {
+            get { return openRatio; }
+            set 
+            {
+                openRatio = value;
+                OnPropertyChanged("OpenRatio");
+                if (!openRatio)
+                {
+                    m_uiCondition.ControlRatio.TargetRatio = 1.0;
+                }
+            }
+        }
         private string costTime = "0";
         public string CostTime
         {
@@ -101,34 +121,36 @@ namespace Random_Polygon.circle
         //              3.1   For each of the rest boxes, randomly run polygons within
         //              3.2   Put the generated polygons into container
         //              4     Repeat for reasonable times
-        private void awesomelyFill(CircleContainer container, Canvas ui_container, ref Circle_Condition condition)
+        private void awesomelyFill(CircleContainer container)
         {
             Random rand = new Random(DateTime.Now.Millisecond);
-            for (int i = 0; i < condition.IterCount; ++i)
+            for (int i = 0; i < this.m_RatioConditionList.IterCount; ++i)
             {
                 if (canStopThread)
                 {
                     break;
                 }
+                CircleRatioCondition ratioControl = this.m_RatioConditionList.getMiniRatioControl();
+
                 System.Drawing.Rectangle box = new System.Drawing.Rectangle();
                 box.X = rand.Next((int)container.Radius * 2 - 1) + 1;
                 box.Y = rand.Next((int)container.Radius * 2 - 1) + 1;
-                box.Width = condition.MinRadius * 2;
+                box.Width = ratioControl.Condition.MinRadius * 2;
                 box.Height = box.Width;
 
                 ExtendedPolygon polygon = null;
-                RatioControl ratioControl = condition.RatioControlList.getMinRatio();
+              
                 bool bSuccess = false;
-                for (int j = 0; j < condition.MaxRadius * 2; j += condition.ExpandStep)
+                for (int j = 0; j < ratioControl.Condition.MaxRadius * 2; j += ratioControl.Condition.ExpandStep)
                 {
                     if (canStopThread)
                     {
                         break;
                     }
-                    box.Width += condition.ExpandStep;
-                    box.Height += condition.ExpandStep;
+                    box.Width += ratioControl.Condition.ExpandStep;
+                    box.Height += ratioControl.Condition.ExpandStep;
 
-                    ExtendedPolygon tmpPolygon = randPolygonWithinBox(box, ratioControl.Key, condition.MinAngle, condition.MaxAngle);
+                    ExtendedPolygon tmpPolygon = randPolygonWithinBox(box, ratioControl.Condition.MaxEdges, ratioControl.Condition.MinAngle, ratioControl.Condition.MaxAngle);
                     bSuccess = container.canSafePut(tmpPolygon);
                     if (bSuccess)
                     {
@@ -143,20 +165,21 @@ namespace Random_Polygon.circle
                 if (polygon != null)
                 {
                     container.put(polygon);
-                    AddPolygon(polygon, ui_container, condition, container);
-                    condition.RatioControlList.UpdateCount(ratioControl.Key);
-                    condition.RatioControlList.UpdateTotalCount();
 
-                    ratioControl = condition.RatioControlList.getMinRatio();
+                    AddPolygon(polygon, container);
+                    ++ratioControl.ControlRatio.Count;
+                    this.m_RatioConditionList.UpdateTotalCount();
+
+                    ratioControl = this.m_RatioConditionList.getMiniRatioControl();
 
                 }
             }
         }
 
 
-        public void genteraterRun(Circle_Condition condition, Canvas ui_containor)
+        public void genteraterRun()
         {
-            CircleContainer container = new CircleContainer(condition.Radius, condition.Radius, condition.Radius);
+            CircleContainer container = new CircleContainer(this.m_RatioConditionList.Radius, this.m_RatioConditionList.Radius, this.m_RatioConditionList.Radius);
 
             while (true)
             {
@@ -165,50 +188,44 @@ namespace Random_Polygon.circle
                     break;
                 }
                 bool bSuccess = false;
-                RatioControl ratioControl = condition.RatioControlList.getMinRatio();
-                ExtendedPolygon polygon = randPolygonWithinBox(container, ratioControl.Key, condition.MinRadius, condition.MaxRadius, condition.MinAngle, condition.MaxAngle);
+                CircleRatioCondition ratioControl = this.m_RatioConditionList.getMiniRatioControl();
+                ExtendedPolygon polygon = randPolygonWithinBox(container, ratioControl.Condition.MaxEdges, ratioControl.Condition.MinRadius, ratioControl.Condition.MaxRadius, ratioControl.Condition.MinAngle, ratioControl.Condition.MaxAngle);
                 bSuccess = container.canSafePut(polygon);
                 if (!bSuccess)
                 {
                     for (int i = 0; i < 20; ++i)
                     {
                         Random rand = new Random(DateTime.Now.Millisecond);
-                        int deltX = condition.StepX + rand.Next(3);
-                        int deltY = condition.StepY;
+                        int deltX = ratioControl.Condition.StepX + rand.Next(3);
+                        int deltY = ratioControl.Condition.StepY;
                         polygon.translate(deltX, deltY);
                         bSuccess = container.canSafePut(polygon);
                         if (bSuccess)
                         {
                             container.put(polygon); 
-                            AddPolygon(polygon, ui_containor, condition, container);
-                            condition.RatioControlList.UpdateCount(ratioControl.Key);
-                            condition.RatioControlList.UpdateTotalCount(); 
+                            AddPolygon(polygon, container);
+                            ++ratioControl.ControlRatio.Count;
+                            this.m_RatioConditionList.UpdateTotalCount(); 
+                             
+                             
                             break;
                         }
                     }
                 }
                 else
                 {
-                    container.put(polygon); 
-                    AddPolygon(polygon, ui_containor, condition, container);
-                    condition.RatioControlList.UpdateCount(ratioControl.Key);
-                    condition.RatioControlList.UpdateTotalCount(); 
+                    container.put(polygon);
+                    AddPolygon(polygon, container);
+                    ++ratioControl.ControlRatio.Count;
+                    this.m_RatioConditionList.UpdateTotalCount(); 
                 }
 
 
-                this.awesomelyFill(container, ui_containor, ref condition);
+                this.awesomelyFill(container);
 
                 double radio = container.getCoverageRatio() * 100;
-                if (radio > condition.MinCoverRadio)
-                {
-
-                    this.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(
-                                 () =>
-                                 {
-                                     this.m_circle_condition.RatioControlList = condition.RatioControlList;
-
-                                 }));
-
+                if (radio > this.m_RatioConditionList.MinCoverRadio)
+                { 
                     break;
                 }
             }
@@ -217,11 +234,10 @@ namespace Random_Polygon.circle
 
         }
 
-        public void run(object parameters)
+        public void run()
         {
-            sw.Start();
-            RThreadParameters threadParameter = parameters as RThreadParameters;
-            genteraterRun(threadParameter.Condition, threadParameter.Ui_containor);
+            sw.Start();         
+            genteraterRun();
             sw.Stop();
             Condation_Enable = true;
 
@@ -230,7 +246,7 @@ namespace Random_Polygon.circle
         private Stopwatch sw = new Stopwatch();
 
         // 异步函数，保证其他线程能在UI 线程上进行操作
-        private void AddPolygon(ExtendedPolygon polygon, Canvas ui_container, Circle_Condition condition, CircleContainer container)
+        private void AddPolygon(ExtendedPolygon polygon, CircleContainer container)
         {
             this.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(
               () =>
@@ -240,7 +256,7 @@ namespace Random_Polygon.circle
                   CoverRadio = (container.getCoverageRatio() * 100).ToString();
 
                   Polygon ui_polygon = createPolygon(polygon.Points);
-                  ui_container.Children.Add(ui_polygon);
+                  this.bg_draw.Children.Add(ui_polygon);
 
               }));
         }
@@ -273,21 +289,26 @@ namespace Random_Polygon.circle
 
 
         #endregion
+
         private Thread m_thread = null;
         private void StartButton_Click(object sender, RoutedEventArgs e)
         {
+            if (!CheckOpenRatioControl())
+            {
+                return;
+            }
             Condation_Enable = false;
             canStopThread = false;
 
-            rect_container.Width = 2 * m_circle_condition.Radius;
-            rect_container.Height = 2 * m_circle_condition.Radius;
+            rect_container.Width = 2 * m_RatioConditionList.Radius;
+            rect_container.Height = 2 * m_RatioConditionList.Radius;
             rect_container.Visibility = Visibility.Visible;
             bg_draw.Children.Clear();
 
             LogInfo = "";
             CoverRadio = "0";
 
-            m_circle_condition.RatioControlList.ClearGeneraterInfo();
+            m_RatioConditionList.ClearGeneraterInfo();
 
             bg_draw.Children.Add(rect_container);
             if (null == sw)
@@ -299,13 +320,11 @@ namespace Random_Polygon.circle
             // 工作线程，生成多边形
 
 
-            m_thread = new Thread(new ParameterizedThreadStart(run));
-
-
+            m_thread = new Thread(new ThreadStart(run));
             m_thread.IsBackground = true;
             m_thread.Priority = ThreadPriority.BelowNormal;
-            RThreadParameters param = new RThreadParameters(m_circle_condition, bg_draw);
-            m_thread.Start(param);
+          
+            m_thread.Start();
         }
 
         private void StopButton_Click(object sender, RoutedEventArgs e)
@@ -321,29 +340,62 @@ namespace Random_Polygon.circle
             Debug.WriteLine("canStopThread = true");
 
         }
+       
+        #region  物料比率控制
 
+        //是否开启物料比率控制
+        private bool CheckOpenRatioControl()
+        {
+            if (!this.OpenRatio)
+            {
+                this.m_RatioConditionList.RatioConditionList.Clear();
+                this.m_RatioConditionList.RatioConditionList.Add(this.m_uiCondition.Clone());
+               
+            }
+
+            if (1 == this.m_RatioConditionList.IsTargetOutLimited(0))
+            {
+                    MessageBox.Show("目标比率之和已经超过100%！", "警告");
+                    return false;
+            }
+            else if(-1 == this.m_RatioConditionList.IsTargetOutLimited(0))
+            {
+                MessageBox.Show("目标比率之和不足100%,请调整目标比率！", "警告");
+                    return false;
+            }
+                          
+            return true;
+        }
+
+        //添加物料比率控制
+        private void Button_AddClick(object sender, RoutedEventArgs e)
+        {
+            if (1 == this.m_RatioConditionList.IsTargetOutLimited(this.m_uiCondition.ControlRatio.TargetRatio))
+            {
+                MessageBox.Show("目标比率之和已经超过100%", "警告");
+                return;
+            }
+            this.m_RatioConditionList.RatioConditionList.Add(this.m_uiCondition.Clone());
+        }
+
+       
+
+        private void Button_DeleteSelectClick(object sender, RoutedEventArgs e)
+        {
+            CircleRatioCondition condition = this.ui_listview.SelectedItem as CircleRatioCondition;
+            if (condition != null)
+            {
+                this.m_RatioConditionList.RatioConditionList.Remove(condition);
+            }
+        }
+
+        private void Button_ClearClick(object sender, RoutedEventArgs e)
+        {
+            this.ui_listview.SelectedIndex = -1;
+            this.m_RatioConditionList.RatioConditionList.Clear();
+        }
+        #endregion
 
     }
-
-
-    public class RThreadParameters
-    {
-        public RThreadParameters(Circle_Condition condition, System.Windows.Controls.Canvas container)
-        {
-            this.m_condition = condition;
-            this.m_ui_containor = container;
-        }
-        private Circle_Condition m_condition;
-        public Circle_Condition Condition
-        {
-            get { return m_condition; }
-            set { m_condition = value; }
-        }
-        private System.Windows.Controls.Canvas m_ui_containor;
-        public System.Windows.Controls.Canvas Ui_containor
-        {
-            get { return m_ui_containor; }
-            set { m_ui_containor = value; }
-        }
-    }
+     
 }

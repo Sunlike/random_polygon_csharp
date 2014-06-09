@@ -28,15 +28,49 @@ namespace Random_Polygon.rectangle
         public RectangleControl()
         {
             InitializeComponent();
-            this.ui_condition.DataContext = this.m_condition;
-            this.ui_result.DataContext = this;
-            this.DataContext = this;
-            layer_condaition.ItemsSource = this.ContidationList;
-            layer_condaition_control.DataContext = this.m_condition.RatioControlList;
-
+            this.DataContext = m_ConditionList;
+            ui_layerCondition.DataContext = m_uiLayerCondition;
+            ui_listview.DataContext = m_uiLayerCondition;
+            ui_Condition.DataContext = m_uiCondition;
+            //layer_condaition.DataContext = m_ConditionList;
+            OpenRatio = false;
         }
-        private Condition m_condition = new Condition(); 
+        // 物料比率控制条件
+        private RectRationLayerCondition m_uiCondition = new RectRationLayerCondition();
+        public Random_Polygon.rectangle.RectRationLayerCondition Condition
+        {
+            get { return m_uiCondition; }
+            set { m_uiCondition = value; OnPropertyChanged("Condition"); }
+        }
+        // 矩形分层控制条件
+        private RectRationLayerConditionList m_uiLayerCondition = new RectRationLayerConditionList();
+        public Random_Polygon.rectangle.RectRationLayerConditionList LayerCondition
+        {
+            get { return m_uiLayerCondition; }
+            set { m_uiLayerCondition = value; OnPropertyChanged("LayerCondition"); }
+        }
+        // 
+        private RectRationConditionList m_ConditionList = new RectRationConditionList();
+        public Random_Polygon.rectangle.RectRationConditionList ConditionList
+        {
+            get { return m_ConditionList; }
+            set { m_ConditionList = value; OnPropertyChanged("ConditionList"); }
+        }
        
+        private bool openRatio = false;
+        public bool OpenRatio
+        {
+            get { return openRatio; }
+            set
+            {
+                openRatio = value;
+                if (!openRatio)
+                {
+                    Condition.ControlRatio.TargetRatio = 1.0;
+                }
+            }
+        }
+
         private string costTime = "0";
         public string CostTime
         {
@@ -66,13 +100,7 @@ namespace Random_Polygon.rectangle
 
         private bool canStopThread = false;
 
-        // 矩形分层填充控制条件
-        ObservableCollection<Condition> m_contidationList = new ObservableCollection<Condition>();
-        public ObservableCollection<Condition> ContidationList
-        {
-            get { return m_contidationList; }
-            set { m_contidationList = value; }
-        }
+         
 
         private List<double> m_recover_radio = new List<double>();
 
@@ -113,34 +141,35 @@ namespace Random_Polygon.rectangle
         //              3.1   For each of the rest boxes, randomly run polygons within
         //              3.2   Put the generated polygons into container
         //              4     Repeat for reasonable times
-        private void awesomelyFill(RectangleContainer container,Canvas ui_container, ref Condition condition)
+        private void awesomelyFill(RectangleContainer container, RectRationLayerConditionList ratioLayerCondition)
         {
             Random rand = new Random(DateTime.Now.Millisecond);
-            for (int i = 0; i < condition.IterCount; ++i)
+            for (int i = 0; i < ratioLayerCondition.IterCount; ++i)
             {
                 if (canStopThread)
                 {
                     break;
                 }
+                RectRationLayerCondition ratioControl = ratioLayerCondition.getMiniRatioControl();
                 System.Drawing.Rectangle box = new System.Drawing.Rectangle();
                 box.X = rand.Next(container.Width - 1) + 1;
                 box.Y = rand.Next(container.Height - 1) + 1;
-                box.Width = condition.MinRadius * 2;
+                box.Width = ratioControl.Condition.MinRadius * 2;
                 box.Height = box.Width;
 
                 ExtendedPolygon polygon = null;
                 bool bSuccess = false;
-                RatioControl ratioControl = condition.RatioControlList.getMinRatio();
-                for (int j = 0; j < condition.MaxRadius * 2; j += condition.ExpandStep)
+
+                for (int j = 0; j < ratioControl.Condition.MaxRadius * 2; j += ratioControl.Condition.ExpandStep)
                 {
                     if (canStopThread)
                     {
                         break;
                     }
-                    box.Width += condition.ExpandStep;
-                    box.Height += condition.ExpandStep;
+                    box.Width += ratioControl.Condition.ExpandStep;
+                    box.Height += ratioControl.Condition.ExpandStep;
 
-                    ExtendedPolygon tmpPolygon = randPolygonWithinBox(box, ratioControl.Key, condition.MinAngle, condition.MaxAngle);
+                    ExtendedPolygon tmpPolygon = randPolygonWithinBox(box, ratioControl.Condition.MaxEdges, ratioControl.Condition.MinAngle, ratioControl.Condition.MaxAngle);
                     bSuccess = container.canSafePut(tmpPolygon);
                     if (bSuccess)
                     {
@@ -154,18 +183,18 @@ namespace Random_Polygon.rectangle
 
                 if (polygon != null)
                 {
-                    container.put(polygon); 
-                    AddPolygon(polygon, ui_container, condition, container);
-                    condition.RatioControlList.UpdateCount(ratioControl.Key);
-                    condition.RatioControlList.UpdateTotalCount();
-                    ratioControl = condition.RatioControlList.getMinRatio();
+                    container.put(polygon);
+                    AddPolygon(polygon, ratioLayerCondition, container);
+                    ++ratioControl.ControlRatio.Count;
+                    ratioLayerCondition.UpdateTotalCount();
+                    ratioControl = ratioLayerCondition.getMiniRatioControl();
                 }
             }
         }
 
-        public void genteraterRun(ref Condition condition, Canvas ui_containor)
+        public void genteraterRun(RectRationLayerConditionList ratioLayerCondition)
         {
-            RectangleContainer container = new RectangleContainer(0,0, condition.CWidth, condition.CHeight);
+            RectangleContainer container = new RectangleContainer(0, 0, ratioLayerCondition.CWidth, ratioLayerCondition.CHeight);
 
             while (true)
             {
@@ -174,24 +203,24 @@ namespace Random_Polygon.rectangle
                     break;
                 }
                 bool bSuccess = false;
-                RatioControl ratioControl = condition.RatioControlList.getMinRatio();
-                ExtendedPolygon polygon = randPolygonWithinBox(container, ratioControl.Key, condition.MinRadius, condition.MaxRadius, condition.MinAngle, condition.MaxAngle);
+                RectRationLayerCondition ratioControl = ratioLayerCondition.getMiniRatioControl();
+                ExtendedPolygon polygon = randPolygonWithinBox(container, ratioControl.Condition.MaxEdges, ratioControl.Condition.MinRadius, ratioControl.Condition.MaxRadius, ratioControl.Condition.MinAngle, ratioControl.Condition.MaxAngle);
                 bSuccess = container.canSafePut(polygon);
                 if (!bSuccess)
                 {
                     for (int i = 0; i < 20; ++i)
                     {
                         Random rand = new Random(DateTime.Now.Millisecond);
-                        int deltX = condition.StepX + rand.Next(3);
-                        int deltY = condition.StepY;
+                        int deltX = ratioControl.Condition.StepX + rand.Next(3);
+                        int deltY = ratioControl.Condition.StepY;
                         polygon.translate(deltX, deltY);
                         bSuccess = container.canSafePut(polygon);
                         if (bSuccess)
                         {
                             container.put(polygon);
-                            AddPolygon(polygon, ui_containor, condition, container);
-                            condition.RatioControlList.UpdateCount(ratioControl.Key);
-                            condition.RatioControlList.UpdateTotalCount(); 
+                            AddPolygon(polygon, ratioLayerCondition, container);
+                            ++ratioControl.ControlRatio.Count;
+                            LayerCondition.UpdateTotalCount();
                             break;
                         }
                     }
@@ -199,17 +228,17 @@ namespace Random_Polygon.rectangle
                 else
                 {
                     container.put(polygon);
-                    AddPolygon(polygon, ui_containor, condition, container);
-                    condition.RatioControlList.UpdateCount(ratioControl.Key);
-                    condition.RatioControlList.UpdateTotalCount(); 
+                    AddPolygon(polygon, ratioLayerCondition, container);
+                    ++ratioControl.ControlRatio.Count;
+                    ratioLayerCondition.UpdateTotalCount();
 
                 }
 
 
-                this.awesomelyFill(container, ui_containor,ref condition);
+                this.awesomelyFill(container, ratioLayerCondition);
 
                 double radio = container.getCoverageRatio() * 100;
-                if (radio > condition.MinCoverRadio)
+                if (radio > ratioLayerCondition.MinCoverRadio)
                 {
                     break;
                 }
@@ -219,34 +248,23 @@ namespace Random_Polygon.rectangle
              
         }
 
-        public void run(object oParameters)
-        {
-            ThreadParameters parameters = oParameters as ThreadParameters;
-            List<Condition> conditionList = parameters.ConditionList.ToList<Condition>();
-            sw.Start();
-            for (int i = 0; i < conditionList.Count; ++i )
+        public void run()
+        {  
+            sw.Start();           
+            foreach(RectRationLayerConditionList layerCondition in this.ConditionList.LayerConditionList)
             {
                 try
                 {
-                    Condition condition = conditionList[i];
-                    genteraterRun(ref condition, parameters.Ui_containor);
-                    conditionList[i] = condition;
+                    genteraterRun(layerCondition);
                 }
                 catch (System.Exception ex)
                 {
                     Debug.Write("Wrong:" + ex.ToString());
                 }
-
             }
 
             sw.Stop();
-            this.Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(
-                                () =>
-                                {
-                                    this.ContidationList = new ObservableCollection<Condition>(conditionList);
-
-                                }));
-           
+         
 
             int layer = 1;
             CoverRadio = "";
@@ -290,7 +308,7 @@ namespace Random_Polygon.rectangle
             return polygon;
         }
         // 异步函数，保证其他线程能在UI 线程上进行操作
-        private void AddPolygon(ExtendedPolygon polygon, Canvas ui_container, Condition condition,RectangleContainer container)
+        private void AddPolygon(ExtendedPolygon polygon, RectRationLayerConditionList layerCondition, RectangleContainer container)
         {
 
             ExtendedPolygon polygonTemp = new ExtendedPolygon();
@@ -298,7 +316,7 @@ namespace Random_Polygon.rectangle
             {
                 polygonTemp.addPoint(new System.Drawing.Point((int)pt.X,(int)pt.Y));
             }
-            polygonTemp.translate(condition.X, condition.Y);
+            polygonTemp.translate(layerCondition.X, layerCondition.Y);
 
             this.Dispatcher.BeginInvoke(DispatcherPriority.Send, new Action(
               () =>
@@ -308,7 +326,7 @@ namespace Random_Polygon.rectangle
                   CoverRadio = (container.getCoverageRatio() * 100).ToString();
 
                   Polygon ui_polygon = createPolygon(polygonTemp.Points);
-                  ui_container.Children.Add(ui_polygon);
+                  bg_draw.Children.Add(ui_polygon);
 
               }));
         }
@@ -320,19 +338,16 @@ namespace Random_Polygon.rectangle
         {
             Condation_Enable = false;
             canStopThread = false;
-           
-            rect_container.Width = m_condition.BoundaryHeight;
-            rect_container.Height = m_condition.BoundaryHeight;
+
+            rect_container.Width = m_ConditionList.BoundaryHeight;
+            rect_container.Height = m_ConditionList.BoundaryHeight;
             rect_container.Visibility = Visibility.Visible;
             bg_draw.Children.Clear();
             m_recover_radio.Clear();
             LogInfo = "";
             CoverRadio = "0";
 
-            foreach(Condition cd in this.m_contidationList)
-            {
-                cd.RatioControlList.ClearGeneraterInfo();
-            }
+            this.m_ConditionList.clearInfo();
            
             bg_draw.Children.Add(rect_container);
             if (null == sw)
@@ -342,10 +357,9 @@ namespace Random_Polygon.rectangle
             sw.Reset();
 
             // 工作线程，生成多边形
-            m_thread = new Thread(new ParameterizedThreadStart(run));
+            m_thread = new Thread(new ThreadStart(run));
             m_thread.IsBackground = true;
-            ThreadParameters param = new ThreadParameters(ContidationList, bg_draw);
-            m_thread.Start(param);
+            m_thread.Start();
 
 
         }
@@ -364,101 +378,87 @@ namespace Random_Polygon.rectangle
 
         private int getCurrentLayerHeight()
         {
-            int height = 0;
-            foreach (Condition cd in this.ContidationList)
-            {
-                height += cd.CHeight;
-            }
-            return height;
+            return this.m_ConditionList.LayerConditionList.Sum(x => x.CHeight);
         }
         // 添加分层控制
         private void AddContidation_Click(object sender, RoutedEventArgs e)
         {
-            // 判断是否层高是否大于总高 
-            int height = m_condition.CHeight + getCurrentLayerHeight();
-
-            if (height > m_condition.BoundaryHeight)
+            if (!openRatio)
             {
-                MessageBox.Show("超出范围", "提醒");
+                Button_AddClick(null,null);               
+            }
+
+            double totalTargetRatio = m_uiLayerCondition.CalcTotalRatio();
+            if (totalTargetRatio + this.m_uiCondition.ControlRatio.TargetRatio < 1.0)
+            {
+                MessageBox.Show("目标比率之和不足100%\n\r目标比率只和必须为100%", "警告");
                 return;
             }
-            boundary_width.IsEnabled = false;
-            boundary_height.IsEnabled = false;
-            int currentHeight = getCurrentLayerHeight();
-            m_condition.Y = currentHeight;
-            
-            Condition condition =m_condition.DeepClone();
-            this.ContidationList.Add(condition);
+            this.ConditionList.Add(this.m_uiLayerCondition.Clone());
+           
+            this.LayerCondition.Clear();
+            this.Condition = new RectRationLayerCondition();
+            ui_Condition.DataContext = this.Condition;
         }
 
-        // 重置分层控制参数
+        // 清空分层控制参数
         private void ResetContidation_Click(object sender, RoutedEventArgs e)
         {
-            this.ContidationList.Clear();
-            m_condition = new Condition();
-            boundary_width.IsEnabled = true;
-            boundary_height.IsEnabled = true;
-            LogInfo = "";
-            CoverRadio = "0";
-
-            this.layer_condaition.Items.Clear();
-
-            foreach (Condition cd in this.m_contidationList)
-            {
-                cd.RatioControlList.ClearGeneraterInfo();
-            }
-            
+            this.LayerCondition.Clear();
+            this.Condition = new RectRationLayerCondition();
+            this.ConditionList.Clear();            
         }
 
         // 删除选中的分层
         private void DeleteContidation_Click(object sender, RoutedEventArgs e)
         {
-            int index = layer_condaition.SelectedIndex;
-            if (-1 == index)
+            RectRationLayerConditionList item = this.layer_condaition.SelectedValue as RectRationLayerConditionList;
+            if(item != null)
             {
-                return;
+                this.ConditionList.Remove(item);
             }
-            this.ContidationList.RemoveAt(index);
-        }
-
-        private void layer_condaition_MouseLeave(object sender, MouseEventArgs e)
-        {
             
+        }
+        // 添加一种物料比率
+        private void Button_AddClick(object sender, RoutedEventArgs e)
+        {
+                      
+            double totalTargetRatio = m_uiLayerCondition.CalcTotalRatio();
+            if (totalTargetRatio + this.m_uiCondition.ControlRatio.TargetRatio > 1.0)
+            {
+                 MessageBox.Show("目标比率之和已经超过100%", "警告");
+                 return;
+             }
+             m_uiLayerCondition.RatioConditionList.Add(this.m_uiCondition.Clone());  
+             
+                    
+        }
+        // 删除选中的物料比率
+        private void Button_DeleteSelectClick(object sender, RoutedEventArgs e)
+        {
+            RectRationLayerCondition item = this.ui_listview.SelectedValue as RectRationLayerCondition;
+            if (item != null)
+            {
+                LayerCondition.Remove(item);
+            }
+        }
+        // 清空物料比率条件 
+        private void Button_ClearClick(object sender, RoutedEventArgs e)
+        {
+            LayerCondition.Clear();
         }
 
         private void layer_condaition_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            PopupControl.IsOpen = false; 
-            Condition cd = this.layer_condaition.SelectedItem as Condition;
-            if (null == cd)
-            {
-                return;
-            }
+            ui_listview.DataContext = this.layer_condaition.SelectedItem;
+        }
 
-            this.popup_condaition_control.DataContext = cd.RatioControlList;
-            PopupControl.IsOpen = true;
+        private void layer_condaition_MouseLeave(object sender, MouseEventArgs e)
+        {
+            ui_listview.DataContext = m_uiLayerCondition;
         }
-    }
 
-    public class ThreadParameters
-    {
-        public ThreadParameters(ObservableCollection<Condition> conditionList, System.Windows.Controls.Canvas container)
-        {
-            this.m_condition_list = conditionList.ToList<Condition>();
-            this.m_ui_containor = container;
-        }
-        private List<Condition> m_condition_list;
-        public List<Condition> ConditionList
-        {
-            get { return m_condition_list; }
-            set { m_condition_list = value; }
-        }
-        private System.Windows.Controls.Canvas m_ui_containor;
-        public System.Windows.Controls.Canvas Ui_containor
-        {
-            get { return m_ui_containor; }
-            set { m_ui_containor = value; }
-        }
+       
     }
 
 }
