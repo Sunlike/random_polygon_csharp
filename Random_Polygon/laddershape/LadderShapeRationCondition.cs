@@ -112,6 +112,7 @@ namespace Random_Polygon.laddershape
             {
                 ratio.ControlRatio.ClearGenteraterInfo();
             }
+            this.CadPoint3dList.Clear();
         }
 
         public void UpdateTotalCount()
@@ -131,6 +132,20 @@ namespace Random_Polygon.laddershape
                 return -1;
             else
                 return 0;
+        }
+
+        public void Add(List<System.Windows.Point> pts)
+        {
+            Points pt = new Points();
+            pt.Add(pts);
+            CadPoint3dList.Add(pt);
+        }
+
+        private List<Points> m_CadPoint3dList = new List<Points>();
+        public List<Points> CadPoint3dList
+        {
+            get { return m_CadPoint3dList; }
+            set { m_CadPoint3dList = value; }
         }
 
         #region INotifyPropertyChanged Members

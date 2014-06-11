@@ -32,7 +32,7 @@
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="350"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Border BorderThickness="1" BorderBrush="Black" >
@@ -44,12 +44,12 @@
                         <StackPanel Orientation="Horizontal" >
                             <TextBlock Text="矩形边界宽:" Width ="100"></TextBlock>
                             <TextBlock Text="{Binding BoundaryWidth}"  Width ="50"></TextBlock>
-                            <Slider Width="150" Value="{Binding BoundaryWidth}" Minimum="100" Maximum="1000" />
+                            <Slider x:Name="ctr_slider"  Width="200" Value="{Binding BoundaryWidth}" Minimum="100" Maximum="1000" />
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="矩形边界高:" Width ="100"></TextBlock>
                             <TextBlock Text="{Binding BoundaryHeight}"  Width ="50"></TextBlock>
-                            <Slider Width="150" Value="{Binding BoundaryHeight}" Minimum="100" Maximum="1000" />
+                            <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding BoundaryHeight}" Minimum="100" Maximum="1000" />
                         </StackPanel>
 
                         <Border BorderThickness="1"  BorderBrush="Blue" IsEnabled="{Binding  ElementName=Rectangle_Control ,Path=Condation_Enable}">
@@ -58,20 +58,20 @@
                                 <StackPanel x:Name="ui_layerCondition"  Orientation="Vertical" >
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="层高:" Width ="100"></TextBlock>
-                                        <TextBlock Text="{Binding CHeight}"  Width ="50"></TextBlock>
-                                        <Slider Width="150" Value="{Binding CHeight}" Minimum="10" Maximum="5000" />
+                                        <TextBlock Text="{Binding CHeight,Mode=TwoWay}"  Width ="50"></TextBlock>
+                                        <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding CHeight,Mode=TwoWay}" Minimum="10" Maximum="5000" />
                                     </StackPanel>
 
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="最小填充率:" Width ="100"></TextBlock>
                                         <TextBlock Text="{Binding MinCoverRadio}"  Width ="25"></TextBlock>
                                         <TextBlock Text="%"  Width ="25"></TextBlock>
-                                        <Slider Width="150" Value="{Binding MinCoverRadio}" Minimum="10" Maximum="80" />
+                                        <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding MinCoverRadio,Mode=TwoWay}" Minimum="10" Maximum="80" />
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="迭代次数:" Width ="100"></TextBlock>
                                         <TextBlock Text="{Binding IterCount}"  Width ="50"></TextBlock>
-                                        <Slider Width="150" Value="{Binding IterCount}" Minimum="1000" Maximum="300000" TickPlacement="None" />
+                                        <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding IterCount,Mode=TwoWay}" Minimum="1000" Maximum="300000" TickPlacement="None" />
                                     </StackPanel>
                                 </StackPanel>
                                 <Separator></Separator>
@@ -79,33 +79,33 @@
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="最大边数:" Width ="100"></TextBlock>
                                         <TextBlock Text="{Binding Condition.MaxEdges}"  Width ="50"></TextBlock>
-                                        <Slider Width="150" Value="{Binding Condition.MaxEdges}" Minimum="3" Maximum="6" />
+                                        <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding Condition.MaxEdges,Mode=TwoWay}" Minimum="3" Maximum="6" />
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="最小外接圆半径:" Width ="100"></TextBlock>
                                         <TextBlock Text="{Binding Condition.MinRadius}"  Width ="50"></TextBlock>
-                                        <Slider Width="150" Value="{Binding Condition.MinRadius}" Minimum="1" Maximum="500"  />
+                                        <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding Condition.MinRadius,Mode=TwoWay}" Minimum="1" Maximum="500"  />
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="最大外接圆半径:" Width ="100"></TextBlock>
                                         <TextBlock Text="{Binding Condition.MaxRadius}"  Width ="50"></TextBlock>
-                                        <Slider Width="150" Value="{Binding Condition.MaxRadius}" Minimum="1" Maximum="1000" />
+                                        <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding Condition.MaxRadius,Mode=TwoWay}" Minimum="1" Maximum="1000" />
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="最小角度:" Width ="100"></TextBlock>
                                         <TextBlock Text="{Binding Condition.MinAngle}"  Width ="50"></TextBlock>
-                                        <Slider Width="150" Value="{Binding Condition.MinAngle}" Minimum="1" Maximum="179" />
+                                        <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding Condition.MinAngle,Mode=TwoWay}" Minimum="1" Maximum="179" />
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="最大角度:" Width ="100"></TextBlock>
                                         <TextBlock Text="{Binding Condition.MaxAngle}"  Width ="50"></TextBlock>
-                                        <Slider Width="150" Value="{Binding Condition.MaxAngle}" Minimum="1" Maximum="179" />
+                                        <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding Condition.MaxAngle,Mode=TwoWay}" Minimum="1" Maximum="179" />
                                     </StackPanel>
 
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="目标比率:" Width ="100"></TextBlock>
                                         <TextBlock Text="{Binding ControlRatio.TargetRatio,Converter={StaticResource DoubleToPercentConverter}}"  Width ="50"></TextBlock>
-                                        <Slider Width="150" Value="{Binding ControlRatio.TargetRatio,Converter={StaticResource IntToPercentConverter}}"  IsEnabled="{Binding ElementName=ctrl_OpenRatio,Path=IsChecked}" Minimum="1" Maximum="100" />
+                                        <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding ControlRatio.TargetRatio,Mode=TwoWay,Converter={StaticResource IntToPercentConverter}}"  IsEnabled="{Binding ElementName=ctrl_OpenRatio,Path=IsChecked}" Minimum="1" Maximum="100" />
                                     </StackPanel>
                                     <CheckBox x:Name="ctrl_OpenRatio" IsChecked ="{Binding ElementName=Rectangle_Control,Path=OpenRatio}">开启物料比率控制</CheckBox>
                                 </StackPanel>
@@ -157,7 +157,7 @@
 
                                     </Grid>
 
-                                    <ListView x:Name="layer_condaition"  ItemsSource="{Binding LayerConditionList}" Height="100" MouseLeave="layer_condaition_MouseLeave">
+                                    <ListView x:Name="layer_condaition"  ItemsSource="{Binding LayerConditionList}" Height="100" MouseLeave="layer_condaition_MouseLeave" SelectionChanged="layer_condaition_SelectionChanged">
                                         <ListView.View>
                                             <GridView>
                                                 <GridViewColumn Header="层高" DisplayMemberBinding="{Binding CHeight}"/>
@@ -208,7 +208,8 @@
         <StackPanel Grid.Row="2" Orientation="Horizontal" Grid.ColumnSpan="3">
             <Button Width="80" Click="StartButton_Click"  IsEnabled="{Binding ElementName=Rectangle_Control ,Path=Condation_Enable}">开始</Button>
             <Button Width="80" Click="StopButton_Click">停止</Button>
-            <Button Width="80">保存</Button>
+            <Button Width="80" Click="Button_Click">保存</Button>
+            <TextBlock x:Name="save_tips" VerticalAlignment="Center" Foreground="Red" FontSize="14"></TextBlock>
         </StackPanel>
 
     </Grid>

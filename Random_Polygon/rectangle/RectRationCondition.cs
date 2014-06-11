@@ -105,7 +105,7 @@ namespace Random_Polygon.rectangle
         public ObservableCollection<RectRationLayerCondition> RatioConditionList
         {
             get { return m_RatioConditionList; }
-            private set { m_RatioConditionList = value; }
+            set { m_RatioConditionList = value; }
         }
 
         public void Add(RectRationLayerCondition condition)
@@ -217,6 +217,7 @@ namespace Random_Polygon.rectangle
             {
                 conditionList.ClearGeneraterInfo();
             }
+            this.CadPoint3dList.Clear();
         }
 
         public void clear()
@@ -225,6 +226,7 @@ namespace Random_Polygon.rectangle
             {
                 conditionList.Clear();
             }
+           
         }
 
         #region INotifyPropertyChanged Members
@@ -255,6 +257,7 @@ namespace Random_Polygon.rectangle
         {
             m_LayerConditionList.Remove(item);
             UpdateHeight();
+            
         }
 
         public void UpdateHeight()
@@ -274,7 +277,21 @@ namespace Random_Polygon.rectangle
             {
                 conditionList.CWidth = with;
             }
-        } 
+        }
+
+        public void Add(List<System.Windows.Point> pts)
+        {
+            Points pt = new Points();
+            pt.Add(pts);
+            CadPoint3dList.Add(pt);
+        }
+
+        private List<Points> m_CadPoint3dList = new List<Points>();
+        public List<Points> CadPoint3dList
+        {
+            get { return m_CadPoint3dList; }
+            set { m_CadPoint3dList = value; }
+        }
         
     }
 

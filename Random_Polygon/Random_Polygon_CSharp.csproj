@@ -93,6 +93,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CadPoint3d.cs" />
     <Compile Include="Converters\BoolReverseConverter.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="circle\CircleRationCondition.cs" />
@@ -116,7 +117,6 @@
     <Compile Include="circle\RCircle.cs" />
     <Compile Include="utils\CollectionComparator.cs" />
     <Compile Include="rectangle\Condition.cs" />
-    <Compile Include="rectangle\ContitionList.cs" />
     <Compile Include="rectangle\ExtendedPolygon.cs" />
     <Compile Include="rectangle\ExtendedPolygonBuilder.cs" />
     <Compile Include="laddershape\LadderShape.cs" />

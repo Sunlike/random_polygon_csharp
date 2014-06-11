@@ -95,6 +95,7 @@ namespace Random_Polygon.circle
             {
                 ratio.ControlRatio.ClearGenteraterInfo();
             }
+            CadPoint3dList.Clear();
         }
 
         public void UpdateTotalCount()
@@ -118,6 +119,19 @@ namespace Random_Polygon.circle
              
         }
 
+        public void Add(List<System.Windows.Point> pts)
+        {
+            Points pt = new Points();
+            pt.Add(pts);
+            CadPoint3dList.Add(pt);
+        }
+
+        private List<Points> m_CadPoint3dList = new List<Points>();
+        public List<Points> CadPoint3dList
+        {
+            get { return m_CadPoint3dList; }
+            set { m_CadPoint3dList = value; }
+        }
         #region INotifyPropertyChanged Members
         [field: NonSerialized]
         public event PropertyChangedEventHandler PropertyChanged;

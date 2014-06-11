@@ -17,6 +17,8 @@ using System.ComponentModel;
 using System.Windows.Threading;
 using System.Collections.ObjectModel;
 using Random_Polygon.circle;
+using System.IO;
+using System.Xml.Serialization;
 
 namespace Random_Polygon.rectangle
 {
@@ -267,12 +269,12 @@ namespace Random_Polygon.rectangle
          
 
             int layer = 1;
-            CoverRadio = "";
+            string strRadio = "";
             foreach(double radio in m_recover_radio)
             {
-                CoverRadio += "" + layer + "层:" + radio + "%d" ; 
+                strRadio += "" + (layer++) + "层:" + radio + "%  "; 
             }
-
+            CoverRadio = strRadio;
             Condation_Enable = true;
 
         }
@@ -326,6 +328,7 @@ namespace Random_Polygon.rectangle
                   CoverRadio = (container.getCoverageRatio() * 100).ToString();
 
                   Polygon ui_polygon = createPolygon(polygonTemp.Points);
+                  m_ConditionList.Add(polygonTemp.Points);
                   bg_draw.Children.Add(ui_polygon);
 
               }));
@@ -456,6 +459,37 @@ namespace Random_Polygon.rectangle
         private void layer_condaition_MouseLeave(object sender, MouseEventArgs e)
         {
             ui_listview.DataContext = m_uiLayerCondition;
+        }
+
+        /// <summary>
+        /// 保存生成的列表
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                save_tips.Text = "正在保存中……";
+                string path = AppDomain.CurrentDomain.BaseDirectory + "rectangle";
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+
+                string filename = path + "\\" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".xml";
+
+                using (FileStream stream = new FileStream(filename, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+                {
+                    XmlSerializer serializer = new XmlSerializer(typeof(RectRationConditionList));
+                    serializer.Serialize(stream, this.m_ConditionList);
+                }
+                save_tips.Text = "保存成功";
+            }
+            catch (System.Exception ex)
+            {
+                MessageBox.Show("保存失败", "错误", MessageBoxButton.OK);
+            }
         }
 
        

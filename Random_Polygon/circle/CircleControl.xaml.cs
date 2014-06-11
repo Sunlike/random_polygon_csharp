@@ -15,6 +15,9 @@ using Random_Polygon.circle;
 using System.Windows.Threading;
 using System.Diagnostics;
 using System.Threading;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Xml.Serialization;
 
 namespace Random_Polygon.circle
 {
@@ -29,7 +32,7 @@ namespace Random_Polygon.circle
 
             this.DataContext = m_RatioConditionList;
             ui_condition.DataContext = m_uiCondition;
-           
+
 
         }
 
@@ -45,7 +48,7 @@ namespace Random_Polygon.circle
         public bool OpenRatio
         {
             get { return openRatio; }
-            set 
+            set
             {
                 openRatio = value;
                 OnPropertyChanged("OpenRatio");
@@ -139,7 +142,7 @@ namespace Random_Polygon.circle
                 box.Height = box.Width;
 
                 ExtendedPolygon polygon = null;
-              
+
                 bool bSuccess = false;
                 for (int j = 0; j < ratioControl.Condition.MaxRadius * 2; j += ratioControl.Condition.ExpandStep)
                 {
@@ -202,12 +205,12 @@ namespace Random_Polygon.circle
                         bSuccess = container.canSafePut(polygon);
                         if (bSuccess)
                         {
-                            container.put(polygon); 
+                            container.put(polygon);
                             AddPolygon(polygon, container);
                             ++ratioControl.ControlRatio.Count;
-                            this.m_RatioConditionList.UpdateTotalCount(); 
-                             
-                             
+                            this.m_RatioConditionList.UpdateTotalCount();
+
+
                             break;
                         }
                     }
@@ -217,7 +220,7 @@ namespace Random_Polygon.circle
                     container.put(polygon);
                     AddPolygon(polygon, container);
                     ++ratioControl.ControlRatio.Count;
-                    this.m_RatioConditionList.UpdateTotalCount(); 
+                    this.m_RatioConditionList.UpdateTotalCount();
                 }
 
 
@@ -225,7 +228,7 @@ namespace Random_Polygon.circle
 
                 double radio = container.getCoverageRatio() * 100;
                 if (radio > this.m_RatioConditionList.MinCoverRadio)
-                { 
+                {
                     break;
                 }
             }
@@ -236,7 +239,7 @@ namespace Random_Polygon.circle
 
         public void run()
         {
-            sw.Start();         
+            sw.Start();
             genteraterRun();
             sw.Stop();
             Condation_Enable = true;
@@ -256,6 +259,7 @@ namespace Random_Polygon.circle
                   CoverRadio = (container.getCoverageRatio() * 100).ToString();
 
                   Polygon ui_polygon = createPolygon(polygon.Points);
+                  this.RatioConditionList.Add(polygon.Points);
                   this.bg_draw.Children.Add(ui_polygon);
 
               }));
@@ -323,7 +327,7 @@ namespace Random_Polygon.circle
             m_thread = new Thread(new ThreadStart(run));
             m_thread.IsBackground = true;
             m_thread.Priority = ThreadPriority.BelowNormal;
-          
+
             m_thread.Start();
         }
 
@@ -340,7 +344,7 @@ namespace Random_Polygon.circle
             Debug.WriteLine("canStopThread = true");
 
         }
-       
+
         #region  物料比率控制
 
         //是否开启物料比率控制
@@ -350,20 +354,20 @@ namespace Random_Polygon.circle
             {
                 this.m_RatioConditionList.RatioConditionList.Clear();
                 this.m_RatioConditionList.RatioConditionList.Add(this.m_uiCondition.Clone());
-               
+
             }
 
             if (1 == this.m_RatioConditionList.IsTargetOutLimited(0))
             {
-                    MessageBox.Show("目标比率之和已经超过100%！", "警告");
-                    return false;
+                MessageBox.Show("目标比率之和已经超过100%！", "警告");
+                return false;
             }
-            else if(-1 == this.m_RatioConditionList.IsTargetOutLimited(0))
+            else if (-1 == this.m_RatioConditionList.IsTargetOutLimited(0))
             {
                 MessageBox.Show("目标比率之和不足100%,请调整目标比率！", "警告");
-                    return false;
+                return false;
             }
-                          
+
             return true;
         }
 
@@ -378,7 +382,7 @@ namespace Random_Polygon.circle
             this.m_RatioConditionList.RatioConditionList.Add(this.m_uiCondition.Clone());
         }
 
-       
+
 
         private void Button_DeleteSelectClick(object sender, RoutedEventArgs e)
         {
@@ -396,6 +400,33 @@ namespace Random_Polygon.circle
         }
         #endregion
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                save_tips.Text = "正在保存中……";
+                string path = AppDomain.CurrentDomain.BaseDirectory + "circle";
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+
+                string filename = path + "\\" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".xml";
+
+                using (FileStream stream = new FileStream(filename, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+                {
+                    XmlSerializer serializer = new XmlSerializer(typeof(CircleRatioConditionList));
+                    serializer.Serialize(stream, this.m_RatioConditionList);
+                }
+                save_tips.Text = "保存成功";
+            }
+            catch (System.Exception ex)
+            {
+                MessageBox.Show("保存失败", "错误", MessageBoxButton.OK);
+            }          
+
+        }
+
     }
-     
+
 }

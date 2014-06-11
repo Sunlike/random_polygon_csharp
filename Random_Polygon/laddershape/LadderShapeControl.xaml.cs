@@ -15,6 +15,8 @@ using Random_Polygon.circle;
 using System.Windows.Threading;
 using System.Diagnostics;
 using System.Threading;
+using System.IO;
+using System.Xml.Serialization;
 
 namespace Random_Polygon.laddershape
 {
@@ -247,6 +249,7 @@ namespace Random_Polygon.laddershape
                   CoverRadio = (container.getCoverageRatio() * 100).ToString();
 
                   Polygon ui_polygon = createPolygon(polygon.Points);
+                  this.m_RatioConditionList.Add(polygon.Points);
                   this.bg_draw.Children.Add(ui_polygon);
 
               }));
@@ -394,6 +397,32 @@ namespace Random_Polygon.laddershape
             this.m_RatioConditionList.RatioConditionList.Clear();
         }
         #endregion
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                save_tips.Text = "正在保存中……";
+                string path = AppDomain.CurrentDomain.BaseDirectory + "laddershape";
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+
+                string filename = path + "\\" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".xml";
+
+                using (FileStream stream = new FileStream(filename, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+                {
+                    XmlSerializer serializer = new XmlSerializer(typeof(LadderShapeRationConditionList));
+                    serializer.Serialize(stream, this.m_RatioConditionList);
+                }
+                save_tips.Text = "保存成功";
+            }
+            catch (System.Exception ex)
+            {
+                MessageBox.Show("保存失败", "错误", MessageBoxButton.OK);
+            }
+        }
     }
 
 
