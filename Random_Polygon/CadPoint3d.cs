@@ -46,7 +46,7 @@ namespace Random_Polygon
 
     }
 
-    public class Points:List< CadPoint3d>
+    public class Points:List<CadPoint3d>
     {
         public void Add(List<System.Windows.Point> items)
         {
