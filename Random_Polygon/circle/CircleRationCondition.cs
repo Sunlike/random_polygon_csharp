@@ -37,6 +37,11 @@ namespace Random_Polygon.circle
                 return formatter.Deserialize(objectStream) as CircleRatioCondition;
             }  
         }
+
+        public override string ToString()
+        {
+            return m_condition.ToString() + m_controlRatio.ToString();
+        }
         
         #region INotifyPropertyChanged Members
         [field: NonSerialized]
@@ -74,6 +79,20 @@ namespace Random_Polygon.circle
         {
             get { return m_radius; }
             set { m_radius = value; SubscribePropertyChanged("Radius"); }
+        }
+
+        private string m_finalRatio = "";
+        public string FinalRatio
+        {
+            get { return m_finalRatio; }
+            set { m_finalRatio = value; SubscribePropertyChanged("FinalRatio"); }
+        }
+
+        private string m_costTime = "";
+        public string CostTime
+        {
+            get { return m_costTime; }
+            set { m_costTime = value; SubscribePropertyChanged("CostTime"); }
         }
 
         private ObservableCollection<CircleRatioCondition> m_RatioConditionList= new ObservableCollection<CircleRatioCondition>();
@@ -144,6 +163,22 @@ namespace Random_Polygon.circle
         }
 
         #endregion
+
+        public override string ToString()
+        {
+            string format = "圆形信息:\n\r" +
+                            "半径:{0}\n\r" +
+                            "最总填充率:{1}\n\r" +
+                            "花费时间:{2}ms\n\r";
+            string result = string.Format(format, this.m_radius, this.m_finalRatio, this.m_costTime) + "\n\r";
+            format = "第{0}种物料信息:\n\r{1}\n\r";
+            for (int i = 0; i < m_RatioConditionList.Count;++i)
+            {
+                result += string.Format(format, i + 1, m_RatioConditionList[i].ToString());
+            }
+
+            return result;
+        }
 
 
     }

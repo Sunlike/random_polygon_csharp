@@ -74,6 +74,8 @@
     <Compile Include="circle\CircleRationCondition.cs" />
     <Compile Include="circle\Circle_Condition.cs" />
     <Compile Include="CadHelper.cs" />
+    <Compile Include="Circle_CadHelper.cs" />
+    <Compile Include="LadderShape_CadHelper.cs" />
     <Compile Include="rectangle\Condition.cs" />
     <Compile Include="rectangle\ExtendedPolygon.cs" />
     <Compile Include="laddershape\LadderShape.cs" />
@@ -85,6 +87,7 @@
     <Compile Include="circle\RCircle.cs" />
     <Compile Include="rectangle\RectangleContainer.cs" />
     <Compile Include="rectangle\RectRationCondition.cs" />
+    <Compile Include="Rectangle_CadHelper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

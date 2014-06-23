@@ -404,6 +404,8 @@ namespace Random_Polygon.circle
         {
             try
             {
+                this.m_RatioConditionList.CostTime = this.CostTime;
+                this.m_RatioConditionList.FinalRatio = this.CoverRadio + "%";
                 save_tips.Text = "正在保存中……";
                 string path = AppDomain.CurrentDomain.BaseDirectory + "circle";
                 if (!Directory.Exists(path))

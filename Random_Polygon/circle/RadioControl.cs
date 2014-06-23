@@ -91,7 +91,7 @@ namespace Random_Polygon.circle
 
         public override string ToString()
         {
-            return "Target:" + TargetRatio.ToString() + "\n\rReal:" + RealRatio + "\n\rCount:" + Count + "/ TotalCount:" + TotalCount.ToString() + "\n\r";
+            return "目标比率:" + TargetRatio.ToString() + "\n\r实际比率:" + RealRatio + "\n\r数量:" + Count + "/ 总数量:" + TotalCount.ToString() + "\n\r";
         }
 
         public void ClearGenteraterInfo()
@@ -222,6 +222,23 @@ namespace Random_Polygon.circle
             {
                 ratio.ClearGenteraterInfo();
             }
+        }
+
+        public override string ToString()
+        {
+            string format = "物料填充比率控制信息:\n\r"+
+                            "第{0}个条:\n\r"+
+                            "{1}\n\r"+
+                            "物料目标填充比率:{2}  --物料数:{4}\n\r" +
+                            "物料实际填充比率:{3}  --物料总数:{5}\n\r";
+            string result = "";
+            for (int i = 0; i < this.RatioList.Count; ++i)
+            {
+                RatioControl ratio = this.RatioList[i];
+                result += string.Format(format, i + 1, ratio.ToString(), ratio.TargetRatio, ratio.RealRatio, ratio.Count, ratio.TotalCount);
+            }
+
+            return result;
         }
     }
 }

@@ -92,6 +92,16 @@ namespace Random_Polygon
         }
 
         #endregion
+
+
+        public override string ToString()
+        {
+            string format = "物料边数:[3,{0}]\n\r" +
+                            "物料外接圆半径大小:[{1},{2}]\n\r" +
+                            "物料角度大小:[{3},{4}]\n\r";
+            
+            return string.Format(format,this.m_MaxEdges,this.m_MinRadius,this.MaxRadius,this.MinAngle,this.MaxAngle);
+        }
       
     }
 

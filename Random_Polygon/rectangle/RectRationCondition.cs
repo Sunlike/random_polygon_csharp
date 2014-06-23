@@ -40,6 +40,12 @@ namespace Random_Polygon.rectangle
             }
         }
 
+        public override string ToString()
+        {
+            string result = this.Condition.ToString(); 
+            result += this.ControlRatio.ToString();
+            return result;
+        }
 
 
         #region INotifyPropertyChanged Members
@@ -173,6 +179,19 @@ namespace Random_Polygon.rectangle
             }
         }
 
+        public override string ToString()
+        {
+            string format = "层高:{0}\n\r" +
+                            "物料控制信息:\n\r";
+            string result = string.Format(format, this.CHeight);
+
+            foreach(RectRationLayerCondition ration in this.m_RatioConditionList)
+            {
+                result += ration.ToString();
+            }
+
+            return result;
+        }
 
         #region INotifyPropertyChanged Members
         [field: NonSerialized]
@@ -204,6 +223,19 @@ namespace Random_Polygon.rectangle
             set { m_BoundaryHeight = value; SubscribePropertyChanged("BoundaryHeight"); }
         }
 
+        private string m_finalRatio = "";
+        public string FinalRatio
+        {
+            get { return m_finalRatio; }
+            set { m_finalRatio = value; SubscribePropertyChanged("FinalRatio"); }
+        }
+
+        private string m_costTime = "";
+        public string CostTime
+        {
+            get { return m_costTime; }
+            set { m_costTime = value; SubscribePropertyChanged("CostTime"); }
+        }
         private ObservableCollection<RectRationLayerConditionList> m_LayerConditionList = new ObservableCollection<RectRationLayerConditionList>();
         public ObservableCollection<RectRationLayerConditionList> LayerConditionList
         {
@@ -292,7 +324,23 @@ namespace Random_Polygon.rectangle
             get { return m_CadPoint3dList; }
             set { m_CadPoint3dList = value; }
         }
-        
+
+
+        public override string ToString()
+        {
+            string format = "矩形边界信息:矩形宽-{0}\t 矩形高={1}\n\r" + "最总填充率:{2}\n\r" +
+                            "花费时间:{3}ms\n\r";
+
+            string result = string.Format(format, this.BoundaryWidth, this.BoundaryHeight, this.FinalRatio, this.CostTime) + "\n\r";
+            result += "物料分层填充信息:\n\r";
+            format = "第{0}层物料信息:\n\r{1}";
+            for(int i = 0; i < this.m_LayerConditionList.Count; ++i)
+            {
+                result += string.Format(format, i + 1, this.m_LayerConditionList[i].ToString());  
+            }
+
+            return result;
+        }
     }
 
 }

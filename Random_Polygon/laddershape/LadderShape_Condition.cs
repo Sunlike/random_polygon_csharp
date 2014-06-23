@@ -65,7 +65,17 @@ namespace Random_Polygon
         {
             get { return m_expandStep; }
             set { m_expandStep = value; }
-        } 
+        }
+
+        public override string ToString()
+        {
+            string format = "物料边数:[3,{0}]\n\r" +
+                            "物料外接圆半径大小:[{1},{2}]\n\r" +
+                            "物料角度大小:[{3},{4}]\n\r";
+
+            return string.Format(format, this.m_MaxEdges, this.m_MinRadius, this.MaxRadius, this.MinAngle, this.MaxAngle);
+        }
+
 
         #region INotifyPropertyChanged Members
         [field: NonSerialized]

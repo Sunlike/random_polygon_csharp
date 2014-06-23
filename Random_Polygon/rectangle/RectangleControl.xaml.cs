@@ -470,6 +470,9 @@ namespace Random_Polygon.rectangle
         {
             try
             {
+                m_ConditionList.CostTime = this.CostTime;
+                m_ConditionList.FinalRatio = this.CoverRadio + "%";
+
                 save_tips.Text = "正在保存中……";
                 string path = AppDomain.CurrentDomain.BaseDirectory + "rectangle";
                 if (!Directory.Exists(path))
