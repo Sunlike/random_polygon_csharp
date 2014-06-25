@@ -22,5 +22,21 @@ namespace Random_Polygon
         {
             InitializeComponent();
         }
+
+      
+
+        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (ui_CadFileGenerater_Parent.IsSelected)
+            {
+                ui_CadFileGenerater.Initialize();
+            }
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            ui_CadFileGenerater.Close();
+        }
+
     }
 }

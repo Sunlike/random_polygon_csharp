@@ -35,8 +35,8 @@ namespace CadHelper
         private static Polyline3d GetBoundary(LadderShapeRationConditionList condition)
         {
             LadderShape ls = new LadderShape(condition.UpLayer, condition.DownLayer, condition.Height);
-            
-            return new Polyline3d(Poly3dType.SimplePoly,GetBoundaryPoints(ls),true);
+
+            return new Polyline3d(Poly3dType.SimplePoly, GetBoundaryPoints(ls), true);
         }
 
         private static Point3dCollection GetBoundaryPoints(LadderShape ls)
@@ -44,7 +44,7 @@ namespace CadHelper
             Point3dCollection p3dList = new Point3dCollection();
             foreach (System.Drawing.Point pt in ls.Points)
             {
-                p3dList.Add(new Point3d(pt.X,pt.Y,0));
+                p3dList.Add(new Point3d(pt.X, pt.Y, 0));
             }
             return p3dList;
         }
@@ -52,30 +52,31 @@ namespace CadHelper
         [CommandMethod("RunLadderShape")]
         public void RunLadderShape()
         {
-            OpenFileDialog openDialog = new OpenFileDialog("打开梯形边界中间文件", "", "xml", "打开", OpenFileDialog.OpenFileDialogFlags.AllowAnyExtension);
-            bool? result = openDialog.ShowModal();
-            if (result != null && result == true)
+
+            string filePath = CadHelper.GetSelectPath();
+            if (filePath == "")
             {
-                string filePath = openDialog.Filename;
-                string savePath = filePath.Replace(".xml", ".sat");
-                LadderShapeRationConditionList conditonList = GetLadderShapeInfo(filePath);
-                Polyline3d boundaryEntity = GetBoundary(conditonList);
-                List<Polyline3d> interEntities = CadHelper.GetEntities(conditonList.CadPoint3dList.ToList());
-                Database db = Application.DocumentManager.MdiActiveDocument.Database;
-                string text = conditonList.ToString();
-                CadHelper.InsertDescription(text, new Point3d(-100, 200, 0), db);
-
-                CadHelper.ToModelSpace(boundaryEntity, db);
-                foreach (Polyline3d entity in interEntities)
-                {
-                    CadHelper.ToModelSpace(entity, db);
-                }
-
-                Document acDoc = Application.DocumentManager.MdiActiveDocument;
-
-                acDoc.Database.SaveAs(savePath, acDoc.Database.SecurityParameters);
-
+                return;
             }
+            string savePath = filePath.Replace(".xml", ".sat");
+            LadderShapeRationConditionList conditonList = GetLadderShapeInfo(filePath);
+            Polyline3d boundaryEntity = GetBoundary(conditonList);
+            List<Polyline3d> interEntities = CadHelper.GetEntities(conditonList.CadPoint3dList.ToList());
+            Database db = Application.DocumentManager.MdiActiveDocument.Database;
+            string text = conditonList.ToString();
+            CadHelper.InsertDescription(text, new Point3d(-100, 200, 0), db);
+
+            CadHelper.ToModelSpace(boundaryEntity, db);
+            foreach (Polyline3d entity in interEntities)
+            {
+                CadHelper.ToModelSpace(entity, db);
+            }
+
+            Document acDoc = Application.DocumentManager.MdiActiveDocument;
+
+            acDoc.Database.SaveAs(savePath, acDoc.Database.SecurityParameters);
+
+
         }
     }
 }

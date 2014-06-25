@@ -1,7 +1,9 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Random_Polygon_CSharp", "Random_Polygon\Random_Polygon_CSharp.csproj", "{AAAA8096-EE55-4E35-9053-6657630AAE45}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CadHelper", "Random_Polygon\CadHelper.csproj", "{51272E0E-0DD4-4BD8-A7EE-853D7AEEA8B6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,6 +15,10 @@ Global
 		{AAAA8096-EE55-4E35-9053-6657630AAE45}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AAAA8096-EE55-4E35-9053-6657630AAE45}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AAAA8096-EE55-4E35-9053-6657630AAE45}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51272E0E-0DD4-4BD8-A7EE-853D7AEEA8B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51272E0E-0DD4-4BD8-A7EE-853D7AEEA8B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51272E0E-0DD4-4BD8-A7EE-853D7AEEA8B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51272E0E-0DD4-4BD8-A7EE-853D7AEEA8B6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

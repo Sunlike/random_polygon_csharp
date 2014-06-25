@@ -14,6 +14,7 @@ using Autodesk.AutoCAD.Windows;
 using Autodesk.AutoCAD.Runtime;
 using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD;
+using Autodesk.AutoCAD.EditorInput;
 
 namespace CadHelper
 {
@@ -41,16 +42,7 @@ namespace CadHelper
             }
             return new Polyline3d(Poly3dType.SimplePoly, vertices, true);
         }
-
-        [CommandMethod("CreateDocument")]
-        public void CreateDocument()
-        {
-            Document doc = Application.DocumentManager.Add("");
-            Application.DocumentManager.MdiActiveDocument = doc;
-        }
-
-      
-
+         
 
         /// <summary>
         /// 添加对象到模型空间
@@ -71,6 +63,21 @@ namespace CadHelper
             }
             return entId;
         }
+
+        public static string GetSelectPath()
+        {
+            Editor ed = Application.DocumentManager.MdiActiveDocument.Editor;
+            PromptResult result = ed.GetString("输入XML全路径:\n\r");
+            string filePath = result.StringResult;
+            if (!File.Exists(filePath))
+            {
+                ed.WriteMessage("文件不存在!");
+                filePath = "";
+            }
+            return filePath;
+        }
+
+        
 
         public static void InsertDescription(string textString, Point3d position, Database db)
         {

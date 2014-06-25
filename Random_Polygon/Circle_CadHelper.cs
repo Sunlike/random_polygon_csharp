@@ -11,6 +11,7 @@ using Autodesk.AutoCAD.Runtime;
 using Autodesk.AutoCAD.Windows;
 using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD;
+using Autodesk.AutoCAD.EditorInput;
 
 
 namespace CadHelper
@@ -42,36 +43,38 @@ namespace CadHelper
             return circle;
         }
 
+        
+
         [CommandMethod("RunCircle")]
-        public void RunCircle()
+        public void RunCircle1()
         {
-            OpenFileDialog openDialog = new OpenFileDialog("打开圆形边界中间文件", "", "xml", "打开", OpenFileDialog.OpenFileDialogFlags.AllowAnyExtension);
-            bool? result = openDialog.ShowModal();
-            if (result != null && result == true)
+            Database db = Application.DocumentManager.MdiActiveDocument.Database; 
+
+            string filePath = CadHelper.GetSelectPath();
+            if (filePath == "")
             {
-                string filePath = openDialog.Filename;
-                string savePath = filePath.Replace(".xml", ".sat");
-                CircleRatioConditionList conditonList = GetCircleInfo(filePath);
-               
-                
-                Circle boundaryEntity = GetCircleBoundary(conditonList);
-                List<Polyline3d> interEntities = CadHelper.GetEntities(conditonList.CadPoint3dList.ToList());
-                Database db = Application.DocumentManager.MdiActiveDocument.Database;
-                string text = conditonList.ToString(); 
-                CadHelper.InsertDescription(text, new Point3d(-100, 200, 0), db);
-                CadHelper.ToModelSpace(boundaryEntity, db);
-                foreach (Polyline3d entity in interEntities)
-                {
-                    CadHelper.ToModelSpace(entity, db);
-                }
-
-                Document acDoc = Application.DocumentManager.MdiActiveDocument;
-
-                acDoc.Database.SaveAs(savePath, acDoc.Database.SecurityParameters);
-
+                return;
             }
-        }
+            string savePath = filePath.Replace(".xml", ".sat");
+            CircleRatioConditionList conditonList = GetCircleInfo(filePath);
 
+            Circle boundaryEntity = GetCircleBoundary(conditonList);
+            List<Polyline3d> interEntities = CadHelper.GetEntities(conditonList.CadPoint3dList.ToList());
+            
+            string text = conditonList.ToString();
+            CadHelper.InsertDescription(text, new Point3d(-100, 200, 0), db);
+            CadHelper.ToModelSpace(boundaryEntity, db);
+            foreach (Polyline3d entity in interEntities)
+            {
+                CadHelper.ToModelSpace(entity, db);
+            }
+
+            Document acDoc = Application.DocumentManager.MdiActiveDocument;
+
+            acDoc.Database.SaveAs(savePath, acDoc.Database.SecurityParameters);
+
+
+        }
 
     }
 }
