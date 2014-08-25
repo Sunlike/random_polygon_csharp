@@ -60,6 +60,15 @@ namespace Random_Polygon.circle
 
     public class CircleRatioConditionList : INotifyPropertyChanged
     {
+        private int m_Thickness = 0;
+        /// <summary>
+        /// 厚度，用来生成厚度的图纸
+        /// </summary>
+        public int Thickness
+        {
+            get { return m_Thickness; }
+            set { m_Thickness = value; SubscribePropertyChanged("Thickness"); }
+        }
         private int m_MinCoverRadio = 50;
         public int MinCoverRadio
         {
@@ -138,11 +147,13 @@ namespace Random_Polygon.circle
              
         }
 
-        public void Add(List<System.Windows.Point> pts)
+        public void Add(List<System.Windows.Point> pts,System.Windows.Point centerPoint,double r)
         {
             Points pt = new Points();
             pt.Add(pts);
-            CadPoint3dList.Add(pt);
+            pt.Radius = r;
+            pt.CenterPoint = new CadPoint3d(centerPoint.X, centerPoint.Y, 0);            
+            CadPoint3dList.Add(pt);            
         }
 
         private List<Points> m_CadPoint3dList = new List<Points>();

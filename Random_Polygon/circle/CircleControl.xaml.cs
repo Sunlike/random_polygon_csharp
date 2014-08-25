@@ -259,7 +259,8 @@ namespace Random_Polygon.circle
                   CoverRadio = (container.getCoverageRatio() * 100).ToString();
 
                   Polygon ui_polygon = createPolygon(polygon.Points);
-                  this.RatioConditionList.Add(polygon.Points);
+                 
+                  this.RatioConditionList.Add(polygon.Points,polygon.CircleCenter,polygon.Radius);
                   this.bg_draw.Children.Add(ui_polygon);
 
               }));

@@ -249,7 +249,7 @@ namespace Random_Polygon.laddershape
                   CoverRadio = (container.getCoverageRatio() * 100).ToString();
 
                   Polygon ui_polygon = createPolygon(polygon.Points);
-                  this.m_RatioConditionList.Add(polygon.Points);
+                  this.m_RatioConditionList.Add(polygon.Points,polygon.CircleCenter,polygon.Radius);
                   this.bg_draw.Children.Add(ui_polygon);
 
               }));

@@ -328,7 +328,7 @@ namespace Random_Polygon.rectangle
                   CoverRadio = (container.getCoverageRatio() * 100).ToString();
 
                   Polygon ui_polygon = createPolygon(polygonTemp.Points);
-                  m_ConditionList.Add(polygonTemp.Points);
+                  m_ConditionList.Add(polygonTemp.Points,polygonTemp.CircleCenter,polygonTemp.Radius);
                   bg_draw.Children.Add(ui_polygon);
 
               }));

@@ -152,10 +152,12 @@ namespace Random_Polygon.laddershape
                 return 0;
         }
 
-        public void Add(List<System.Windows.Point> pts)
+        public void Add(List<System.Windows.Point> pts,System.Windows.Point centerPoint,double r)
         {
             Points pt = new Points();
             pt.Add(pts);
+            pt.Radius = r;
+            pt.CenterPoint = new CadPoint3d(centerPoint.X, centerPoint.Y, 0);
             CadPoint3dList.Add(pt);
         }
 

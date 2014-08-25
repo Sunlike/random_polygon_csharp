@@ -101,6 +101,9 @@ namespace Random_Polygon
 
         private void Generate_Click(object sender, RoutedEventArgs e)
         {
+            
+            //
+
             CadFileInfo cadFileInfo = ui_fileInfoView.SelectedValue as CadFileInfo;
             if (cadFileInfo == null)
             {
@@ -133,7 +136,7 @@ namespace Random_Polygon
             catch (System.Exception ex)
             {
                 MessageBox.Show("AutoCad没有启动或者已经关闭，\n请点击左侧“启动Cad” 的按钮进行启动AutoCad.", "错误", MessageBoxButton.OK);
-            }
+            } 
 
         }
 

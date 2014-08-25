@@ -19,26 +19,31 @@ using Autodesk.AutoCAD.EditorInput;
 namespace CadHelper
 {
     public class CadHelper
-    {
-
-       
+    { 
+        public static void Move(Entity ent, Point3d basePt, Point3d targetPt)
+        {
+            Vector3d vec = targetPt - basePt;
+            Matrix3d mt = Matrix3d.Displacement(vec);
+            ent.TransformBy(mt);
+        }
+        
         public static List<Polyline3d> GetEntities(List<Points> pointsList)
         {
             List<Polyline3d> entityList = new List<Polyline3d>();
-            foreach (List<CadPoint3d> pts in pointsList)
+            foreach (Points pts in pointsList)
             {
-                entityList.Add(CadHelper.getPolyline(pts));
+                entityList.Add(CadHelper.getPolyline(pts.PointList, 0.0));
             }
              
             return entityList;
         }
 
-        public static Polyline3d getPolyline(List<CadPoint3d> pointList)
+        public static Polyline3d getPolyline(List<CadPoint3d> pointList,double height)
         {
             Point3dCollection vertices = new Point3dCollection();
             foreach (CadPoint3d pt in pointList)
             {
-                vertices.Add(new Point3d(pt.X, pt.Y, pt.Z));
+                vertices.Add(new Point3d(pt.X, pt.Y , pt.Z + height));
             }
             return new Polyline3d(Poly3dType.SimplePoly, vertices, true);
         }

@@ -38,5 +38,7 @@ namespace Random_Polygon
             ui_CadFileGenerater.Close();
         }
 
+      
+
     }
 }

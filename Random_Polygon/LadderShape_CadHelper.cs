@@ -11,6 +11,8 @@ using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD;
 using System.IO;
 using Random_Polygon.laddershape;
+using System.Threading;
+
 namespace CadHelper
 {
     public class LadderShape_CadHelper
@@ -35,8 +37,9 @@ namespace CadHelper
         private static Polyline3d GetBoundary(LadderShapeRationConditionList condition)
         {
             LadderShape ls = new LadderShape(condition.UpLayer, condition.DownLayer, condition.Height);
-
+           
             return new Polyline3d(Poly3dType.SimplePoly, GetBoundaryPoints(ls), true);
+            
         }
 
         private static Point3dCollection GetBoundaryPoints(LadderShape ls)
@@ -70,9 +73,25 @@ namespace CadHelper
             foreach (Polyline3d entity in interEntities)
             {
                 CadHelper.ToModelSpace(entity, db);
-            }
-
+            } 
+            
             Document acDoc = Application.DocumentManager.MdiActiveDocument;
+            try
+            { 
+                acDoc.SendStringToExecute("region ", true, false, false);
+                acDoc.SendStringToExecute("select all\n\n", true, false, false);
+                Thread.Sleep(1500);
+                acDoc.SendStringToExecute("extrude ", true, false, false);
+                acDoc.SendStringToExecute("select all\n\n", true, false, false);
+                Thread.Sleep(1500);
+                int height = conditonList.Height;
+                acDoc.SendStringToExecute(height.ToString() + "\r", true, false, false);
+            }
+            catch (System.Exception ex)
+            {
+                System.Windows.MessageBox.Show(ex.ToString());
+            }
+            
 
             acDoc.Database.SaveAs(savePath, acDoc.Database.SecurityParameters);
 

@@ -237,6 +237,7 @@ namespace Random_Polygon.rectangle
             set { m_costTime = value; SubscribePropertyChanged("CostTime"); }
         }
         private ObservableCollection<RectRationLayerConditionList> m_LayerConditionList = new ObservableCollection<RectRationLayerConditionList>();
+        
         public ObservableCollection<RectRationLayerConditionList> LayerConditionList
         {
             get { return m_LayerConditionList; }
@@ -311,10 +312,12 @@ namespace Random_Polygon.rectangle
             }
         }
 
-        public void Add(List<System.Windows.Point> pts)
+        public void Add(List<System.Windows.Point> pts, System.Windows.Point centerPoint, double r)
         {
             Points pt = new Points();
             pt.Add(pts);
+            pt.Radius = r;
+            pt.CenterPoint = new CadPoint3d(centerPoint.X, centerPoint.Y, 0);
             CadPoint3dList.Add(pt);
         }
 

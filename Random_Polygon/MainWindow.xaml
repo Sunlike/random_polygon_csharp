@@ -21,7 +21,7 @@
                 <ladder:LadderShapeControl></ladder:LadderShapeControl>
             </TabItem>
             <TabItem x:Name="ui_CadFileGenerater_Parent"  Header="生成物料填充图纸" HorizontalAlignment="Left" VerticalAlignment="Top">
-                <local:CadFileGenerater x:Name="ui_CadFileGenerater"></local:CadFileGenerater>
+                <local:CadFileGenerater x:Name="ui_CadFileGenerater" ></local:CadFileGenerater>
             </TabItem>
         </TabControl>
         

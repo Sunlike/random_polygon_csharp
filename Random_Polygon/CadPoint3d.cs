@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Collections.ObjectModel;
 
 
 namespace Random_Polygon
 {
+    [Serializable]
     public class CadPoint3d
     {
         private double x = 0; 
@@ -45,15 +47,36 @@ namespace Random_Polygon
         }
 
     }
-
-    public class Points:List<CadPoint3d>
+    [Serializable]
+    public class Points
     {
+        private List<CadPoint3d> pointList = new List<CadPoint3d>();
+        public List<CadPoint3d> PointList
+        {
+            get { return pointList; }
+            set { pointList = value; }
+        }
+
         public void Add(List<System.Windows.Point> items)
         {
             foreach(System.Windows.Point pt in items)
             {
-                this.Add(new CadPoint3d(pt.X, pt.Y, 0));
+                PointList.Add(new CadPoint3d(pt.X, pt.Y, 0));
             }
-        }        
+        }
+
+        private double m_Radius = 0.0;
+        public double Radius
+        {
+            get { return m_Radius; }
+            set { m_Radius = value; }
+        }
+
+        private CadPoint3d m_centerPoint = new CadPoint3d(0, 0, 0);
+        public Random_Polygon.CadPoint3d CenterPoint
+        {
+            get { return m_centerPoint; }
+            set { m_centerPoint = value; }
+        }
     }
 }
