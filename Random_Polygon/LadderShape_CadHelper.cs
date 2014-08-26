@@ -77,15 +77,16 @@ namespace CadHelper
             
             Document acDoc = Application.DocumentManager.MdiActiveDocument;
             try
-            { 
-                acDoc.SendStringToExecute("region ", true, false, false);
-                acDoc.SendStringToExecute("select all\n\n", true, false, false);
-                Thread.Sleep(1500);
-                acDoc.SendStringToExecute("extrude ", true, false, false);
-                acDoc.SendStringToExecute("select all\n\n", true, false, false);
-                Thread.Sleep(1500);
-                int height = conditonList.Height;
-                acDoc.SendStringToExecute(height.ToString() + "\r", true, false, false);
+            {
+                //acDoc.SendStringToExecute("region\r", true, false, false);
+                //acDoc.SendStringToExecute("_ai_selall\r", true, false, false);
+                //Thread.Sleep(1500);
+                //acDoc.SendStringToExecute("extrude\r", true, false, false);
+                //acDoc.SendStringToExecute("_ai_selall\r", true, false, false);
+                //Thread.Sleep(1500);
+                //int height = conditonList.Height;
+                //acDoc.SendStringToExecute(height.ToString() + "\r\r", true, false, false); 
+               
             }
             catch (System.Exception ex)
             {
@@ -93,7 +94,7 @@ namespace CadHelper
             }
             
 
-            acDoc.Database.SaveAs(savePath, acDoc.Database.SecurityParameters);
+           // acDoc.Database.SaveAs(savePath, acDoc.Database.SecurityParameters);
 
 
         }

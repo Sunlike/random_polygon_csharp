@@ -58,7 +58,11 @@
                                     <TextBlock Text="{Binding Height}"  Width ="50"></TextBlock>
                                     <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding Height,Mode=TwoWay}" Minimum="10" Maximum="5000" />
                                 </StackPanel>
-
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="图形厚度:" Width ="100"></TextBlock>
+                                    <TextBlock Text="{Binding Thickness}"  Width ="50"></TextBlock>
+                                    <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding Thickness,Mode=TwoWay}" Minimum="0" Maximum="1000"  />
+                                </StackPanel>
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="最小填充率:" Width ="100"></TextBlock>
                                     <TextBlock Text="{Binding MinCoverRadio}"  Width ="25"></TextBlock>

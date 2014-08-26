@@ -63,6 +63,15 @@ namespace Random_Polygon.laddershape
 
     public class LadderShapeRationConditionList : INotifyPropertyChanged
     {
+        private int m_Thickness = 0;
+        /// <summary>
+        /// 厚度，用来生成厚度的图纸
+        /// </summary>
+        public int Thickness
+        {
+            get { return m_Thickness; }
+            set { m_Thickness = value; SubscribePropertyChanged("Thickness"); }
+        }
         private int m_MinCoverRadio = 50;
         public int MinCoverRadio
         {

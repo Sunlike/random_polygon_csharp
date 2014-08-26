@@ -64,7 +64,7 @@ namespace Random_Polygon.rectangle
     [Serializable]
     public class RectRationLayerConditionList : INotifyPropertyChanged
     {
-
+        
         private int m_MinCoverRadio = 50;
         public int MinCoverRadio
         {
@@ -209,6 +209,15 @@ namespace Random_Polygon.rectangle
 
     public class RectRationConditionList : INotifyPropertyChanged
     {
+        private int m_Thickness = 0;
+        /// <summary>
+        /// 厚度，用来生成厚度的图纸
+        /// </summary>
+        public int Thickness
+        {
+            get { return m_Thickness; }
+            set { m_Thickness = value; SubscribePropertyChanged("Thickness"); }
+        }
         // 总边界
         private int m_BoundaryWidth = 500;
         public int BoundaryWidth

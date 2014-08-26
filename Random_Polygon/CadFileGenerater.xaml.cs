@@ -15,6 +15,10 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.ComponentModel;
 using System.Threading;
+using Random_Polygon.circle;
+using System.Xml.Serialization;
+using Random_Polygon.laddershape;
+using Random_Polygon.rectangle;
 
 namespace Random_Polygon
 {
@@ -153,6 +157,109 @@ namespace Random_Polygon
 
             }
 
+        }
+
+        private void Save_Click(object sender, RoutedEventArgs e)
+        {
+            CadFileInfo cadFileInfo = ui_fileInfoView.SelectedValue as CadFileInfo;
+            if (cadFileInfo == null)
+            {
+                MessageBox.Show("请先选中要生成的文件", "错误", MessageBoxButton.OK);
+                return;
+            }
+
+            try
+            {
+                int nThickness = 0;
+                switch (cadFileInfo.CadType)
+                {
+                    case CadShapeType.CadShapeType_Circle: 
+                        CircleRatioConditionList Circlelist = GetCircleInfo(cadFileInfo.FileFullPath);
+                        nThickness = Circlelist.Thickness;
+                        break;
+                    case CadShapeType.CadShapeType_LadderShape: 
+                        LadderShapeRationConditionList LadderShapelist = GetLadderShapeInfo(cadFileInfo.FileFullPath);
+                        nThickness = LadderShapelist.Thickness; 
+                        break;
+                    case CadShapeType.CadShapeType_Rectangle:
+                        RectRationConditionList RectShapelist = GetRectangleInfo(cadFileInfo.FileFullPath);
+                        nThickness = RectShapelist.Thickness;
+                        break;
+                }
+
+
+                string satName = cadFileInfo.FileFullPath.Replace(".xml", ".sat");
+
+                string strCommand = "";
+                strCommand = "region\r" + "select\r" + "all\r\r";
+                AcadApp.ActiveDocument.SendCommand(strCommand);
+                Thread.Sleep(2000);
+                if (nThickness > 0)
+                {
+                    strCommand = "extrude\r" + "select\r" + "all\r\r" + nThickness.ToString() + "\r";
+                    AcadApp.ActiveDocument.SendCommand(strCommand);
+                    Thread.Sleep(2000); 
+                }
+                
+                strCommand = "acisout\r" + "select\r" + "all\r\r" + satName +"\r";
+                AcadApp.ActiveDocument.SendCommand(strCommand);
+            }
+            catch (System.Exception ex)
+            {
+                MessageBox.Show("命令参数不正确，请注意先region命令，转化为面\n\r在用extrude命令转化为3D实体\n最后通过命令export或acisout输出sat文件", "错误", MessageBoxButton.OK);
+            } 
+
+        }
+
+        /// <summary>
+        /// 获取圆形边界生成的信息
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        private CircleRatioConditionList GetCircleInfo(string path)
+        {
+            CircleRatioConditionList result = null;
+            using (Stream stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                XmlSerializer xs = new XmlSerializer(typeof(CircleRatioConditionList));
+                result = (CircleRatioConditionList)xs.Deserialize(stream);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 获取梯形形边界生成的信息
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        private  LadderShapeRationConditionList GetLadderShapeInfo(string path)
+        {
+            LadderShapeRationConditionList result = null;
+            using (Stream stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                XmlSerializer xs = new XmlSerializer(typeof(LadderShapeRationConditionList));
+                result = (LadderShapeRationConditionList)xs.Deserialize(stream);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 获取矩形形边界生成的信息
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        private  RectRationConditionList GetRectangleInfo(string path)
+        {
+            RectRationConditionList result = null;
+            using (Stream stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                XmlSerializer xs = new XmlSerializer(typeof(RectRationConditionList));
+                result = (RectRationConditionList)xs.Deserialize(stream);
+            }
+
+            return result;
         }
 
     }

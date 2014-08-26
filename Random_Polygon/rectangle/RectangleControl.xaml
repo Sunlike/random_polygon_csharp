@@ -51,6 +51,11 @@
                             <TextBlock Text="{Binding BoundaryHeight}"  Width ="50"></TextBlock>
                             <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding BoundaryHeight}" Minimum="100" Maximum="1000" />
                         </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="图形厚度:" Width ="100"></TextBlock>
+                            <TextBlock Text="{Binding Thickness}"  Width ="50"></TextBlock>
+                            <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding Thickness,Mode=TwoWay}" Minimum="0" Maximum="1000"  />
+                        </StackPanel>
 
                         <Border BorderThickness="1"  BorderBrush="Blue" IsEnabled="{Binding  ElementName=Rectangle_Control ,Path=Condation_Enable}">
                             <StackPanel Orientation="Vertical" Margin="0" >
