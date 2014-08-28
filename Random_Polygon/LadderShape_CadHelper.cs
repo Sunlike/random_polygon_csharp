@@ -75,23 +75,23 @@ namespace CadHelper
                 CadHelper.ToModelSpace(entity, db);
             } 
             
-            Document acDoc = Application.DocumentManager.MdiActiveDocument;
-            try
-            {
-                //acDoc.SendStringToExecute("region\r", true, false, false);
-                //acDoc.SendStringToExecute("_ai_selall\r", true, false, false);
-                //Thread.Sleep(1500);
-                //acDoc.SendStringToExecute("extrude\r", true, false, false);
-                //acDoc.SendStringToExecute("_ai_selall\r", true, false, false);
-                //Thread.Sleep(1500);
-                //int height = conditonList.Height;
-                //acDoc.SendStringToExecute(height.ToString() + "\r\r", true, false, false); 
+            //Document acDoc = Application.DocumentManager.MdiActiveDocument;
+            //try
+            //{
+            //    //acDoc.SendStringToExecute("region\r", true, false, false);
+            //    //acDoc.SendStringToExecute("_ai_selall\r", true, false, false);
+            //    //Thread.Sleep(1500);
+            //    //acDoc.SendStringToExecute("extrude\r", true, false, false);
+            //    //acDoc.SendStringToExecute("_ai_selall\r", true, false, false);
+            //    //Thread.Sleep(1500);
+            //    //int height = conditonList.Height;
+            //    //acDoc.SendStringToExecute(height.ToString() + "\r\r", true, false, false); 
                
-            }
-            catch (System.Exception ex)
-            {
-                System.Windows.MessageBox.Show(ex.ToString());
-            }
+            //}
+            //catch (System.Exception ex)
+            //{
+            //    System.Windows.MessageBox.Show(ex.ToString());
+            //}
             
 
            // acDoc.Database.SaveAs(savePath, acDoc.Database.SecurityParameters);

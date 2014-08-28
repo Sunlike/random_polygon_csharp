@@ -71,9 +71,9 @@ namespace CadHelper
 
 
 
-            Document acDoc = Application.DocumentManager.MdiActiveDocument;
+            //Document acDoc = Application.DocumentManager.MdiActiveDocument;
 
-            acDoc.Database.SaveAs(savePath, acDoc.Database.SecurityParameters);
+            //acDoc.Database.SaveAs(savePath, acDoc.Database.SecurityParameters);
 
 
         }

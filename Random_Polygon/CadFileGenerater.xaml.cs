@@ -57,6 +57,10 @@ namespace Random_Polygon
 
         private void InitializeFileList(string path, CadShapeType shapeType)
         {
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
             string[] xmlFileList = Directory.GetFiles(path, "*.xml");
             string[] satFileList = Directory.GetFiles(path, "*.sat");
             foreach (string file in xmlFileList)

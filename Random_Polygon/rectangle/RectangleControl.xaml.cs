@@ -397,6 +397,14 @@ namespace Random_Polygon.rectangle
                 MessageBox.Show("目标比率之和不足100%\n\r目标比率只和必须为100%", "警告");
                 return;
             }
+
+            if (this.ConditionList.CurrentHeight + this.m_uiLayerCondition.CHeight > this.ConditionList.BoundaryHeight)
+            {
+                MessageBox.Show("分层高度大于总矩形高度", "警告");
+                return;
+            }
+             
+
             this.ConditionList.Add(this.m_uiLayerCondition.Clone());
            
             this.LayerCondition.Clear();

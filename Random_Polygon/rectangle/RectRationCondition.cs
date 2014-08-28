@@ -302,6 +302,11 @@ namespace Random_Polygon.rectangle
             
         }
 
+        public int CurrentHeight
+        {
+            get { return m_LayerConditionList.Sum(x => x.CHeight); }
+        }
+
         public void UpdateHeight()
         {
             int y = 0;
