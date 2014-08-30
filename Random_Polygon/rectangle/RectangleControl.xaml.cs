@@ -417,6 +417,7 @@ namespace Random_Polygon.rectangle
         {
             this.LayerCondition.Clear();
             this.Condition = new RectRationLayerCondition();
+            ui_Condition.DataContext = this.Condition;
             this.ConditionList.Clear();            
         }
 
