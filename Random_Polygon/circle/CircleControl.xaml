@@ -46,22 +46,22 @@
                                     <TextBlock Text="最小填充率:" Width ="100"></TextBlock>
                                     <TextBlock Text="{Binding MinCoverRadio}"  Width ="25"></TextBlock>
                                     <TextBlock Text="%"  Width ="25"></TextBlock>
-                                    <Slider x:Name="ctr_slider" Width="200" Value="{Binding MinCoverRadio,Mode=TwoWay}" Minimum="10" Maximum="80" />
+                                    <Slider x:Name="ctr_slider" Width="200" Value="{Binding MinCoverRadio,Mode=TwoWay}" Minimum="10" Maximum="80" MouseDoubleClick="ctr_slider_MouseDoubleClick" />
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="迭代次数:" Width ="100"></TextBlock>
                                     <TextBlock Text="{Binding IterCount}"  Width ="50"></TextBlock>
-                                    <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding IterCount,Mode=TwoWay}" Minimum="1000" Maximum="300000" TickPlacement="None" />
+                                    <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding IterCount,Mode=TwoWay}" Minimum="1000" Maximum="300000" TickPlacement="None" MouseDoubleClick="ctr_slider_MouseDoubleClick" />
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="圆形半径:" Width ="100"></TextBlock>
                                     <TextBlock Text="{Binding Radius}"  Width ="50"></TextBlock>
-                                    <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding Radius,Mode=TwoWay}" Minimum="10" Maximum="5000"  />
+                                    <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding Radius,Mode=TwoWay}" Minimum="10" Maximum="5000" MouseDoubleClick="ctr_slider_MouseDoubleClick" />
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="图形厚度:" Width ="100"></TextBlock>
                                     <TextBlock Text="{Binding Thickness}"  Width ="50"></TextBlock>
-                                    <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding Thickness,Mode=TwoWay}" Minimum="0" Maximum="1000"  />
+                                    <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding Thickness,Mode=TwoWay}" Minimum="0" Maximum="1000" MouseDoubleClick="ctr_slider_MouseDoubleClick" />
                                 </StackPanel>
 
                                 <Separator></Separator>
@@ -69,33 +69,33 @@
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="最大边数:" Width ="100"></TextBlock>
                                         <TextBlock Text="{Binding Condition.MaxEdges}"  Width ="50"></TextBlock>
-                                        <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding Condition.MaxEdges,Mode=TwoWay}" Minimum="3" Maximum="6"  />
+                                        <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding Condition.MaxEdges,Mode=TwoWay}" Minimum="3" Maximum="6" MouseDoubleClick="ctr_slider_MouseDoubleClick" />
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="最小外接圆半径:" Width ="100"></TextBlock>
                                         <TextBlock Text="{Binding Condition.MinRadius}"  Width ="50"></TextBlock>
-                                        <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding Condition.MinRadius,Mode=TwoWay}" Minimum="1" Maximum="500"  />
+                                        <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding Condition.MinRadius,Mode=TwoWay}" Minimum="1" Maximum="500" MouseDoubleClick="ctr_slider_MouseDoubleClick" />
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="最大外接圆半径:" Width ="100"></TextBlock>
                                         <TextBlock Text="{Binding Condition.MaxRadius}"  Width ="50"></TextBlock>
-                                        <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding Condition.MaxRadius,Mode=TwoWay}" Minimum="1" Maximum="1000" />
+                                        <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding Condition.MaxRadius,Mode=TwoWay}" Minimum="1" Maximum="1000" MouseDoubleClick="ctr_slider_MouseDoubleClick" />
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="最小角度:" Width ="100"></TextBlock>
                                         <TextBlock Text="{Binding Condition.MinAngle}"  Width ="50"></TextBlock>
-                                        <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding Condition.MinAngle,Mode=TwoWay}" Minimum="1" Maximum="179" />
+                                        <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding Condition.MinAngle,Mode=TwoWay}" Minimum="1" Maximum="179" MouseDoubleClick="ctr_slider_MouseDoubleClick" />
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="最大角度:" Width ="100"></TextBlock>
                                         <TextBlock Text="{Binding Condition.MaxAngle}"  Width ="50"></TextBlock>
-                                        <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding Condition.MaxAngle,Mode=TwoWay}" Minimum="1" Maximum="179" />
+                                        <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding Condition.MaxAngle,Mode=TwoWay}" Minimum="1" Maximum="179" MouseDoubleClick="ctr_slider_MouseDoubleClick" />
                                     </StackPanel>
 
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="目标比率:" Width ="100"></TextBlock>
                                         <TextBlock Text="{Binding ControlRatio.TargetRatio,Converter={StaticResource DoubleToPercentConverter}}"  Width ="50"></TextBlock>
-                                        <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding ControlRatio.TargetRatio,Mode=TwoWay,Converter={StaticResource IntToPercentConverter}}" IsEnabled="{Binding ElementName=ctrl_OpenRatio,Path=IsChecked}" Minimum="1" Maximum="100" />
+                                        <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding ControlRatio.TargetRatio,Mode=TwoWay,Converter={StaticResource IntToPercentConverter}}" IsEnabled="{Binding ElementName=ctrl_OpenRatio,Path=IsChecked}" Minimum="1" Maximum="100" MouseDoubleClick="ctr_slider_MouseDoubleClick" />
                                     </StackPanel>
                                 </StackPanel>
                                 <Separator></Separator>

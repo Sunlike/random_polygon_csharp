@@ -328,6 +328,9 @@ namespace Random_Polygon.rectangle
                   CoverRadio = (container.getCoverageRatio() * 100).ToString();
 
                   Polygon ui_polygon = createPolygon(polygonTemp.Points);
+                  Canvas.SetZIndex(ui_polygon, -1);
+
+                  Canvas.SetZIndex(bg_draw, -1000000);
                   m_ConditionList.Add(polygonTemp.Points,polygonTemp.CircleCenter,polygonTemp.Radius);
                   bg_draw.Children.Add(ui_polygon);
 
@@ -503,6 +506,18 @@ namespace Random_Polygon.rectangle
                 MessageBox.Show("保存失败", "错误", MessageBoxButton.OK);
             }
         }
+
+        private void ctr_slider_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        { 
+            Common.ModifySliderValue(sender as Slider,e);
+        }
+
+        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            bg_draw.Offset = new Point(slOffset.Value, 0);
+        }
+
+       
 
        
     }

@@ -3,6 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:converter="clr-namespace:Random_Polygon.Converters"
     x:Name ="Rectangle_Control"
+    xmlns:my="clr-namespace:System.Windows.Controls"
     >
 
     <UserControl.Resources>
@@ -44,39 +45,39 @@
                         <StackPanel Orientation="Horizontal" >
                             <TextBlock Text="矩形边界宽:" Width ="100"></TextBlock>
                             <TextBlock Text="{Binding BoundaryWidth}"  Width ="50"></TextBlock>
-                            <Slider x:Name="ctr_slider"  Width="200" Value="{Binding BoundaryWidth}" Minimum="100" Maximum="1000" />
+                            <Slider x:Name="ctr_slider"  Width="200" Value="{Binding BoundaryWidth}" Minimum="100" Maximum="1000" MouseDoubleClick="ctr_slider_MouseDoubleClick" />
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="矩形边界高:" Width ="100"></TextBlock>
                             <TextBlock Text="{Binding BoundaryHeight}"  Width ="50"></TextBlock>
-                            <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding BoundaryHeight}" Minimum="100" Maximum="1000" />
+                            <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding BoundaryHeight}" Minimum="100" Maximum="1000" MouseDoubleClick="ctr_slider_MouseDoubleClick" />
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="图形厚度:" Width ="100"></TextBlock>
                             <TextBlock Text="{Binding Thickness}"  Width ="50"></TextBlock>
-                            <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding Thickness,Mode=TwoWay}" Minimum="0" Maximum="1000"  />
+                            <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding Thickness,Mode=TwoWay}" Minimum="0" Maximum="1000" MouseDoubleClick="ctr_slider_MouseDoubleClick" />
                         </StackPanel>
 
-                        <Border BorderThickness="1"  BorderBrush="Blue" IsEnabled="{Binding  ElementName=Rectangle_Control ,Path=Condation_Enable}">
+                        <Border Panel.ZIndex="100"  BorderThickness="1"  BorderBrush="Blue" IsEnabled="{Binding  ElementName=Rectangle_Control ,Path=Condation_Enable}">
                             <StackPanel Orientation="Vertical" Margin="0" >
                                 <TextBlock Height ="30" VerticalAlignment="Stretch" TextAlignment="Center" Background="Beige" IsHitTestVisible="False" HorizontalAlignment="Stretch">分层填充条件控制</TextBlock>
                                 <StackPanel x:Name="ui_layerCondition"  Orientation="Vertical" >
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="层高:" Width ="100"></TextBlock>
                                         <TextBlock Text="{Binding CHeight,Mode=TwoWay}"  Width ="50"></TextBlock>
-                                        <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding CHeight,Mode=TwoWay}" Minimum="10" Maximum="5000" />
+                                        <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding CHeight,Mode=TwoWay}" Minimum="10" Maximum="5000" MouseDoubleClick="ctr_slider_MouseDoubleClick" />
                                     </StackPanel>
 
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="最小填充率:" Width ="100"></TextBlock>
                                         <TextBlock Text="{Binding MinCoverRadio}"  Width ="25"></TextBlock>
                                         <TextBlock Text="%"  Width ="25"></TextBlock>
-                                        <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding MinCoverRadio,Mode=TwoWay}" Minimum="10" Maximum="80" />
+                                        <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding MinCoverRadio,Mode=TwoWay}" Minimum="10" Maximum="80" MouseDoubleClick="ctr_slider_MouseDoubleClick" />
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="迭代次数:" Width ="100"></TextBlock>
                                         <TextBlock Text="{Binding IterCount}"  Width ="50"></TextBlock>
-                                        <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding IterCount,Mode=TwoWay}" Minimum="1000" Maximum="300000" TickPlacement="None" />
+                                        <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding IterCount,Mode=TwoWay}" Minimum="1000" Maximum="300000" TickPlacement="None" MouseDoubleClick="ctr_slider_MouseDoubleClick" />
                                     </StackPanel>
                                 </StackPanel>
                                 <Separator></Separator>
@@ -84,33 +85,33 @@
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="最大边数:" Width ="100"></TextBlock>
                                         <TextBlock Text="{Binding Condition.MaxEdges}"  Width ="50"></TextBlock>
-                                        <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding Condition.MaxEdges,Mode=TwoWay}" Minimum="3" Maximum="6" />
+                                        <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding Condition.MaxEdges,Mode=TwoWay}" Minimum="3" Maximum="6" MouseDoubleClick="ctr_slider_MouseDoubleClick" />
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="最小外接圆半径:" Width ="100"></TextBlock>
                                         <TextBlock Text="{Binding Condition.MinRadius}"  Width ="50"></TextBlock>
-                                        <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding Condition.MinRadius,Mode=TwoWay}" Minimum="1" Maximum="500"  />
+                                        <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding Condition.MinRadius,Mode=TwoWay}" Minimum="1" Maximum="500" MouseDoubleClick="ctr_slider_MouseDoubleClick" />
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="最大外接圆半径:" Width ="100"></TextBlock>
                                         <TextBlock Text="{Binding Condition.MaxRadius}"  Width ="50"></TextBlock>
-                                        <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding Condition.MaxRadius,Mode=TwoWay}" Minimum="1" Maximum="1000" />
+                                        <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding Condition.MaxRadius,Mode=TwoWay}" Minimum="1" Maximum="1000" MouseDoubleClick="ctr_slider_MouseDoubleClick" />
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="最小角度:" Width ="100"></TextBlock>
                                         <TextBlock Text="{Binding Condition.MinAngle}"  Width ="50"></TextBlock>
-                                        <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding Condition.MinAngle,Mode=TwoWay}" Minimum="1" Maximum="179" />
+                                        <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding Condition.MinAngle,Mode=TwoWay}" Minimum="1" Maximum="179" MouseDoubleClick="ctr_slider_MouseDoubleClick" />
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="最大角度:" Width ="100"></TextBlock>
                                         <TextBlock Text="{Binding Condition.MaxAngle}"  Width ="50"></TextBlock>
-                                        <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding Condition.MaxAngle,Mode=TwoWay}" Minimum="1" Maximum="179" />
+                                        <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding Condition.MaxAngle,Mode=TwoWay}" Minimum="1" Maximum="179" MouseDoubleClick="ctr_slider_MouseDoubleClick" />
                                     </StackPanel>
 
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="目标比率:" Width ="100"></TextBlock>
                                         <TextBlock Text="{Binding ControlRatio.TargetRatio,Converter={StaticResource DoubleToPercentConverter}}"  Width ="50"></TextBlock>
-                                        <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding ControlRatio.TargetRatio,Mode=TwoWay,Converter={StaticResource IntToPercentConverter}}"  IsEnabled="{Binding ElementName=ctrl_OpenRatio,Path=IsChecked}" Minimum="1" Maximum="100" />
+                                        <Slider Width="{Binding ElementName=ctr_slider,Path=Width}" Value="{Binding ControlRatio.TargetRatio,Mode=TwoWay,Converter={StaticResource IntToPercentConverter}}"  IsEnabled="{Binding ElementName=ctrl_OpenRatio,Path=IsChecked}" Minimum="1" Maximum="100" MouseDoubleClick="ctr_slider_MouseDoubleClick" />
                                     </StackPanel>
                                     <CheckBox x:Name="ctrl_OpenRatio" IsChecked ="{Binding ElementName=Rectangle_Control,Path=OpenRatio}">开启物料比率控制</CheckBox>
                                 </StackPanel>
@@ -205,12 +206,41 @@
                 </StackPanel>
             </ScrollViewer>
         </Border>
-        <Border Grid.Row="0" Grid.Column="1" Grid.RowSpan="3"  BorderBrush="Blue" BorderThickness="1">
-            <Canvas x:Name="bg_draw"  >
-                <Rectangle x:Name="rect_container"  Canvas.Left="0" Canvas.Top="0" Height="100" Stroke="Red" Width="200" Visibility="Hidden" />
-            </Canvas>
-        </Border>
-        <StackPanel Grid.Row="2" Orientation="Horizontal" Grid.ColumnSpan="3">
+        <Grid Grid.Row="0" Grid.Column="1" Grid.RowSpan="3" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+               <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="50*"></ColumnDefinition>
+                <ColumnDefinition Width="50*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="50"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock>OffSet</TextBlock>
+                    <Slider x:Name="slOffset"  Value="0" Maximum="100" Grid.Column="1" ValueChanged="Slider_ValueChanged"></Slider>
+                </Grid>
+                <Grid Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="50"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock> Scale</TextBlock>
+                    <Slider  x:Name="slScale"  Maximum="100" Grid.Column="1"  Value="{Binding ElementName=bg_draw, Path=Scale}" ></Slider>
+                </Grid>
+            </Grid>
+            <Border BorderBrush="Blue" BorderThickness="1" Grid.Row="1"> 
+                <my:ZoomableCanvas  x:Name="bg_draw" Panel.ZIndex="-10000"  Height="{Binding ElementName=rect_container,Path=Height}" Width="{Binding ElementName=rect_container,Path=Width}">
+                    <Rectangle x:Name="rect_container" Canvas.Left="0" Canvas.Top="0" Height="100" Stroke="Red" Width="200" Visibility="Hidden" />
+                </my:ZoomableCanvas >
+                
+            </Border>
+        </Grid>
+            <StackPanel Grid.Row="2" Orientation="Horizontal" Grid.ColumnSpan="3">
             <Button Width="80" Click="StartButton_Click"  IsEnabled="{Binding ElementName=Rectangle_Control ,Path=Condation_Enable}">开始</Button>
             <Button Width="80" Click="StopButton_Click">停止</Button>
             <Button Width="80" Click="Button_Click">保存</Button>

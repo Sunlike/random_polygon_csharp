@@ -425,6 +425,13 @@ namespace Random_Polygon.laddershape
                 MessageBox.Show("保存失败", "错误", MessageBoxButton.OK);
             }
         }
+
+
+
+        private void ctr_slider_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            Common.ModifySliderValue(sender as Slider, e);
+        }
     }
 
 

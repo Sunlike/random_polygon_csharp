@@ -128,6 +128,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="InputWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="laddershape\LadderShapeControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -155,12 +159,17 @@
     </Compile>
     <Compile Include="CadFileInfo.cs" />
     <Compile Include="CadPoint3d.cs" />
+    <Compile Include="utils\Common.cs" />
     <Compile Include="Converters\BoolReverseConverter.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="circle\CircleRationCondition.cs" />
+    <Compile Include="Converters\StringToIntConverter.cs" />
     <Compile Include="Converters\DoubleToPercentConverter.cs" />
     <Compile Include="circle\RadioControl.cs" />
     <Compile Include="Converters\IntToPercentConverter.cs" />
+    <Compile Include="InputWindow.xaml.cs">
+      <DependentUpon>InputWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="laddershape\LadderShapeRationCondition.cs" />
     <Compile Include="rectangle\RectRationCondition.cs" />
     <Compile Include="usercontrol\editbox.cs" />
@@ -201,6 +210,27 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="rectangle\RectangleContainer.cs" />
+    <Compile Include="zoomCanvas\LinkedListExtensions.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="zoomCanvas\MathExtensions.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="zoomCanvas\PriorityQuadTree.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="zoomCanvas\PriorityQueue.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="zoomCanvas\RectExtensions.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="zoomCanvas\VirtualPanel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="zoomCanvas\ZoomableCanvas.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

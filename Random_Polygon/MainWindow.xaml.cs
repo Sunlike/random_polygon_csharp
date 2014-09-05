@@ -23,7 +23,7 @@ namespace Random_Polygon
             InitializeComponent();
         }
 
-      
+        public static MainWindow mainWindow;
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

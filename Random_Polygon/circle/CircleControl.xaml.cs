@@ -430,6 +430,10 @@ namespace Random_Polygon.circle
 
         }
 
+        private void ctr_slider_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            Common.ModifySliderValue(sender as Slider, e);
+        }
     }
 
 }
