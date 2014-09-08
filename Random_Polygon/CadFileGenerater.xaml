@@ -29,12 +29,38 @@
         </Grid>
         
         <ListView x:Name="ui_fileInfoView" ItemsSource="{Binding }"  Grid.Row="1" SelectionChanged="ui_fileInfoView_SelectionChanged">
+            
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="文件名称" Width="Auto"    DisplayMemberBinding="{Binding FileName}"/>
-                    <GridViewColumn Header="文件全名称" Width="250" DisplayMemberBinding="{Binding FileFullPath}"/>
-                    <GridViewColumn Header="类型"     Width="80"     DisplayMemberBinding="{Binding CadType,Converter={StaticResource CadTypeConverter}}"/>
-                    <GridViewColumn Header="是否生成" Width="80"     DisplayMemberBinding="{Binding IsGenerater,Converter={StaticResource BoolConverter}}"/>
+                    <GridView.Columns>
+                        <GridViewColumn Header="文件名称" Width="Auto"    DisplayMemberBinding="{Binding FileName}"/>
+                        <GridViewColumn Header="文件全名称" Width="250" DisplayMemberBinding="{Binding FileFullPath}"/>
+                        <GridViewColumn Header="类型"     Width="80"     DisplayMemberBinding="{Binding CadType,Converter={StaticResource CadTypeConverter}}"/>
+                        <GridViewColumn Header="是否生成" Width="80"     DisplayMemberBinding="{Binding IsGenerater,Converter={StaticResource BoolConverter}}"/>
+                        <GridViewColumn Header="删除sat文件">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid HorizontalAlignment="Center">
+                                        <Button BorderBrush="Transparent" Height="20" IsEnabled="{Binding IsGenerater}"  Click="ButtonDelete_Click" Tag="{Binding FileFullPath}" HorizontalAlignment="Center">
+                                            <Image Source="images/Delete.png" Stretch="Uniform"/>
+                                        </Button>
+                                    </Grid>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+
+                        <GridViewColumn Header="删除所有">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate> 
+                                    <Grid HorizontalAlignment="Center">
+                                        <Button BorderBrush="Transparent" Height="20"  Click="ButtonDeleteALL_Click" Tag="{Binding FileFullPath}"  HorizontalAlignment="Center">
+                                            <Image Source="images/Delete.png" Stretch="Uniform"/>
+                                        </Button>
+                                    </Grid>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                    </GridView.Columns>
                 </GridView>
             </ListView.View>
         </ListView>

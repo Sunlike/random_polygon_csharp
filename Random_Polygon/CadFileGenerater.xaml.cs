@@ -264,6 +264,66 @@ namespace Random_Polygon
             }
 
             return result;
+        } 
+
+        private void ButtonDelete_Click(object sender, RoutedEventArgs e)
+        {
+            if (MessageBoxResult.Cancel == MessageBox.Show("确认删除该行吗？", "提示", MessageBoxButton.OKCancel))
+            {
+                return;
+            }
+            Button btn = sender as Button;
+            if (btn != null)
+            {
+                try
+                {
+                    string tag = btn.Tag.ToString();                     
+                    string satPath = tag.Replace(".xml", ".sat");
+                    File.Delete(satPath);
+                }
+                catch (System.Exception ex)
+                {
+                    string error = "删除失败，失败原因如下:\n\r" + ex.ToString();
+                    MessageBox.Show(error, "提示", MessageBoxButton.OK);
+                }
+                finally
+                {
+                    Initialize();
+                }
+
+            }
+            
+
+        }
+
+        private void ButtonDeleteALL_Click(object sender, RoutedEventArgs e)
+        {
+            if (MessageBoxResult.Cancel == MessageBox.Show("确认删除该行吗？", "提示", MessageBoxButton.OKCancel))
+            {
+                return;
+            }
+            Button btn = sender as Button;
+            if (btn != null)
+            {
+                try
+                {
+                    string tag = btn.Tag.ToString();
+                    string xmlPath = tag;
+                    string satPath = tag.Replace(".xml", ".sat");
+                    File.Delete(xmlPath);
+                    File.Delete(satPath);
+                }
+                catch (System.Exception ex)
+                {
+                    string error = "删除失败，失败原因如下:\n\r" + ex.ToString();
+                    MessageBox.Show(error, "提示", MessageBoxButton.OK);
+                }
+                finally
+                {
+                    Initialize();
+                }
+
+            }
         }
 
     }
