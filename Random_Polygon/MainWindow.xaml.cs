@@ -38,6 +38,11 @@ namespace Random_Polygon
             ui_CadFileGenerater.Close();
         }
 
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            rectControl.NotifySizeChanged();
+        }
+
       
 
     }

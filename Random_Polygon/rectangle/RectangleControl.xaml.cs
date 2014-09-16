@@ -58,7 +58,7 @@ namespace Random_Polygon.rectangle
             get { return m_ConditionList; }
             set { m_ConditionList = value; OnPropertyChanged("ConditionList"); }
         }
-       
+
         private bool openRatio = false;
         public bool OpenRatio
         {
@@ -102,7 +102,7 @@ namespace Random_Polygon.rectangle
 
         private bool canStopThread = false;
 
-         
+
 
         private List<double> m_recover_radio = new List<double>();
 
@@ -246,14 +246,14 @@ namespace Random_Polygon.rectangle
                 }
             }
 
-            m_recover_radio.Add(container.getCoverageRatio()*100); 
-             
+            m_recover_radio.Add(container.getCoverageRatio() * 100);
+
         }
 
         public void run()
-        {  
-            sw.Start();           
-            foreach(RectRationLayerConditionList layerCondition in this.ConditionList.LayerConditionList)
+        {
+            sw.Start();
+            foreach (RectRationLayerConditionList layerCondition in this.ConditionList.LayerConditionList)
             {
                 try
                 {
@@ -266,13 +266,13 @@ namespace Random_Polygon.rectangle
             }
 
             sw.Stop();
-         
+
 
             int layer = 1;
             string strRadio = "";
-            foreach(double radio in m_recover_radio)
+            foreach (double radio in m_recover_radio)
             {
-                strRadio += "" + (layer++) + "层:" + radio + "%  "; 
+                strRadio += "" + (layer++) + "层:" + radio + "%  ";
             }
             CoverRadio = strRadio;
             Condation_Enable = true;
@@ -316,7 +316,7 @@ namespace Random_Polygon.rectangle
             ExtendedPolygon polygonTemp = new ExtendedPolygon();
             foreach (Point pt in polygon.Points)
             {
-                polygonTemp.addPoint(new System.Drawing.Point((int)pt.X,(int)pt.Y));
+                polygonTemp.addPoint(new System.Drawing.Point((int)pt.X, (int)pt.Y));
             }
             polygonTemp.translate(layerCondition.X, layerCondition.Y);
 
@@ -331,7 +331,7 @@ namespace Random_Polygon.rectangle
                   Canvas.SetZIndex(ui_polygon, -1);
 
                   Canvas.SetZIndex(bg_draw, -1000000);
-                  m_ConditionList.Add(polygonTemp.Points,polygonTemp.CircleCenter,polygonTemp.Radius);
+                  m_ConditionList.Add(polygonTemp.Points, polygonTemp.CircleCenter, polygonTemp.Radius);
                   bg_draw.Children.Add(ui_polygon);
 
               }));
@@ -354,7 +354,7 @@ namespace Random_Polygon.rectangle
             CoverRadio = "0";
 
             this.m_ConditionList.clearInfo();
-           
+
             bg_draw.Children.Add(rect_container);
             if (null == sw)
             {
@@ -391,9 +391,9 @@ namespace Random_Polygon.rectangle
         {
             if (!openRatio)
             {
-                Button_AddClick(null,null);               
+                Button_AddClick(null, null);
             }
-
+            m_uiLayerCondition.CWidth = m_ConditionList.BoundaryWidth;
             double totalTargetRatio = m_uiLayerCondition.CalcTotalRatio();
             if (totalTargetRatio + this.m_uiCondition.ControlRatio.TargetRatio < 1.0)
             {
@@ -406,10 +406,10 @@ namespace Random_Polygon.rectangle
                 MessageBox.Show("分层高度大于总矩形高度", "警告");
                 return;
             }
-             
+
 
             this.ConditionList.Add(this.m_uiLayerCondition.Clone());
-           
+
             this.LayerCondition.Clear();
             this.Condition = new RectRationLayerCondition();
             ui_Condition.DataContext = this.Condition;
@@ -421,32 +421,32 @@ namespace Random_Polygon.rectangle
             this.LayerCondition.Clear();
             this.Condition = new RectRationLayerCondition();
             ui_Condition.DataContext = this.Condition;
-            this.ConditionList.Clear();            
+            this.ConditionList.Clear();
         }
 
         // 删除选中的分层
         private void DeleteContidation_Click(object sender, RoutedEventArgs e)
         {
             RectRationLayerConditionList item = this.layer_condaition.SelectedValue as RectRationLayerConditionList;
-            if(item != null)
+            if (item != null)
             {
                 this.ConditionList.Remove(item);
             }
-            
+
         }
         // 添加一种物料比率
         private void Button_AddClick(object sender, RoutedEventArgs e)
         {
-                      
+
             double totalTargetRatio = m_uiLayerCondition.CalcTotalRatio();
             if (totalTargetRatio + this.m_uiCondition.ControlRatio.TargetRatio > 1.0)
             {
-                 MessageBox.Show("目标比率之和已经超过100%", "警告");
-                 return;
-             }
-             m_uiLayerCondition.RatioConditionList.Add(this.m_uiCondition.Clone());  
-             
-                    
+                MessageBox.Show("目标比率之和已经超过100%", "警告");
+                return;
+            }
+            m_uiLayerCondition.RatioConditionList.Add(this.m_uiCondition.Clone());
+
+
         }
         // 删除选中的物料比率
         private void Button_DeleteSelectClick(object sender, RoutedEventArgs e)
@@ -508,18 +508,100 @@ namespace Random_Polygon.rectangle
         }
 
         private void ctr_slider_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        { 
-            Common.ModifySliderValue(sender as Slider,e);
+        {
+            Common.ModifySliderValue(sender as Slider, e);
         }
+
+        private Point m_oldPointX;
+        private Point m_oldPointY;
+
+        int fixType = 0;
+
 
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            bg_draw.Offset = new Point(slOffset.Value, 0);
+
+            Window window = Window.GetWindow(bg_draw);
+
+            Point standandOuterLeftPoint = bg_point.TransformToAncestor(window).Transform(new Point(0, 0));
+            Point standandOuterRightPoint = bg_point.TransformToAncestor(window).Transform(new Point(bg_point.ActualWidth, bg_point.ActualHeight));
+
+           
+            double x = slOffsetX.Value;
+            double y = slOffsetY.Value;
+            switch (fixType)
+            {
+                case 1:
+                    x = m_oldPointX.X;
+                    if (m_oldPointX.X > slOffsetX.Value)
+                        x = slOffsetX.Value;
+                    break;
+                case 2:
+                    x = m_oldPointX.X;
+                    if (m_oldPointX.X < slOffsetX.Value)
+                        x = slOffsetX.Value;
+                    break;
+                case 3:
+                    y = m_oldPointY.Y;
+                    if (m_oldPointY.Y > slOffsetY.Value)
+                        y = slOffsetY.Value;
+                    break;
+                case 4:
+                    y = m_oldPointY.Y;
+                    if (m_oldPointY.Y < slOffsetY.Value)
+                        y = slOffsetY.Value;
+                    break;
+                case 0:
+                    break;
+
+            }
+
+             m_oldPointY = m_oldPointX = bg_draw.Offset;
+
+            Point newOffset = new Point(x,y);
+            bg_draw.Offset = newOffset;
+            Point standandInnerLeftPoint = bg_draw.TransformToAncestor(window).Transform(new Point(0, 0));
+            Point standandInnerRightPoint = bg_draw.TransformToAncestor(window).Transform(new Point(bg_draw.ActualWidth, bg_draw.ActualHeight));
+
+
+            if (standandOuterLeftPoint.X > standandInnerLeftPoint.X)
+            {
+                bg_draw.Offset = new Point(m_oldPointX.X, newOffset.Y);
+                fixType = 1;
+
+            }
+            else if (standandOuterRightPoint.X < standandInnerRightPoint.X)
+            {
+                bg_draw.Offset = new Point(m_oldPointX.X, newOffset.Y);
+                fixType = 2;
+            }
+
+            else if (standandOuterLeftPoint.Y > standandInnerLeftPoint.Y)
+            {
+                bg_draw.Offset = new Point(newOffset.X, m_oldPointY.Y);
+                fixType = 3;
+            }
+            else if (standandOuterRightPoint.Y < standandInnerRightPoint.Y)
+            {
+                bg_draw.Offset = new Point(newOffset.X, m_oldPointY.Y);
+                fixType = 4;
+            }
+            else
+            {
+                fixType = 0;
+            }
+             
+
         }
 
        
+       public void NotifySizeChanged()
+       {
+           slOffsetX.Value = slOffsetY.Value = 0;
+       }
 
-       
+
+
     }
 
 }

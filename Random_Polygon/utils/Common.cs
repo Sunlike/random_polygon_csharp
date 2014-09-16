@@ -27,7 +27,7 @@ namespace Random_Polygon
                     {
                         result = 0;
                     }
-                    sender.Value = result;
+                    sender.Value = result > sender.Maximum ? sender.Maximum : result < sender.Minimum ? sender.Minimum : result;
                 }
             }
         }

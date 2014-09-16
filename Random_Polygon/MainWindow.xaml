@@ -6,12 +6,12 @@
     xmlns:ladder="clr-namespace:Random_Polygon.laddershape"
     xmlns:local="clr-namespace:Random_Polygon"
     Closed="Window_Closed"
-    Title="物料生成" Height="700" Width="1000">
+    Title="物料生成" Height="700" Width="1000" SizeChanged="Window_SizeChanged">
     <Grid>
         <TabControl SelectionChanged="TabControl_SelectionChanged">
             <TabItem Header="矩形物料生成" HorizontalAlignment="Left" VerticalAlignment="Top">
              
-                <rect:RectangleControl></rect:RectangleControl>
+                <rect:RectangleControl x:Name="rectControl"></rect:RectangleControl>
                 
             </TabItem>
             <TabItem Header="圆形物料生成" HorizontalAlignment="Left" VerticalAlignment="Top">
