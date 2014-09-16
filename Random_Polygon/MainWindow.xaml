@@ -15,10 +15,10 @@
                 
             </TabItem>
             <TabItem Header="圆形物料生成" HorizontalAlignment="Left" VerticalAlignment="Top">
-                <circle:CircleControl />
+                <circle:CircleControl x:Name="circleControl" />
             </TabItem>
             <TabItem Header="梯形物料生成" HorizontalAlignment="Left" VerticalAlignment="Top">
-                <ladder:LadderShapeControl></ladder:LadderShapeControl>
+                <ladder:LadderShapeControl x:Name="ladderShapeControl"></ladder:LadderShapeControl>
             </TabItem>
             <TabItem x:Name="ui_CadFileGenerater_Parent"  Header="生成物料填充图纸" HorizontalAlignment="Left" VerticalAlignment="Top">
                 <local:CadFileGenerater x:Name="ui_CadFileGenerater" ></local:CadFileGenerater>

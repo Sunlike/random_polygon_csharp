@@ -41,6 +41,8 @@ namespace Random_Polygon
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             rectControl.NotifySizeChanged();
+            circleControl.NotifySizeChanged();
+            ladderShapeControl.NotifySizeChanged();
         }
 
       

@@ -432,6 +432,93 @@ namespace Random_Polygon.laddershape
         {
             Common.ModifySliderValue(sender as Slider, e);
         }
+        private Point m_oldPointX;
+        private Point m_oldPointY;
+
+        int fixType = 0;
+
+
+        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+
+            Window window = Window.GetWindow(bg_draw);
+
+            Point standandOuterLeftPoint = bg_point.TransformToAncestor(window).Transform(new Point(0, 0));
+            Point standandOuterRightPoint = bg_point.TransformToAncestor(window).Transform(new Point(bg_point.ActualWidth, bg_point.ActualHeight));
+
+
+            double x = slOffsetX.Value;
+            double y = slOffsetY.Value;
+            switch (fixType)
+            {
+                case 1:
+                    x = m_oldPointX.X;
+                    if (m_oldPointX.X > slOffsetX.Value)
+                        x = slOffsetX.Value;
+                    break;
+                case 2:
+                    x = m_oldPointX.X;
+                    if (m_oldPointX.X < slOffsetX.Value)
+                        x = slOffsetX.Value;
+                    break;
+                case 3:
+                    y = m_oldPointY.Y;
+                    if (m_oldPointY.Y > slOffsetY.Value)
+                        y = slOffsetY.Value;
+                    break;
+                case 4:
+                    y = m_oldPointY.Y;
+                    if (m_oldPointY.Y < slOffsetY.Value)
+                        y = slOffsetY.Value;
+                    break;
+                case 0:
+                    break;
+
+            }
+
+            m_oldPointY = m_oldPointX = bg_draw.Offset;
+
+            Point newOffset = new Point(x, y);
+            bg_draw.Offset = newOffset;
+            Point standandInnerLeftPoint = bg_draw.TransformToAncestor(window).Transform(new Point(0, 0));
+            Point standandInnerRightPoint = bg_draw.TransformToAncestor(window).Transform(new Point(bg_draw.ActualWidth, bg_draw.ActualHeight));
+
+
+            if (standandOuterLeftPoint.X > standandInnerLeftPoint.X)
+            {
+                bg_draw.Offset = new Point(m_oldPointX.X, newOffset.Y);
+                fixType = 1;
+
+            }
+            else if (standandOuterRightPoint.X < standandInnerRightPoint.X)
+            {
+                bg_draw.Offset = new Point(m_oldPointX.X, newOffset.Y);
+                fixType = 2;
+            }
+
+            else if (standandOuterLeftPoint.Y > standandInnerLeftPoint.Y)
+            {
+                bg_draw.Offset = new Point(newOffset.X, m_oldPointY.Y);
+                fixType = 3;
+            }
+            else if (standandOuterRightPoint.Y < standandInnerRightPoint.Y)
+            {
+                bg_draw.Offset = new Point(newOffset.X, m_oldPointY.Y);
+                fixType = 4;
+            }
+            else
+            {
+                fixType = 0;
+            }
+
+
+        }
+
+
+        public void NotifySizeChanged()
+        {
+            slOffsetX.Value = slOffsetY.Value = 0;
+        }
     }
 
 
