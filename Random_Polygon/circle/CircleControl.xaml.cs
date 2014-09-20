@@ -101,7 +101,7 @@ namespace Random_Polygon.circle
         #endregion
 
         #region 随机生成多边形的方法接口
-        public static ExtendedPolygon randPolygonWithinBox(System.Drawing.Rectangle box, int edgeNum, int minAngle, int maxAngle)
+        public static ExtendedPolygon randPolygonWithinBox(System.Drawing.RectangleF box, int edgeNum, int minAngle, int maxAngle)
         {
 
             ExtendedPolygonBuilder pBuilder = new ExtendedPolygonBuilder();
@@ -135,7 +135,7 @@ namespace Random_Polygon.circle
                 }
                 CircleRatioCondition ratioControl = this.m_RatioConditionList.getMiniRatioControl();
 
-                System.Drawing.Rectangle box = new System.Drawing.Rectangle();
+                System.Drawing.RectangleF box = new System.Drawing.RectangleF();
                 box.X = rand.Next((int)container.Radius * 2 - 1) + 1;
                 box.Y = rand.Next((int)container.Radius * 2 - 1) + 1;
                 box.Width = ratioControl.Condition.MinRadius * 2;
@@ -298,6 +298,7 @@ namespace Random_Polygon.circle
         private Thread m_thread = null;
         private void StartButton_Click(object sender, RoutedEventArgs e)
         {
+            Button_Click_1(null, null);
             if (!CheckOpenRatioControl())
             {
                 return;
@@ -520,6 +521,26 @@ namespace Random_Polygon.circle
         public void NotifySizeChanged()
         {
             slOffsetX.Value = slOffsetY.Value = 0;
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            double oPrecison = 0.0001;
+            double iPrecision = 0.0001;
+            if (!double.TryParse(outerPrecision.Text, out oPrecison))
+            {
+                MessageBox.Show("边界精度输入的不是浮点数，请重新输入。");
+                return;
+           }
+
+            if (!double.TryParse(innerPrecision.Text, out iPrecision))
+            {
+                MessageBox.Show("内部精度输入的不是浮点数，请重新输入。");
+                return;
+            }
+
+            Common.OuterPrecision = (float)oPrecison;
+            Common.InnerPrecision = (float)iPrecision;
         }
     }
 

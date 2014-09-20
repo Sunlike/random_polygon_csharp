@@ -83,7 +83,7 @@ namespace Random_Polygon.laddershape
             if (null != polygon.Points)
             {
 
-                List<Point> pts = polygon.getPoints();
+                List<PointF> pts = polygon.getPoints();
                 for (int i = 0; i < pts.Count; i++)
                 {
                     if (!this.m_laddershape.Contains(pts[i].X, pts[i].Y))
@@ -91,6 +91,8 @@ namespace Random_Polygon.laddershape
                         return false;
                     }
                 }
+
+                // 精度计算
                 return true;
             }
 
@@ -178,31 +180,7 @@ namespace Random_Polygon.laddershape
 
             Point center = new Point(x + width / 2, y + height / 2);
 
-            //RectangleContainer mainRectangle = new RectangleContainer(m_laddershape.Points[1].X, 0, (int)m_laddershape.Up_layer, (int)m_laddershape.Height);
-            //RectangleContainer section1 = new RectangleContainer(x, y, (int)(m_laddershape.Down_layer - m_laddershape.Up_layer)/2, height);
-            //RectangleContainer section2 = new RectangleContainer((int)(m_laddershape.Down_layer + m_laddershape.Up_layer) / 2, y, (int)(m_laddershape.Down_layer - m_laddershape.Up_layer) / 2, height);
-            
-            //if (mainRectangle.contains(polygon))
-            //{
-            //    int location =   1 + mainRectangle.getQuadrant(polygon);
-            //    polygon.Quadrant = location;
-            //    return location;
-            //}
-            //else if (section1.contains(polygon))
-            //{
-            //    return 6;
-            //}
-            //else if (section1.contains(polygon))
-            //{
-            //    return 7;
-            //}
-            //else
-            //{
-            //    return 0;
-            //}
-
-
-
+         
             RectangleContainer section1 = new RectangleContainer(x, y, width / 2, height / 2);
             RectangleContainer section2 = new RectangleContainer(center.X, y, width / 2, height / 2);
             RectangleContainer section3 = new RectangleContainer(x, center.Y, width / 2, height / 2);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
+using Random_Polygon;
 
 namespace Random_Polygon.circle
 {
@@ -42,31 +43,31 @@ namespace Random_Polygon.circle
             return Math.PI * Math.Pow(m_radius, 2.0);
         }
 
-        public bool Contains(Point pt)
+        public bool Contains(PointF pt)
         {
-            double distance = Math.Pow(pt.X - center.X, 2.0) + Math.Pow(pt.Y - center.Y, 2.0);
-            double R2 = Math.Pow(m_radius, 2.0);
-            return distance < R2;
+            double distance = Math.Sqrt(Math.Pow(pt.X - center.X, 2.0) + Math.Pow(pt.Y - center.Y, 2.0));
+            double R2 =  Math.Sqrt(Math.Pow(m_radius, 2.0));
+            return Common.OuterPrecision <= R2 - distance;
         }
         public bool Contains(double x,double y)
         {
-            double distance = Math.Pow(x - center.X, 2.0) + Math.Pow(y - center.Y, 2.0);
-            double R2 = Math.Pow(m_radius, 2.0);
-            return distance < R2;
+            double distance =  Math.Sqrt(Math.Pow(x - center.X, 2.0) + Math.Pow(y - center.Y, 2.0));
+            double R2 = Math.Sqrt(Math.Pow(m_radius, 2.0));
+            return Common.OuterPrecision <= R2 - distance;
         }
 
         public bool Contains(RCircle circle)
         {
-            double distance = Math.Pow(circle.Center.X - center.X, 2.0) + Math.Pow(circle.Center.Y - center.Y, 2.0);
-            double R2 = Math.Pow(m_radius-circle.Radius, 2.0);
-            return distance <= R2;
+            double distance =  Math.Sqrt(Math.Pow(circle.Center.X - center.X, 2.0) + Math.Pow(circle.Center.Y - center.Y, 2.0));
+            double R2 =  Math.Sqrt(Math.Pow(m_radius-circle.Radius, 2.0));
+            return Common.OuterPrecision <= R2 - distance;
         }
 
         public bool IntersectsWith(RCircle circle)
         {
-            double distance = Math.Pow(circle.Center.X - center.X, 2.0) + Math.Pow(circle.Center.Y - center.Y, 2.0);
-            double R2E = Math.Pow(m_radius + circle.Radius, 2.0); 
-            return distance < R2E;
+            double distance =  Math.Sqrt(Math.Pow(circle.Center.X - center.X, 2.0) + Math.Pow(circle.Center.Y - center.Y, 2.0));
+            double R2 =  Math.Sqrt(Math.Pow(m_radius + circle.Radius, 2.0));
+            return Common.OuterPrecision <= R2 - distance; ;
         }
     }
 }

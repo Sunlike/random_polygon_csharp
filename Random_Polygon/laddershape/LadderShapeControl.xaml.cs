@@ -290,6 +290,7 @@ namespace Random_Polygon.laddershape
         private Thread m_thread = null;
         private void StartButton_Click(object sender, RoutedEventArgs e)
         {
+            Button_Click_1(null, null); 
             if (!CheckOpenRatioControl())
             {
                 return;
@@ -518,6 +519,26 @@ namespace Random_Polygon.laddershape
         public void NotifySizeChanged()
         {
             slOffsetX.Value = slOffsetY.Value = 0;
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            double oPrecison = 0.0001;
+            double iPrecision = 0.0001;
+            if (!double.TryParse(outerPrecision.Text, out oPrecison))
+            {
+                MessageBox.Show("边界精度输入的不是浮点数，请重新输入。");
+                return;
+            }
+
+            if (!double.TryParse(innerPrecision.Text, out iPrecision))
+            {
+                MessageBox.Show("内部精度输入的不是浮点数，请重新输入。");
+                return;
+            }
+
+            Common.OuterPrecision = (float)oPrecison;
+            Common.InnerPrecision = (float)iPrecision;
         }
     }
 

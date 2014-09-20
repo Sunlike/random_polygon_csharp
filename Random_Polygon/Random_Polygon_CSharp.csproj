@@ -159,6 +159,7 @@
     </Compile>
     <Compile Include="CadFileInfo.cs" />
     <Compile Include="CadPoint3d.cs" />
+    <Compile Include="Common.cs" />
     <Compile Include="utils\Common.cs" />
     <Compile Include="Converters\BoolReverseConverter.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />

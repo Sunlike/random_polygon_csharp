@@ -13,15 +13,15 @@ namespace Random_Polygon
 
     public class RectangleContainer
     {
-        private Rectangle m_rectange = Rectangle.Empty;
+        private RectangleF m_rectange = RectangleF.Empty;
         private double m_blankArea = 0.0;
         private double m_area = 0.0;
         private int listSize = 0;
         private List<ExtendedPolygon>[] polygonInside = new List<ExtendedPolygon>[maxCount];
         private static int maxCount = 5;
-        public RectangleContainer(int x, int y, int width, int height)
+        public RectangleContainer(float x, float y, float width, float height)
         {
-            m_rectange = new Rectangle(x, y, width, height);
+            m_rectange = new RectangleF(x, y, width, height);
             this.m_area = this.m_blankArea = width * height;
             for (int i = 0; i < maxCount; ++i)
             {
@@ -30,21 +30,21 @@ namespace Random_Polygon
             }
         }
 
-        public int Width
+        public float Width
         {
-            get { return this.m_rectange.Width; }
+            get { return  this.m_rectange.Width; }
         }
-        public int Height
+        public float Height
         {
             get { return this.m_rectange.Height; }
         }
-        public int X
+        public float X
         {
-            get { return this.m_rectange.X; }
+            get { return  this.m_rectange.X; }
         }
-        public int Y
+        public float Y
         {
-            get { return this.m_rectange.Y; }
+            get { return  this.m_rectange.Y; }
         }
 
         public string LogInfo
@@ -53,9 +53,9 @@ namespace Random_Polygon
             set;
         }
 
-        public Rectangle getRectangle()
+        public RectangleF getRectangle()
         {
-            return new Rectangle(X, Y, Width, Height);
+            return new RectangleF(X, Y, Width, Height);
         }
         public List<ExtendedPolygon> getAllPolygons()
         {
@@ -69,9 +69,9 @@ namespace Random_Polygon
             return list;
         }
 
-        private int calculateQuadrant(ExtendedPolygon polygon, int x, int y, int width, int height)
+        private int calculateQuadrant(ExtendedPolygon polygon, float x, float y, float width, float height)
         {
-            Point center = new Point(x + width / 2, y + height / 2);
+            PointF center = new PointF(x + width / 2, y + height / 2);
             RectangleContainer section1 = new RectangleContainer(x, y, width / 2, height / 2);
             RectangleContainer section2 = new RectangleContainer(center.X, y, width / 2, height / 2);
             RectangleContainer section3 = new RectangleContainer(x, center.Y, width / 2, height / 2);
@@ -104,10 +104,10 @@ namespace Random_Polygon
             if (null != polygon.Points)
             {
 
-                List<Point> pts = polygon.getPoints();
+                List<PointF> pts = polygon.getPoints();
                 for (int i = 0; i < pts.Count; i++)
                 {
-                    if (!this.m_rectange.Contains((int)pts[i].X, (int)pts[i].Y))
+                    if (!this.m_rectange.Contains(pts[i].X, pts[i].Y))
                     {
                         return false;
                     }

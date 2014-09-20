@@ -211,8 +211,7 @@ namespace Random_Polygon
             catch (System.Exception ex)
             {
                 MessageBox.Show("命令参数不正确，请注意先region命令，转化为面\n\r在用extrude命令转化为3D实体\n最后通过命令export或acisout输出sat文件", "错误", MessageBoxButton.OK);
-            }
-
+            } 
 
             Thread.Sleep(1000);
             Initialize();

@@ -6,20 +6,20 @@ using System.Drawing;
 
 namespace Random_Polygon
 {
-    public class CollectionComparator : IComparer<Point>
+    public class CollectionComparator : IComparer<PointF>
     { 
-        private Point m_center;
-        public CollectionComparator(Point center)
+        private PointF m_center;
+        public CollectionComparator(PointF center)
         {
             this.m_center = center;
         }
 
-        public int Compare(Point p1, Point p2)
+        public int Compare(PointF p1, PointF p2)
         {
 
-            Point vector1 = new Point(), vector2 = new Point();
+            PointF vector1 = new PointF(), vector2 = new PointF();
 
-            Point axis = new Point(), axisVertex = new Point();
+            PointF axis = new PointF(), axisVertex = new PointF();
 
 
             axis.X = -m_center.X;
@@ -133,34 +133,34 @@ namespace Random_Polygon
 
 
         // 获得该平面向量的值
-        private double getMagnitude(Point point)
+        private double getMagnitude(PointF point)
         {
             return Math.Sqrt(Math.Pow(point.X, 2.0) + Math.Pow(point.Y, 2.0));
         }
 
-        private double doProduct(Point p1, Point p2)
+        private double doProduct(PointF p1, PointF p2)
         {
             return p1.X * p2.X + p1.Y * p2.Y;
         }
 
         //获得叉积
-        private double getAngleCos(Point p1, Point p2)
+        private double getAngleCos(PointF p1, PointF p2)
         {
             return doProduct(p1, p2) / (getMagnitude(p1) * getMagnitude(p2));
         }
 
         // the clock wise circle	
-        private bool onTheRightSide(Point p1, Point p2)
+        private bool onTheRightSide(PointF p1, PointF p2)
         {
             return p2.Y * p1.X - p2.X * p1.Y < 0;
         }
 
-        private bool onTheLeftSide(Point p1, Point p2)
+        private bool onTheLeftSide(PointF p1, PointF p2)
         {
             return p2.Y * p1.X - p2.X * p1.Y > 0;
         }
 
-        private bool onTheSameLine(Point p1, Point p2)
+        private bool onTheSameLine(PointF p1, PointF p2)
         {
             return p2.Y * p1.X - p2.X * p1.Y == 0;
         }

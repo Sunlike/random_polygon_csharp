@@ -40,7 +40,13 @@
                 <Border BorderThickness="0,0,0,1" BorderBrush="Black">
                     <StackPanel Orientation="Vertical" IsEnabled="{Binding  ElementName=Circle_Control ,Path=Condation_Enable}" >
                         <TextBlock Height ="30" VerticalAlignment="Stretch" TextAlignment="Center" Background="Beige" IsHitTestVisible="False" HorizontalAlignment="Stretch">条件设置</TextBlock>
-
+                        <StackPanel Orientation="Horizontal" Visibility="Collapsed">
+                            <TextBlock Text="边界精度:"  Width ="55"/>
+                            <TextBox x:Name="outerPrecision"  Width="90"  Text="0.0001"/>
+                            <TextBlock Text="内部精度:"  Width ="55"/>
+                            <TextBox x:Name="innerPrecision" Width="90" Text="0.0001"/>
+                            <Button Content="设置精度" Click="Button_Click_1" Visibility="Collapsed"/>
+                        </StackPanel>
                         <StackPanel Orientation="Horizontal" >
                             <TextBlock Text="矩形边界宽:" Width ="100"></TextBlock>
                             <TextBlock Text="{Binding BoundaryWidth}"  Width ="50"></TextBlock>

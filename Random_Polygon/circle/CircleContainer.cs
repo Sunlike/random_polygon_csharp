@@ -73,7 +73,7 @@ namespace Random_Polygon.circle
             if (null != polygon.Points)
             {
 
-                List<Point> pts = polygon.getPoints();
+                List<PointF> pts = polygon.getPoints();
                 for (int i = 0; i < pts.Count; i++)
                 {
                     if (!this.m_circle.Contains(pts[i].X, pts[i].Y))

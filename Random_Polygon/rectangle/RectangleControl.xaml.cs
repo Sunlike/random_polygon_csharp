@@ -122,7 +122,7 @@ namespace Random_Polygon.rectangle
 
         #region 随机生成多边形的方法接口
 
-        public static ExtendedPolygon randPolygonWithinBox(System.Drawing.Rectangle box, int edgeNum, int minAngle, int maxAngle)
+        public static ExtendedPolygon randPolygonWithinBox(System.Drawing.RectangleF box, int edgeNum, int minAngle, int maxAngle)
         {
             ExtendedPolygonBuilder pBuilder = new ExtendedPolygonBuilder();
             return pBuilder.buildPolygon(box, edgeNum, minAngle, maxAngle);
@@ -153,9 +153,9 @@ namespace Random_Polygon.rectangle
                     break;
                 }
                 RectRationLayerCondition ratioControl = ratioLayerCondition.getMiniRatioControl();
-                System.Drawing.Rectangle box = new System.Drawing.Rectangle();
-                box.X = rand.Next(container.Width - 1) + 1;
-                box.Y = rand.Next(container.Height - 1) + 1;
+                System.Drawing.RectangleF box = new System.Drawing.RectangleF();
+                box.X = rand.Next((int)container.Width - 1) + 1;
+                box.Y = rand.Next((int)container.Height - 1) + 1;
                 box.Width = ratioControl.Condition.MinRadius * 2;
                 box.Height = box.Width;
 
@@ -342,6 +342,7 @@ namespace Random_Polygon.rectangle
         // 开启随机生成多面体
         private void StartButton_Click(object sender, RoutedEventArgs e)
         {
+            Button_Click_1(null, null); 
             Condation_Enable = false;
             canStopThread = false;
 
@@ -598,6 +599,26 @@ namespace Random_Polygon.rectangle
        public void NotifySizeChanged()
        {
            slOffsetX.Value = slOffsetY.Value = 0;
+       }
+
+       private void Button_Click_1(object sender, RoutedEventArgs e)
+       {
+           double oPrecison = 0.0001;
+           double iPrecision = 0.0001;
+           if (!double.TryParse(outerPrecision.Text, out oPrecison))
+           {
+               MessageBox.Show("边界精度输入的不是浮点数，请重新输入。");
+               return;
+           }
+
+           if (!double.TryParse(innerPrecision.Text, out iPrecision))
+           {
+               MessageBox.Show("内部精度输入的不是浮点数，请重新输入。");
+               return;
+           }
+
+           Common.OuterPrecision = (float)oPrecison;
+           Common.InnerPrecision = (float)iPrecision;
        }
 
 

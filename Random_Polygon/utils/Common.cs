@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace Random_Polygon
 {
-    public class Common
+    public partial class Common
     {
         public static void ModifySliderValue(Slider sender, MouseButtonEventArgs e)
         {

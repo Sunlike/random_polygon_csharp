@@ -9,23 +9,24 @@ namespace Random_Polygon
 {
     public class ExtendedPolygon
     {
-         
+
         private List<Point> norms = null;
         private double m_area = 0.0;
         private double m_radius = 0.0;
         private Point m_circleCenter;
         private int m_quadrant = -1;
 
+
         public ExtendedPolygon()
         {
-            
-           
+
+
         }
-        
+
         public int Quadrant
         {
             get { return m_quadrant; }
-            set { this.m_quadrant = value;}
+            set { this.m_quadrant = value; }
         }
 
         public Point CircleCenter
@@ -47,20 +48,20 @@ namespace Random_Polygon
             set { m_points = value; }
         }
 
-        public List<System.Drawing.Point> getPoints()
+        public List<System.Drawing.PointF> getPoints()
         {
-            List<System.Drawing.Point> pts = new List<System.Drawing.Point>();
+            List<System.Drawing.PointF> pts = new List<System.Drawing.PointF>();
             for (int i = 0; i < Points.Count; ++i)
             {
                 Point pt = Points[i];
-                pts.Add(new System.Drawing.Point(Convert.ToInt32(pt.X), Convert.ToInt32(pt.Y)));
+                pts.Add(new System.Drawing.PointF((float)(pt.X), (float)(pt.Y)));
 
             }
             return pts;
 
         }
-        
-      
+
+
         private void getMinMaxProjs(Point axis, ref double minProj, ref double maxProj)
         {
 
@@ -89,15 +90,12 @@ namespace Random_Polygon
             //m_Polygon.TranslatePoint(new Point(deltX, deltY), null);
             for (int i = 0; i < Points.Count; ++i)
             {
-                Point pt= Points[i];
+                Point pt = Points[i];
                 pt.X = pt.X + deltX;
                 pt.Y = pt.Y + deltY;
                 Points[i] = pt;
 
             }
-
-               
-
             this.m_circleCenter.X += deltX;
             this.m_circleCenter.Y += deltY;
         }
@@ -112,22 +110,24 @@ namespace Random_Polygon
             //半径和
             double sumRadius = this.m_radius + polygon.Radius;
 
-            return distance < sumRadius; 
+            return distance < sumRadius + Common.InnerPrecision;
         }
+
+
 
         public bool intersects(ExtendedPolygon polygon)
         {
             if (false == intersectsWithBox(polygon))
             {
                 return false;
-            }
+            } 
 
             // check each of this prolygon's norms
             int size = this.getNorms().Count;
             for (int i = 0; i < size; ++i)
             {
                 double minProj1 = 0.0, maxProj1 = 0.0, minProj2 = 0.0, maxProj2 = 0.0;
-                this.getMinMaxProjs(this.getNorms()[i],ref minProj1,ref maxProj1);
+                this.getMinMaxProjs(this.getNorms()[i], ref minProj1, ref maxProj1);
                 polygon.getMinMaxProjs(this.getNorms()[i], ref minProj2, ref maxProj2);
                 if (maxProj1 < minProj2 || maxProj2 < minProj1)
                 {
@@ -137,7 +137,7 @@ namespace Random_Polygon
             }
 
             // check each of other polygon's norms
-            size = polygon.getNorms().Count; 
+            size = polygon.getNorms().Count;
             for (int i = 0; i < size; ++i)
             {
                 double minProj1 = 0.0, maxProj1 = 0.0, minProj2 = 0.0, maxProj2 = 0.0;
@@ -149,7 +149,7 @@ namespace Random_Polygon
                 }
 
             }
-
+ 
             return true;
         }
 
@@ -183,8 +183,8 @@ namespace Random_Polygon
         private double calculateArea()
         {
             double area1 = 0, area2 = 0;
-            int size =Points.Count;
-            for (int i = 0; i < size -1; ++i)
+            int size = Points.Count;
+            for (int i = 0; i < size - 1; ++i)
             {
                 area1 += Points[i].X * Points[i + 1].Y;
             }
@@ -213,9 +213,9 @@ namespace Random_Polygon
             return m_area;
         }
 
-        public void addPoint(System.Drawing.Point pt)
+        public void addPoint(System.Drawing.PointF pt)
         {
-           Points.Add(new Point(pt.X,pt.Y));
+            Points.Add(new Point(pt.X, pt.Y));
         }
 
 
