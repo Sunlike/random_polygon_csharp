@@ -79,9 +79,11 @@ Section "¿Í»§¶Ë" MAIN
   
   File "Release\acdbmgd.dll"
   File "Release\CadHelper.dll"
- 
+  File "Release\CadHelper.pdb"
   File "Release\Random_Polygon_CSharp.exe"
- 
+  File "Release\Random_Polygon_CSharp.pdb"
+  File "Release\Random_Polygon_CSharp.vshost.exe"
+  File "Release\Random_Polygon_CSharp.vshost.exe.manifest"
   
   
     

@@ -76,7 +76,6 @@
     <Compile Include="circle\Circle_Condition.cs" />
     <Compile Include="CadHelper.cs" />
     <Compile Include="Circle_CadHelper.cs" />
-    <Compile Include="Common.cs" />
     <Compile Include="LadderShape_CadHelper.cs" />
     <Compile Include="rectangle\Condition.cs" />
     <Compile Include="rectangle\ExtendedPolygon.cs" />

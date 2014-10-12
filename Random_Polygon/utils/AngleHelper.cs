@@ -15,7 +15,7 @@ namespace Random_Polygon
    * @param ptC
    * @return
    */
-        public static double getAngle(PointF ptA, PointF ptB, PointF ptC)
+        public static double getAngle(Point ptA, Point ptB, Point ptC)
         {
             double angle = 0;
             // vector AB
@@ -50,10 +50,10 @@ namespace Random_Polygon
          * @param points
          * @return
          */
-        public static List<Double> getAngleFromPoints(List<PointF> points)
+        public static List<Double> getAngleFromPoints(List<Point> points)
         {
             List<Double> angleList = new List<Double>();
-            List<PointF> tmpPoints = new List<PointF>(points);
+            List<Point> tmpPoints = new List<Point>(points);
             tmpPoints.Insert(0, points[points.Count - 1]);
             tmpPoints.Add(points[0]);
             int size = tmpPoints.Count;

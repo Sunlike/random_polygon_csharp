@@ -42,13 +42,6 @@
                         <TextBlock Height ="30" VerticalAlignment="Stretch" TextAlignment="Center" Background="Beige" IsHitTestVisible="False" HorizontalAlignment="Stretch">条件设置</TextBlock>
                         <Border BorderThickness="1"  BorderBrush="Blue">
                             <StackPanel Orientation="Vertical">
-                                <StackPanel Orientation="Horizontal" Visibility="Collapsed">
-                                    <TextBlock Text="边界精度:"  Width ="55"/>
-                                    <TextBox x:Name="outerPrecision"  Width="90"  Text="0.0001"/>
-                                    <TextBlock Text="内部精度:"  Width ="55"/>
-                                    <TextBox x:Name="innerPrecision" Width="90" Text="0.0001"/>
-                                    <Button Content="设置精度" Click="Button_Click_1" Visibility="Collapsed"/>
-                                </StackPanel>
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="最小填充率:" Width ="100"></TextBlock>
                                     <TextBlock Text="{Binding MinCoverRadio}"  Width ="25"></TextBlock>
@@ -206,7 +199,7 @@
                         <ColumnDefinition Width="*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
                     <TextBlock> Scale</TextBlock>
-                    <Slider  x:Name="slScale"  Maximum="2"   Grid.Column="1"  Value="{Binding ElementName=bg_draw, Path=Scale}" ></Slider>
+                    <Slider  x:Name="slScale"  Maximum="1"   Grid.Column="1"  Value="{Binding ElementName=bg_draw, Path=Scale}" ></Slider>
                 </Grid>
             </Grid>
             <Border x:Name="bg_point"  BorderBrush="Blue" BorderThickness="1" Grid.Row="1">

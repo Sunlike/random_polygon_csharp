@@ -36,7 +36,7 @@ namespace Random_Polygon
             return randAnyPolygon(container, edgeNum, minRadius, maxRadius);
         }
 
-        public ExtendedPolygon buildPolygon(RectangleF box, int edgeNum)
+        public ExtendedPolygon buildPolygon(Rectangle box, int edgeNum)
         {
             return randAnyPolygonWithinBox(box, edgeNum);
         }
@@ -46,31 +46,31 @@ namespace Random_Polygon
             return randAnyPolygon(container, edgeNum, minRadius, maxRadius, minAngle, maxAngle);
         }
 
-        public ExtendedPolygon buildPolygon(RectangleF box, int edgeNum, double minAngle, double maxAngle)
+        public ExtendedPolygon buildPolygon(Rectangle box, int edgeNum, double minAngle, double maxAngle)
         {
             return randAnyPolygonWithinBox(box, edgeNum, minAngle, maxAngle);
         }
 
-        public static ExtendedPolygon randAnyPolygonWithinBox(RectangleF box, int edgeNum)
+        public static ExtendedPolygon randAnyPolygonWithinBox(Rectangle box, int edgeNum)
         {
             Random rand = new Random(DateTime.Now.Millisecond);
 
-            PointF center = new PointF(box.X + box.Width / 2, box.Y + box.Height / 2);
+            Point center = new Point(box.X + box.Width / 2, box.Y + box.Height / 2);
 
-            double radius = box.Width / 2;
-            double minTriangleArea =  (0.3 * Math.PI * radius * radius);
+            int radius = box.Width / 2;
+            double minTriangleArea = 0.3 * Math.PI * radius * radius;
 
-            List<PointF> generatedPoints = new List<PointF>();
+            List<Point> generatedPoints = new List<Point>();
 
             ExtendedPolygon triangle = new ExtendedPolygon();
             for (int i = 0; i < edgeNum; i++)
             {
-                PointF p = new PointF();
+                Point p = new Point();
                 do
                 {
                     // TODO(Rye): use general formula to be able to limit x & y
                     double param_t = rand.NextDouble() * 2 * Math.PI;
-                    p = new PointF((float)(radius * Math.Cos(param_t) + center.X), (float)(radius * Math.Sin(param_t) + center.Y));
+                    p = new Point((int)(radius * Math.Cos(param_t) + center.X), (int)(radius * Math.Sin(param_t) + center.Y));
                     if (!generatedPoints.Contains(p))
                     {
                         generatedPoints.Add(p);
@@ -88,7 +88,7 @@ namespace Random_Polygon
                         generatedPoints.RemoveAt(generatedPoints.Count - 1);
                         generatedPoints.RemoveAt(generatedPoints.Count - 1);
                         triangle = new ExtendedPolygon();
-                        PointF tmp = generatedPoints[generatedPoints.Count() - 1];
+                        Point tmp = generatedPoints[generatedPoints.Count() - 1];
                         triangle.addPoint(tmp);
                         continue;
                     }
@@ -102,7 +102,7 @@ namespace Random_Polygon
             polygon.CircleCenter = new System.Windows.Point(center.X, center.Y);
             polygon.Radius = radius;
 
-            foreach (PointF p in generatedPoints)
+            foreach (Point p in generatedPoints)
             {
 
                 polygon.addPoint(p);
@@ -115,24 +115,24 @@ namespace Random_Polygon
         {
             Random rand = new Random(DateTime.Now.Millisecond);
 
-            PointF center = new PointF();
-            center.X = box.X + rand.Next((int)box.Width);
-            center.Y = box.Y + rand.Next((int)box.Height);
-            float radius = minRadius + rand.Next(maxRadius - minRadius + 1);
+            Point center = new Point();
+            center.X = box.X + rand.Next(box.Width);
+            center.Y = box.Y + rand.Next(box.Height);
+            int radius = minRadius + rand.Next(maxRadius - minRadius + 1);
             double minTriangleArea = 0.05 * Math.PI * radius * radius;
 
-            List<PointF> generatedPoints = new List<PointF>();
+            List<Point> generatedPoints = new List<Point>();
 
             ExtendedPolygon triangle = new ExtendedPolygon();
             for (int i = 0; i < edgeNum; i++)
             {
-                PointF p = new PointF();
+                Point p = new Point();
                 do
                 {
                     // TODO(Rye): use general formula to be able to limit x & y
                     double param_t = rand.NextDouble() * 2 * Math.PI;
-                    p.X = (float)(radius * Math.Cos(param_t) + center.X);
-                    p.Y = (float)(radius * Math.Sin(param_t) + center.Y);
+                    p.X = (int)(radius * Math.Cos(param_t) + center.X);
+                    p.Y = (int)(radius * Math.Sin(param_t) + center.Y);
                     if (!generatedPoints.Contains(p))
                     {
                         generatedPoints.Add(p);
@@ -150,7 +150,7 @@ namespace Random_Polygon
                         generatedPoints.RemoveAt(generatedPoints.Count - 1);
                         generatedPoints.RemoveAt(generatedPoints.Count - 1);
                         triangle = new ExtendedPolygon();
-                        PointF tmp = generatedPoints[generatedPoints.Count - 1];
+                        Point tmp = generatedPoints[generatedPoints.Count - 1];
                         triangle.addPoint(tmp);
                         continue;
                     }
@@ -166,7 +166,7 @@ namespace Random_Polygon
             polygon.CircleCenter = new System.Windows.Point(center.X, center.Y);
             polygon.Radius = radius;
 
-            foreach (PointF p in generatedPoints)
+            foreach (Point p in generatedPoints)
             {
 
                 polygon.addPoint(p);
@@ -175,16 +175,16 @@ namespace Random_Polygon
             return polygon;
         }
 
-        public static ExtendedPolygon randAnyPolygonWithinBox(RectangleF box, int edgeNum, double minAngle, double maxAngle)
+        public static ExtendedPolygon randAnyPolygonWithinBox(Rectangle box, int edgeNum, double minAngle, double maxAngle)
         {
             Random rand = new Random(DateTime.Now.Millisecond);
 
-            PointF center = new PointF(box.X + box.Width / 2, box.Y + box.Height / 2);
+            Point center = new Point(box.X + box.Width / 2, box.Y + box.Height / 2);
 
-            double radius = box.Width / 2;
+            int radius = box.Width / 2;
             double minTriangleArea = 0.3 * Math.PI * radius * radius;
 
-            List<PointF> generatedPoints = new List<PointF>();
+            List<Point> generatedPoints = new List<Point>();
             do
             {
 
@@ -192,12 +192,12 @@ namespace Random_Polygon
                 generatedPoints.Clear();
                 for (int i = 0; i < edgeNum; i++)
                 {
-                    PointF p = new PointF();
+                    Point p = new Point();
                     do
                     {
                         // TODO(Rye): use general formula to be able to limit x & y
                         double param_t = rand.NextDouble() * 2 * Math.PI;
-                        p = new PointF((float)(radius * Math.Cos(param_t) + center.X), (float)(radius * Math.Sin(param_t) + center.Y));
+                        p = new Point((int)(radius * Math.Cos(param_t) + center.X), (int)(radius * Math.Sin(param_t) + center.Y));
                         if (!generatedPoints.Contains(p))
                         {
                             generatedPoints.Add(p);
@@ -216,7 +216,7 @@ namespace Random_Polygon
                             generatedPoints.RemoveAt(generatedPoints.Count - 1);
                             generatedPoints.RemoveAt(generatedPoints.Count - 1);
                             triangle = new ExtendedPolygon();
-                            PointF tmp = generatedPoints[generatedPoints.Count() - 1];
+                            Point tmp = generatedPoints[generatedPoints.Count() - 1];
                             triangle.addPoint(tmp);
                             continue;
                         }
@@ -250,8 +250,9 @@ namespace Random_Polygon
             polygon.CircleCenter = new System.Windows.Point(center.X, center.Y);
             polygon.Radius = radius;
 
-            foreach (PointF p in generatedPoints)
-            { 
+            foreach (Point p in generatedPoints)
+            {
+
                 polygon.addPoint(p);
             }
 
@@ -262,25 +263,25 @@ namespace Random_Polygon
         {
             Random rand = new Random(DateTime.Now.Millisecond);
 
-            PointF center = new PointF();
-            center.X = box.X + rand.Next((int)box.Width);
-            center.Y = box.Y + rand.Next((int)box.Height);
-            double radius = minRadius + rand.Next(maxRadius - minRadius + 1);
+            Point center = new Point();
+            center.X = box.X + rand.Next(box.Width);
+            center.Y = box.Y + rand.Next(box.Height);
+            int radius = minRadius + rand.Next(maxRadius - minRadius + 1);
             double minTriangleArea = 0.05 * Math.PI * radius * radius;
 
-            List<PointF> generatedPoints = new List<PointF>();
+            List<Point> generatedPoints = new List<Point>();
             do
             {
                 ExtendedPolygon triangle = new ExtendedPolygon();
                 for (int i = 0; i < edgeNum; i++)
                 {
-                    PointF p = new PointF();
+                    Point p = new Point();
                     do
                     {
                         // TODO(Rye): use general formula to be able to limit x & y
                         double param_t = rand.NextDouble() * 2 * Math.PI;
-                        p.X = (float)(radius * Math.Cos(param_t) + center.X);
-                        p.Y = (float)(radius * Math.Sin(param_t) + center.Y);
+                        p.X = (int)(radius * Math.Cos(param_t) + center.X);
+                        p.Y = (int)(radius * Math.Sin(param_t) + center.Y);
                         if (!generatedPoints.Contains(p))
                         {
                             generatedPoints.Add(p);
@@ -298,7 +299,7 @@ namespace Random_Polygon
                             generatedPoints.RemoveAt(generatedPoints.Count - 1);
                             generatedPoints.RemoveAt(generatedPoints.Count - 1);
                             triangle = new ExtendedPolygon();
-                            PointF tmp = generatedPoints[generatedPoints.Count - 1];
+                            Point tmp = generatedPoints[generatedPoints.Count - 1];
                             triangle.addPoint(tmp);
                             continue;
                         }
@@ -335,7 +336,7 @@ namespace Random_Polygon
             polygon.CircleCenter = new System.Windows.Point(center.X, center.Y);
             polygon.Radius = radius;
 
-            foreach (PointF p in generatedPoints)
+            foreach (Point p in generatedPoints)
             {
 
                 polygon.addPoint(p);
