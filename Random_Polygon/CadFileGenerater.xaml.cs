@@ -128,15 +128,15 @@ namespace Random_Polygon
                 switch (cadFileInfo.CadType)
                 {
                     case CadShapeType.CadShapeType_Circle:
-                        strCommand = "RunCircle\r\"" + cadFileInfo.FileFullPath + "\"\r";
+                        strCommand = "RunCircle\r" + cadFileInfo.FileFullPath + "\r";
                         AcadApp.ActiveDocument.SendCommand(strCommand);
                         break;
                     case CadShapeType.CadShapeType_LadderShape:
-                        strCommand = "RunLadderShape\r\"" + cadFileInfo.FileFullPath + "\"\r";
+                        strCommand = "RunLadderShape\r" + cadFileInfo.FileFullPath + "\r";
                         AcadApp.ActiveDocument.SendCommand(strCommand);
                         break;
                     case CadShapeType.CadShapeType_Rectangle:
-                        strCommand = "RunRectangle\r\"" + cadFileInfo.FileFullPath + "\"\r";
+                        strCommand = "RunRectangle\r" + cadFileInfo.FileFullPath + "\r";
                         AcadApp.ActiveDocument.SendCommand(strCommand);
                         break;
                 }
@@ -211,11 +211,7 @@ namespace Random_Polygon
             catch (System.Exception ex)
             {
                 MessageBox.Show("命令参数不正确，请注意先region命令，转化为面\n\r在用extrude命令转化为3D实体\n最后通过命令export或acisout输出sat文件", "错误", MessageBoxButton.OK);
-            }
-
-
-            Thread.Sleep(1000);
-            Initialize();
+            } 
 
         }
 
