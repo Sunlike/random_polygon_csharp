@@ -117,10 +117,10 @@ namespace Random_Polygon
 
         public bool intersects(ExtendedPolygon polygon)
         {
-            if (false == intersectsWithBox(polygon))
-            {
-                return false;
-            }
+            //if (false == intersectsWithBox(polygon))
+            //{
+            //    return false;
+            //}
 
             // check each of this prolygon's norms
             int size = this.getNorms().Count;

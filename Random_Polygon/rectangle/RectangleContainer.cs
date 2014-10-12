@@ -18,6 +18,7 @@ namespace Random_Polygon
         private double m_area = 0.0;
         private int listSize = 0;
         private List<ExtendedPolygon>[] polygonInside = new List<ExtendedPolygon>[maxCount];
+        private List<ExtendedPolygon> polygonInsideList = new List<ExtendedPolygon>();
         private static int maxCount = 5;
         public RectangleContainer(int x, int y, int width, int height)
         {
@@ -59,14 +60,15 @@ namespace Random_Polygon
         }
         public List<ExtendedPolygon> getAllPolygons()
         {
-            List<ExtendedPolygon> list = new List<ExtendedPolygon>();
-            for (int i = 0; i < maxCount; ++i)
-            {
-                List<ExtendedPolygon> tmpList = polygonInside[i];
-                list.AddRange(tmpList);
-            }
+            return polygonInsideList;
+            //List<ExtendedPolygon> list = new List<ExtendedPolygon>();
+            //for (int i = 0; i < maxCount; ++i)
+            //{
+            //    List<ExtendedPolygon> tmpList = polygonInside[i];
+            //    list.AddRange(tmpList);
+            //}
 
-            return list;
+            //return list;
         }
 
         private int calculateQuadrant(ExtendedPolygon polygon, int x, int y, int width, int height)
@@ -143,20 +145,21 @@ namespace Random_Polygon
             return listSize;
         }
 
-        public List<ExtendedPolygon>[] getPolygonsInside()
-        {
-            return this.polygonInside;
-        }
+        //public List<ExtendedPolygon>[] getPolygonsInside()
+        //{
+        //    return this.polygonInside;
+        //}
 
         public void put(ExtendedPolygon polygon)
         {
-            this.polygonInside[polygon.Quadrant].Add(polygon);
+            polygonInsideList.Add(polygon);
+            //this.polygonInside[polygon.Quadrant].Add(polygon);
             this.m_blankArea -= polygon.getArea();
-            listSize = 0;
-            foreach (List<ExtendedPolygon> temp in this.polygonInside)
-            {
-                listSize += temp.Count;
-            }
+            listSize = polygonInsideList.Count;
+            //foreach (List<ExtendedPolygon> temp in this.polygonInside)
+            //{
+            //    listSize += temp.Count;
+            //}
 
             string str = "" + listSize + ": " + polygon.Points.Count + "-edges   " + getCoverageRatio() * 100 + "%     " + polygon.getArea() + " pix^2\n";
             LogInfo += str;
@@ -171,40 +174,48 @@ namespace Random_Polygon
                 return false;
             }
 
-            int section = getQuadrant(polygon);
-            polygon.Quadrant = section;
-
-            foreach (ExtendedPolygon p in polygonInside[0])
+            foreach (ExtendedPolygon pg in polygonInsideList)
             {
-                if (polygon.intersects(p))
+                if (polygon.intersects(pg))
                 {
                     return false;
                 }
             }
 
-            if (section == 0)
-            {
-                for (int i = 1; i < maxCount; i++)
-                {
-                    foreach (ExtendedPolygon pg in this.polygonInside[i])
-                    {
-                        if (polygon.intersects(pg))
-                        {
-                            return false;
-                        }
-                    }
-                }
-            }
-            else
-            {
-                foreach (ExtendedPolygon pg in this.polygonInside[section])
-                {
-                    if (polygon.intersects(pg))
-                    {
-                        return false;
-                    }
-                }
-            }
+            //int section = getQuadrant(polygon);
+            //polygon.Quadrant = section;
+
+            //foreach (ExtendedPolygon p in polygonInside[0])
+            //{
+            //    if (polygon.intersects(p))
+            //    {
+            //        return false;
+            //    }
+            //}
+
+            //if (section == 0)
+            //{
+            //for (int i = 0; i < maxCount; i++)
+            //{
+            //    foreach (ExtendedPolygon pg in this.polygonInside[i])
+            //    {
+            //        if (polygon.intersects(pg))
+            //        {
+            //            return false;
+            //        }
+            //    }
+            //}
+            //}
+            //else
+            //{
+            //    foreach (ExtendedPolygon pg in this.polygonInside[section])
+            //    {
+            //        if (polygon.intersects(pg))
+            //        {
+            //            return false;
+            //        }
+            //    }
+            //}
             return true;
         }
     }
